@@ -10,9 +10,11 @@ import lombok.Setter;
 @Entity
 @Getter @Setter
 public class Users {
+
     @Id
     @Column(name = "student_id")
     private Long id;
+
     private String email;
     private String password;
     private String name;
