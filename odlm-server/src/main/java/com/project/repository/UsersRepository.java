@@ -1,12 +1,40 @@
 package com.project.repository;
 
 import com.project.domain.Users;
-import org.springframework.data.jpa.repository.JpaRepository;
+import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface UsersRepository extends JpaRepository<Users , Long> {
-    List<Users> findByName(String name);
+@RequiredArgsConstructor
+public class UsersRepository {
+
+
+    private final EntityManager em;
+
+
+    public void save(Users member){
+        em.persist(member);
+    }
+
+    public Users findOne(Long id) {
+        return em.find(Users.class,id);
+    }
+
+    public List<Users> findAll(){
+
+        List<Users> result = em.createQuery("select m from  Users  m", Users.class)
+                .getResultList();
+
+        return result;
+    }
+
+    public List<Users> findByName(String name) {
+        return em.createQuery("select m from Users m where m.name = :name", Users.class)
+                .setParameter("name", name)
+                .getResultList();
+    }
+
 }
