@@ -5,12 +5,12 @@ import lombok.*;
 import org.springframework.data.redis.core.RedisHash;
 
 
-@RedisHash("Month_study")
+@RedisHash("month_study")
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Month_study {
+public class MonthStudy {
 
     @Id
     private Long id;
@@ -18,6 +18,5 @@ public class Month_study {
     private String month;
 
 
-
-    private Long daily_study_time;
+    private Long dailyStudyTime;
 }

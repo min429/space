@@ -6,13 +6,13 @@ import org.springframework.data.redis.core.RedisHash;
 
 import java.util.Date;
 
-@RedisHash("Daily_study")
+@RedisHash("daily_study")
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 
-public class Daily_study {
+public class DailyStudy {
 
     @Id
     private String id; // Redis에 저장될 때 사용되는 식별자
