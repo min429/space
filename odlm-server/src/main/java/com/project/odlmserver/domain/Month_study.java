@@ -1,20 +1,23 @@
 package com.project.odlmserver.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.data.redis.core.RedisHash;
 
 
-@Entity
+@RedisHash("Month_study")
 @Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Month_study {
+
     @Id
+    private Long id;
+
     private String month;
 
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "student_id")
-    private Users users;
 
-    private int daily_study_time;
+
+    private Long daily_study_time;
 }
