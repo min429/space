@@ -31,14 +31,15 @@ dependencies {
 
 	// jackson
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.3'
-	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation
 
-	// security
+//	// security
 //	implementation 'org.springframework.boot:spring-boot-starter-security'
 //	testImplementation 'org.springframework.security:spring-security-test'
+//
+//	// jwt
+//	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
-	// jwt
-	//implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
 	// xml binding
 	implementation 'javax.xml.bind:jaxb-api:2.3.1'
