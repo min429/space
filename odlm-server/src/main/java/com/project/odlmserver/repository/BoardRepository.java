@@ -1,7 +1,6 @@
-package com.project.repository;
+package com.project.odlmserver.repository;
 
-import com.project.domain.Board;
-import com.project.domain.Users;
+import com.project.odlmserver.domain.Board;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Repository;
 public class BoardRepository {
 
     private final EntityManager em;
-
 
     public void save(Board board){
         em.persist(board);

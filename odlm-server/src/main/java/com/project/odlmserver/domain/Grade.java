@@ -1,4 +1,4 @@
-package com.project.domain;
+package com.project.odlmserver.domain;
 
 public enum Grade {
 
