@@ -1,6 +1,6 @@
 package com.project.odlmserver.domain;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
