@@ -15,10 +15,13 @@ import java.util.Date;
 public class Daily_study {
 
     @Id
-    private Long id;
+    private String id; // Redis에 저장될 때 사용되는 식별자
 
-    private String date;
+    // Redis에 저장될 값들
+    private Date date;
 
-    private int daily_study_time;
+    private int studyTime;
+
+
 
 }
