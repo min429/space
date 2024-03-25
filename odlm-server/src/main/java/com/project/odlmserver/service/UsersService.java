@@ -34,13 +34,12 @@ public class UsersService {
                 });
     }
 
-    public String login(LogInRequestDto signInRequestDto){
+    public void login(LogInRequestDto signInRequestDto){
         Users user = usersRepository.findByEmail(signInRequestDto.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("아이디 불일치"));
         if(!signInRequestDto.getPassword().equals(user.getPassword())){
             throw new IllegalArgumentException("비밀번호 불일치");
         }
-        return new String("로그인 성공");
     }
 
     public void delete(String email) {
