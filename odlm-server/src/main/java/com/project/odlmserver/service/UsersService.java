@@ -3,6 +3,7 @@ package com.project.odlmserver.service;
 import com.project.odlmserver.controller.dto.user.LogInRequestDto;
 import com.project.odlmserver.controller.dto.user.SignUpRequestDto;
 import com.project.odlmserver.domain.Grade;
+import com.project.odlmserver.domain.Seat;
 import com.project.odlmserver.domain.Users;
 import com.project.odlmserver.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,5 +47,14 @@ public class UsersService {
         Users users = usersRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
         usersRepository.delete(users);
+    }
+
+    public void updateSeat(Seat seat) {
+        usersRepository.updateBySeatId(seat.getSeatId(), seat.getUserId());
+    }
+
+    public Users findByEmail(String email) {
+        return usersRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
     }
 }

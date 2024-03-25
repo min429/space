@@ -17,6 +17,7 @@ public class Users {
     private String email;
     private String password;
     private String name;
+    private Long seatId;
 
     @Enumerated(EnumType.STRING)
     private Grade grade; //LOW, MIDDLE, HIGH
