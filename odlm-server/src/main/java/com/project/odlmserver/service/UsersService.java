@@ -7,32 +7,30 @@ import com.project.odlmserver.domain.Seat;
 import com.project.odlmserver.domain.Users;
 import com.project.odlmserver.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-@Slf4j
 public class UsersService {
 
     private final UsersRepository usersRepository;
 
     public void save(SignUpRequestDto signUpRequestDto) {
-        usersRepository.findByEmail(signUpRequestDto.getEmail())
-                .ifPresentOrElse((user) -> {
-                    log.error("error");
-                    throw new IllegalArgumentException("아이디 중복");
-                }, () -> {
-                    log.debug("success");
-                    usersRepository.save(Users.builder()
-                            .email(signUpRequestDto.getEmail())
-                            .password(signUpRequestDto.getPassword())
-                            .name(signUpRequestDto.getName())
-                            .grade(Grade.MIDDLE)
-                            .build());
-                });
+        Optional<Users> user = usersRepository.findByEmail(signUpRequestDto.getEmail());
+        if(user.isPresent()) {
+            throw new IllegalArgumentException("아이디 중복");
+        }
+        usersRepository.save(Users.builder()
+                .email(signUpRequestDto.getEmail())
+                .password(signUpRequestDto.getPassword())
+                .name(signUpRequestDto.getName())
+                .grade(Grade.MIDDLE)
+                .build());
     }
 
     public void login(LogInRequestDto signInRequestDto){
