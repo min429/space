@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 
 public class Board {
     @Id
-    @Column(name = "board_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -27,6 +26,6 @@ public class Board {
 
     @Lob
     private String content;
-    private LocalDateTime post_time;
+    private LocalDateTime postTime;
 
 }

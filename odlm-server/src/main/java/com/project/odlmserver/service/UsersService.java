@@ -47,6 +47,12 @@ public class UsersService {
         usersRepository.delete(users);
     }
 
+    public Users findbyUserId(Long id){
+        Users users = usersRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
+        return users;
+    }
+
     public void updateSeat(Seat seat) {
         usersRepository.updateBySeatId(seat.getSeatId(), seat.getUserId());
     }

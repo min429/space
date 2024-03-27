@@ -14,6 +14,6 @@ public class RealSeat {
     @Id
     private Long seatId;
 
-    private Boolean isReserved;
+    private Long userId;
 
 }
