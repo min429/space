@@ -3,6 +3,7 @@ package com.project.odlmserver.service;
 import com.project.odlmserver.controller.dto.user.LogInRequestDto;
 import com.project.odlmserver.controller.dto.user.SignUpRequestDto;
 import com.project.odlmserver.domain.Grade;
+import com.project.odlmserver.domain.STATE;
 import com.project.odlmserver.domain.Seat;
 import com.project.odlmserver.domain.Users;
 import com.project.odlmserver.repository.UsersRepository;
@@ -33,12 +34,13 @@ public class UsersService {
                 .build());
     }
 
-    public void login(LogInRequestDto signInRequestDto){
+    public Long login(LogInRequestDto signInRequestDto){
         Users user = usersRepository.findByEmail(signInRequestDto.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("아이디 불일치"));
         if(!signInRequestDto.getPassword().equals(user.getPassword())){
             throw new IllegalArgumentException("비밀번호 불일치");
         }
+        return user.getId();
     }
 
     public void delete(String email) {
@@ -47,12 +49,17 @@ public class UsersService {
         usersRepository.delete(users);
     }
 
-    public void updateSeat(Seat seat) {
-        usersRepository.updateBySeatId(seat.getSeatId(), seat.getUserId());
+    public void updateState(STATE state) {
+        usersRepository.updateState(state);
     }
 
     public Users findByEmail(String email) {
         return usersRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
+    }
+
+    public Users findById(Long id) {
+        return usersRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
     }
 }

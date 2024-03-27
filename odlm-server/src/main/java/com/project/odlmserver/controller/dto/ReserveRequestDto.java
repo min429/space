@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ReserveRequestDto {
     private Long seatId;
-    private String userEmail;
+    private Long userId;
 }

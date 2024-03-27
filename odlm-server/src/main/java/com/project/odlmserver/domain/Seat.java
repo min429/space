@@ -12,6 +12,7 @@ public class Seat {
 
     @Id
     private Long seatId;
-
     private Long userId;
+    private Boolean isUsed; // 실제 사용 여부
+    private Long useCount = 0L; // 사용 시간 카운트 (분 단위 측정)
 }

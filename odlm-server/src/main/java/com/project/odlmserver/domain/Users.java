@@ -17,16 +17,20 @@ public class Users {
     private String email;
     private String password;
     private String name;
-    private Long seatId;
+
+    @Enumerated(EnumType.STRING)
+    private STATE state; //RESERVE, RETURN, LEAVE
 
     @Enumerated(EnumType.STRING)
     private Grade grade; //LOW, MIDDLE, HIGH
 
     @Builder
-    public Users(String email, String password, String name, Grade grade) {
+    public Users(Long id, String email, String password, String name, Grade grade, STATE state) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
         this.grade = grade;
+        this.state = state;
     }
 }
