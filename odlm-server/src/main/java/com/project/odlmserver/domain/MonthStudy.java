@@ -6,7 +6,7 @@ import org.springframework.data.redis.core.RedisHash;
 
 
 @RedisHash("month_study")
-@Getter @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

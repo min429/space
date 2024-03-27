@@ -7,7 +7,7 @@ import org.springframework.data.redis.core.RedisHash;
 import java.util.Date;
 
 @RedisHash("daily_study")
-@Getter @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
