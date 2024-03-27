@@ -15,4 +15,5 @@ public class RealSeat {
     private Long seatId;
 
     private Boolean isReserved;
+
 }

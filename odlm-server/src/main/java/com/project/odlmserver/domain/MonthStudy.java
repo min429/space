@@ -17,6 +17,5 @@ public class MonthStudy {
 
     private String month;
 
-
     private Long dailyStudyTime;
 }

@@ -20,7 +20,7 @@ public class DailyStudy {
     // Redis에 저장될 값들
     private Date date;
 
-    private int studyTime;
+    private Integer studyTime;
 
 
 

@@ -13,5 +13,6 @@ public class Seat {
     @Id
     private Long seatId;
 
-    private Long userId;
+    private Boolean isReserved;
+
 }
