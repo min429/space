@@ -49,6 +49,9 @@ dependencies {
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	implementation 'mysql:mysql-connector-java:8.0.32'
 
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
 	// jpa
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
