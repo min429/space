@@ -32,8 +32,13 @@ public class BoardService {
         Users findUser = usersService.findbyUserId(createBoardRequestDto.getUserId());
 
 
-        Board newBoard = new Board(board.get().getId(), findUser ,createBoardRequestDto.getContent() ,createBoardRequestDto.getPostTime());
-        boardRepository.save(newBoard);
+
+        boardRepository.save(Board.builder()
+                .id(createBoardRequestDto.getBoardId())
+                .user(findUser)
+                .content(createBoardRequestDto.getContent())
+                .postTime(createBoardRequestDto.getPostTime())
+                .build());
     }
 
     public void updateBoard(UpdateBoardRequestDto updateBoardRequestDto) {
@@ -44,7 +49,13 @@ public class BoardService {
         }
         Users findUser = usersService.findbyUserId(updateBoardRequestDto.getUserId());
 
-        Board newBoard = new Board(board.get().getId(), findUser ,updateBoardRequestDto.getContent(),updateBoardRequestDto.getPostTime());
+        Board newBoard = Board.builder()
+                .id(updateBoardRequestDto.getBoardId())
+                .user(findUser)
+                .content(updateBoardRequestDto.getContent())
+                .postTime(updateBoardRequestDto.getPostTime())
+                .build();
+        
         boardRepository.update(newBoard.getId(),newBoard.getContent(),newBoard.getPostTime());
 
     }
