@@ -23,7 +23,7 @@ public class BoardController {
 
     @PostMapping("/create")
     public ResponseEntity<String> create(@RequestBody CreateBoardRequestDto request) {
-        boardService.create(request);
+        boardService.createBoard(request);
         return ResponseEntity.ok().body("게시판 글 생성 완료");
     }
 
@@ -35,7 +35,7 @@ public class BoardController {
 
     @PostMapping("/delete")
     public ResponseEntity<String> delete(@RequestBody DeleteBoardRequestDto request) {
-        boardService.delete(request);
+        boardService.deleteBoard(request);
         return ResponseEntity.ok().body("게시판 글 삭제 완료");
     }
 

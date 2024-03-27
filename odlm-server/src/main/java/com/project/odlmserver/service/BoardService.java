@@ -23,7 +23,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UsersService usersService;
 
-    public void create(CreateBoardRequestDto createBoardRequestDto) {
+    public void createBoard(CreateBoardRequestDto createBoardRequestDto) {
         Optional<Board> board = boardRepository.findById(createBoardRequestDto.getBoardId());
         if (board.isPresent()) {
             throw new IllegalArgumentException("이미 만들어진 게시글입니다.");
@@ -55,12 +55,12 @@ public class BoardService {
                 .content(updateBoardRequestDto.getContent())
                 .postTime(updateBoardRequestDto.getPostTime())
                 .build();
-        
+
         boardRepository.update(newBoard.getId(),newBoard.getContent(),newBoard.getPostTime());
 
     }
 
-    public void delete(DeleteBoardRequestDto deleteBoardRequestDto) {
+    public void deleteBoard(DeleteBoardRequestDto deleteBoardRequestDto) {
         Optional<Board> boardOptional = boardRepository.findById(deleteBoardRequestDto.getBoardId());
 
         if (boardOptional.isEmpty()) {
@@ -71,4 +71,5 @@ public class BoardService {
         Board board = boardOptional.get(); // Optional에서 Board 객체 추출
         boardRepository.delete(board);
     }
+
 }
