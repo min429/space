@@ -47,8 +47,8 @@ public class UsersService {
         usersRepository.delete(users);
     }
 
-    public Users findbyUserId(Long id){
-        Users users = usersRepository.findById(id)
+    public Users findbyUserId(Long userId){
+        Users users = usersRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
         return users;
     }

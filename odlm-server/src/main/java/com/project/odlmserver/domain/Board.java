@@ -21,7 +21,7 @@ public class Board {
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "student_id")
+    @JoinColumn(name = "user_id")
     private Users user;
 
     @Lob
