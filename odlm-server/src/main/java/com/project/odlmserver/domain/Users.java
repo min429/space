@@ -19,10 +19,10 @@ public class Users {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private STATE state; //RESERVE, RETURN, LEAVE
+    private STATE state; // RESERVE, RETURN, LEAVE
 
     @Enumerated(EnumType.STRING)
-    private Grade grade; //LOW, MIDDLE, HIGH
+    private Grade grade; // LOW, MIDDLE, HIGH
 
     @Builder
     public Users(Long id, String email, String password, String name, Grade grade, STATE state) {
