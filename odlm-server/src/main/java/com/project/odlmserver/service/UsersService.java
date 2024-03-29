@@ -31,6 +31,7 @@ public class UsersService {
                 .password(signUpRequestDto.getPassword())
                 .name(signUpRequestDto.getName())
                 .grade(Grade.MIDDLE)
+                .state(STATE.RETURN)
                 .build());
     }
 
