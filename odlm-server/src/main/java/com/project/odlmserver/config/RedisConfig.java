@@ -17,7 +17,7 @@ public class RedisConfig {
     private String redisHost;
 
     @Value("${spring.redis.data.port}")
-    private int redisPort;
+    private Integer redisPort;
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
