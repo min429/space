@@ -24,6 +24,8 @@ public class RedisUpdateService {
 
     @Scheduled(fixedRate = 60000) // 매 1분마다 실행 (6,0000ms ) = 60초
     public void myScheduledMethod() {
+
+        //userId가 NULL이 아닌 seat들을 리스트로 가져옴
         List<Seat> reservedSeats = seatRedisRepository.findAllByUserIdIsNotNull();
 
         // isUsed가 false이면 useCount의 값을 1 증가시키고, useCount가 20인 경우 경고 메서드 호출 ,useCount가 30인 경우 자리 박탈 메서드 호출
