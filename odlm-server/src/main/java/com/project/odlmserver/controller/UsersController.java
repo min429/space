@@ -25,9 +25,8 @@ public class UsersController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LogInRequestDto request) {
-        userService.login(request);
-        return ResponseEntity.ok().body("로그인 성공");
+    public ResponseEntity<Long> login(@RequestBody LogInRequestDto request) {
+        return ResponseEntity.ok().body(userService.login(request));
     }
 
     @PostMapping("/signout")

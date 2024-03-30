@@ -25,7 +25,7 @@ public class SeatController {
 
     @PostMapping("/return")
     public ResponseEntity<String> returns(@RequestBody ReturnRequestDto request) {
-        reservationService.delete(request);
+        reservationService.returns(request);
         return ResponseEntity.ok().body("반납 완료");
     }
 }
