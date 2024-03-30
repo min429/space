@@ -23,7 +23,6 @@ public class RedisConfig {
 
     private Integer redisPort;
 
-
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         return new LettuceConnectionFactory(redisHost, redisPort);

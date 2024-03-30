@@ -1,6 +1,5 @@
 package com.project.odlmserver.repository;
 
-import com.project.odlmserver.domain.Seat;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
@@ -28,6 +27,7 @@ public class SeatCustomRedisRepository {
 
     public void deleteUserId(Long seatId, Long userId) {
         hashOperations.put("seat:" + seatId.toString(), "userId", null);
+        hashOperations.put("seat:" + seatId.toString(), "useCount", 0L);
         setOperations.remove("seat:userId:" + userId, seatId.toString());
     }
 
