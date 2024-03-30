@@ -2,7 +2,7 @@ import cv2
 import torch
 
 # YOLOv5 모델 로드
-model = torch.hub.load('ultralytics/yolov5', 'custom', path='yolov5s.pt')
+model = torch.hub.load('ultralytics/yolov5', 'custom', path='../yolov5s.pt')
 
 # 웹캠 캡처 객체 초기화
 cap = cv2.VideoCapture(0)
@@ -38,10 +38,14 @@ while True:
 
     # 객체 바운딩 박스와 점이 겹치는지 확인하여 결과 출력
     result_str = ''
-    for point in points:
-        is_overlap = any((bbox[0] < point[0] < bbox[2] and bbox[1] < point[1] < bbox[3]) for bbox in person_results)
-        result_str += '1' if is_overlap else '0'
-        result_str += ' '
+    for bbox in person_results:
+        for point in points:
+            is_overlap = bbox[0] < point[0] < bbox[2] and bbox[1] < point[1] < bbox[3]
+            result_str += '1' if is_overlap else '0'
+            result_str += ' '
+        # 바운딩 박스 그리기
+        bbox = bbox[:4].cpu().numpy().astype(int)
+        cv2.rectangle(output, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (0, 255, 0), 2)
 
     print(result_str.strip())
 

@@ -3,7 +3,7 @@ import torch
 import time
 
 # YOLOv5 모델 로드
-model = torch.hub.load('ultralytics/yolov5', 'custom', path='yolov5s.pt')
+model = torch.hub.load('ultralytics/yolov5', 'custom', path='../yolov5s.pt')
 
 # 웹캠 캡처 객체 초기화
 cap = cv2.VideoCapture(0)
