@@ -1,6 +1,7 @@
 package com.project.odlmserver.repository;
 
 import com.project.odlmserver.domain.DailyStudy;
+import com.project.odlmserver.domain.Seat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,18 +12,19 @@ import java.util.Date;
 public class DSRepositoryTest {
 
     @Autowired
-    private DSRedisRepository dailyStudyRepository;
+    private SeatRedisRepository seatRedisRepository;
 
     @Test
     void testSaveDailyStudy() {
-        // Daily_study 객체 생성
-        DailyStudy dailyStudy = DailyStudy.builder()
-                .date(new Date())
-                .studyTime(60) // 예시로 60분으로 설정
+
+        Seat seat = Seat.builder()
+                .seatId(1L)
+                .userId(1L)
+                .isUsed(true)
                 .build();
 
         // 저장
-        dailyStudyRepository.save(dailyStudy);
+        seatRedisRepository.save(seat);
 
 
     }

@@ -9,6 +9,8 @@ import org.springframework.data.redis.core.index.Indexed;
 @RedisHash("seat")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
+
 public class Seat {
 
     @Id

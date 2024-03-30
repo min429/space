@@ -12,5 +12,5 @@ public interface SeatRedisRepository extends CrudRepository<Seat, Long> {
 
     Optional<Seat> findByUserId(Long userId);
 
-    List<Seat> findAllByUserIdIsNotNull();
+    List<Seat> findAll();
 }
