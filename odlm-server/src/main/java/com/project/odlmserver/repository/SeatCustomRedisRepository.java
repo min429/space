@@ -33,7 +33,7 @@ public class SeatCustomRedisRepository {
     }
 
     public void updateUseCount(Long seatId, Long useCount ) {
-        hashOperations.put("seat:" + seatId, "useCount", useCount);
+        hashOperations.put("seat:" + seatId, "useCount", useCount.toString());
     }
 
 }
