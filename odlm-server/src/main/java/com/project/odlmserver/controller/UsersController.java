@@ -29,6 +29,7 @@ public class UsersController {
         return ResponseEntity.ok().body(userService.login(request));
     }
 
+
     @PostMapping("/signout")
     public ResponseEntity<String> signout(@RequestBody String email) {
         userService.delete(email);

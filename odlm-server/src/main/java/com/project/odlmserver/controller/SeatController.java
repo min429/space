@@ -28,4 +28,6 @@ public class SeatController {
         reservationService.returns(request);
         return ResponseEntity.ok().body("반납 완료");
     }
+
+
 }

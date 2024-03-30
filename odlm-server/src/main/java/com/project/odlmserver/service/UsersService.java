@@ -72,4 +72,6 @@ public class UsersService {
         return usersRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
     }
+
+
 }

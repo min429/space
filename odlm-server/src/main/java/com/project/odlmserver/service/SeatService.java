@@ -30,7 +30,7 @@ public class SeatService {
 
         Users user = usersService.findById(reserveRequestDto.getUserId());
         if(user.getState() == STATE.RESERVE) {
-            throw new IllegalArgumentException("이미 예약함");
+            throw new IllegalArgumentException("이미 다른 자리를 예약함");
         }
 
         Seat newSeat = new Seat(reserveRequestDto.getSeatId(), user.getId(), true, 0L);
@@ -50,4 +50,7 @@ public class SeatService {
         seatCustomRedisRepository.deleteUserId(seat.getSeatId(), seat.getUserId());
         usersService.updateState(STATE.RETURN);
     }
+
+
+
 }
