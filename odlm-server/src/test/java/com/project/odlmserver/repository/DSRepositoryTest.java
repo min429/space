@@ -1,12 +1,12 @@
 package com.project.odlmserver.repository;
 
-import com.project.odlmserver.domain.DailyStudy;
+
 import com.project.odlmserver.domain.Seat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Date;
+
 
 @SpringBootTest
 public class DSRepositoryTest {
@@ -20,7 +20,8 @@ public class DSRepositoryTest {
         Seat seat = Seat.builder()
                 .seatId(1L)
                 .userId(1L)
-                .isUsed(true)
+                .isUsed(false)
+                .useCount(0L)
                 .build();
 
         // 저장
