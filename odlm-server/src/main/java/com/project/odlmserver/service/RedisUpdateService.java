@@ -29,7 +29,7 @@ public class RedisUpdateService {
     // Logger 인스턴스 가져오기 1분마다 실행되는 지 로그를 보기위함임 나중엔 지움
     private static final Logger logger = LoggerFactory.getLogger(RedisUpdateService.class);
 
-    @Scheduled(fixedRate = 6000) // 매 1분마다 실행 (6,0000ms ) = 60초
+    @Scheduled(fixedRate = 60000) // 매 1분마다 실행 (6,0000ms ) = 60초
     public void myScheduledMethod() {
 
         logger.info("=====1분====");
