@@ -32,8 +32,7 @@ public class SeatCustomRedisRepository {
         setOperations.remove("seat:userId:" + userId, seatId.toString());
     }
 
-    public void updateUseCount(Long seatId, Long useCount ) {
+    public void updateUseCount(Long seatId, Long useCount) {
         hashOperations.put("seat:" + seatId, "useCount", useCount.toString());
     }
-
 }

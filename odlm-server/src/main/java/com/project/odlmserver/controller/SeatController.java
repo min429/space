@@ -1,7 +1,7 @@
 package com.project.odlmserver.controller;
 
-import com.project.odlmserver.controller.dto.ReserveRequestDto;
-import com.project.odlmserver.controller.dto.ReturnRequestDto;
+import com.project.odlmserver.controller.dto.seat.ReserveRequestDto;
+import com.project.odlmserver.controller.dto.seat.ReturnRequestDto;
 import com.project.odlmserver.service.SeatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

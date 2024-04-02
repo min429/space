@@ -1,5 +1,7 @@
 package com.project.odlmserver.service;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.project.odlmserver.domain.STATE;
 import com.project.odlmserver.domain.Seat;
 import com.project.odlmserver.domain.Users;
 import com.project.odlmserver.repository.SeatCustomRedisRepository;
@@ -25,6 +27,8 @@ public class RedisUpdateService {
 
     private final SeatCustomRedisRepository seatCustomRedisRepository;
     private final SeatRedisRepository seatRedisRepository;
+    private final UsersService usersService;
+    private final FCMService fcmService;
 
     // Logger 인스턴스 가져오기 1분마다 실행되는 지 로그를 보기위함임 나중엔 지움
     private static final Logger logger = LoggerFactory.getLogger(RedisUpdateService.class);
@@ -62,19 +66,25 @@ public class RedisUpdateService {
 
                 if (updatedUseCount == 20) {
                     // 경고 메서드 호출
-                    //warningMethod(users, seat);
+                    warn(seat.getUserId());
                 }
 
                 else if (updatedUseCount == 30) {
                     //자리 박탈 메서드 호출
-                    //seatOutMethod(users, seat);
+                    depriveSeat(seat.getSeatId(), seat.getUserId());
                 }
             }
         }
-
-
-
     }
 
+    public void warn(Long userId) {
+        String userToken = usersService.findUserTokenById(userId);
+        fcmService.sendNotification(userToken);
+    }
 
+    public void depriveSeat(Long seatId, Long userId) {
+        seatCustomRedisRepository.deleteUserId(seatId, userId);
+        seatCustomRedisRepository.updateUseCount(seatId, 0L);
+        usersService.updateState(userId, STATE.RETURN);
+    }
 }

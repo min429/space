@@ -1,12 +1,9 @@
 package com.project.odlmserver.controller;
 
-import com.project.odlmserver.controller.dto.ReserveRequestDto;
-import com.project.odlmserver.controller.dto.ReturnRequestDto;
 import com.project.odlmserver.controller.dto.board.CreateBoardRequestDto;
 import com.project.odlmserver.controller.dto.board.DeleteBoardRequestDto;
 import com.project.odlmserver.controller.dto.board.UpdateBoardRequestDto;
 import com.project.odlmserver.service.BoardService;
-import com.project.odlmserver.service.SeatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

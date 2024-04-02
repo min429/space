@@ -1,12 +1,9 @@
 package com.project.odlmserver.service;
 
-import com.project.odlmserver.controller.dto.ReserveRequestDto;
-import com.project.odlmserver.controller.dto.ReturnRequestDto;
 import com.project.odlmserver.controller.dto.board.CreateBoardRequestDto;
 import com.project.odlmserver.controller.dto.board.DeleteBoardRequestDto;
 import com.project.odlmserver.controller.dto.board.UpdateBoardRequestDto;
 import com.project.odlmserver.domain.Board;
-import com.project.odlmserver.domain.Seat;
 import com.project.odlmserver.domain.Users;
 import com.project.odlmserver.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +26,7 @@ public class BoardService {
             throw new IllegalArgumentException("이미 만들어진 게시글입니다.");
         }
 
-        Users findUser = usersService.findbyUserId(createBoardRequestDto.getUserId());
+        Users findUser = usersService.findByUserId(createBoardRequestDto.getUserId());
 
 
 
@@ -47,7 +44,7 @@ public class BoardService {
         if (board.isEmpty()) {
             throw new IllegalArgumentException("업데이트를 할 게시글이 없습니다.");
         }
-        Users findUser = usersService.findbyUserId(updateBoardRequestDto.getUserId());
+        Users findUser = usersService.findByUserId(updateBoardRequestDto.getUserId());
 
         Board newBoard = Board.builder()
                 .id(updateBoardRequestDto.getBoardId())
