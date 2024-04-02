@@ -14,9 +14,20 @@ import java.util.Optional;
 @Repository
 public interface UsersRepository extends JpaRepository<Users, Long> {
 
+    @Query("SELECT u.token FROM Users u WHERE u.id = :id")
+    Optional<String> findTokenByUserId(@Param("id") Long userId);
+
     Optional<Users> findByEmail(String email);
 
-    @Modifying
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query("UPDATE Users u SET u.state = :state WHERE u.id = :id")
+    void updateState(@Param("id") Long userId, @Param("state") STATE state);
+
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("UPDATE Users u SET u.state = :state")
-    void updateState(@Param("state") STATE state);
+    void updateAllState(@Param("state") STATE state);
+
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query("UPDATE Users u SET u.token = :token WHERE u.id = :id")
+    void updateToken(@Param("id") Long userId, @Param("token") String token);
 }

@@ -4,7 +4,6 @@ import com.project.odlmserver.controller.dto.user.LogInRequestDto;
 import com.project.odlmserver.controller.dto.user.SignUpRequestDto;
 import com.project.odlmserver.domain.Grade;
 import com.project.odlmserver.domain.STATE;
-import com.project.odlmserver.domain.Seat;
 import com.project.odlmserver.domain.Users;
 import com.project.odlmserver.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,7 @@ public class UsersService {
 
     public void save(SignUpRequestDto signUpRequestDto) {
         Optional<Users> user = usersRepository.findByEmail(signUpRequestDto.getEmail());
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             throw new IllegalArgumentException("아이디 중복");
         }
         usersRepository.save(Users.builder()
@@ -35,10 +34,10 @@ public class UsersService {
                 .build());
     }
 
-    public Long login(LogInRequestDto signInRequestDto){
+    public Long login(LogInRequestDto signInRequestDto) {
         Users user = usersRepository.findByEmail(signInRequestDto.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("아이디 불일치"));
-        if(!signInRequestDto.getPassword().equals(user.getPassword())){
+        if (!signInRequestDto.getPassword().equals(user.getPassword())) {
             throw new IllegalArgumentException("비밀번호 불일치");
         }
         return user.getId();
@@ -50,17 +49,13 @@ public class UsersService {
         usersRepository.delete(users);
     }
 
-
-    public Users findbyUserId(Long userId){
-        Users users = usersRepository.findById(userId)
+    public Users findByUserId(Long userId) {
+        return usersRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
-        return users;
     }
 
-
-    public void updateState(STATE state) {
-        usersRepository.updateState(state);
-
+    public void updateState(Long userId, STATE state) {
+        usersRepository.updateState(userId, state);
     }
 
     public Users findByEmail(String email) {
@@ -68,10 +63,12 @@ public class UsersService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
     }
 
-    public Users findById(Long id) {
-        return usersRepository.findById(id)
+    public String findUserTokenById(Long userId) {
+        return usersRepository.findTokenByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
     }
 
-
+    public void updateToken(Long userId, String token) {
+        usersRepository.updateToken(userId, token);
+    }
 }
