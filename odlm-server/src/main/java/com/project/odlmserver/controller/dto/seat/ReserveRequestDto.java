@@ -1,4 +1,4 @@
-package com.project.odlmserver.controller.dto;
+package com.project.odlmserver.controller.dto.seat;
 
 import lombok.AccessLevel;
 import lombok.Getter;
