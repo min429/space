@@ -9,5 +9,4 @@ public class OdlmServerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(OdlmServerApplication.class, args);
 	}
-
 }

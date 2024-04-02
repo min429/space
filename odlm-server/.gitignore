@@ -39,3 +39,4 @@ out/
 ### custom ###
 application.yml
 local.properties
+/src/main/resources/odlm-server-firebase-adminsdk-u4vs3-725a9269d1.json
