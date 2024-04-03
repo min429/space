@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 
 public class Board {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue()
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -28,3 +28,4 @@ public class Board {
     private LocalDateTime postTime;
 
 }
+

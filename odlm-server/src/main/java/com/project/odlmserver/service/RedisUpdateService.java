@@ -11,10 +11,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,6 +73,7 @@ public class RedisUpdateService {
                 }
             }
         }
+
     }
 
     public void warn(Long userId) {
@@ -83,8 +82,10 @@ public class RedisUpdateService {
     }
 
     public void depriveSeat(Long seatId, Long userId) {
+
         seatCustomRedisRepository.deleteUserId(seatId, userId);
         seatCustomRedisRepository.updateUseCount(seatId, 0L);
         usersService.updateState(userId, STATE.RETURN);
+
     }
 }
