@@ -107,7 +107,7 @@ class MyHomePage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 _sendRequest('board/create', requestData: {
-                  'boardId': 102,
+                  'boardId': 152,
                   'userId': 0,
                   'content': '도서관 게시판 테스트',
                 });
@@ -117,7 +117,7 @@ class MyHomePage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 _sendRequest('board/update', requestData: {
-                  'boardId': 102,
+                  'boardId': 152,
                   'userId': 0,
                   'content': '도서관 게시판 테스트 수정',
                 });
@@ -127,7 +127,7 @@ class MyHomePage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 _sendRequest('board/delete', requestData: {
-                  'boardId': 102,
+                  'boardId': 152,
                   'userId': 2,
                 });
               },
