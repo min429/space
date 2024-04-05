@@ -1,6 +1,7 @@
 package com.project.odlmserver.controller;
 
 import com.project.odlmserver.controller.dto.user.LogInRequestDto;
+import com.project.odlmserver.controller.dto.user.SignOutRequestDto;
 import com.project.odlmserver.controller.dto.user.SignUpRequestDto;
 import com.project.odlmserver.service.UsersService;
 import lombok.RequiredArgsConstructor;
@@ -31,9 +32,8 @@ public class UsersController {
 
 
     @PostMapping("/signout")
-    public ResponseEntity<String> signout(@RequestBody Long userId) {
-        userService.delete(userId);
+    public ResponseEntity<String> signout(@RequestBody SignOutRequestDto request) {
+        userService.delete(request);
         return ResponseEntity.ok().body("회원탈퇴 완료");
     }
-
 }

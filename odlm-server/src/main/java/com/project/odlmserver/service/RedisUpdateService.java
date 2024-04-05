@@ -44,8 +44,7 @@ public class RedisUpdateService {
         List<Seat> reservedSeats = allSeats.stream()
                 .filter(seat -> {
                     Long userId = seat.getUserId();
-                    String tempUserId = userId.toString();
-                    return tempUserId != null && !tempUserId.isEmpty();
+                    return userId != null;
                 })
                 .collect(Collectors.toList());
 
