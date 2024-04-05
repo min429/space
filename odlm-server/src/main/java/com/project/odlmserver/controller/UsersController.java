@@ -31,8 +31,8 @@ public class UsersController {
 
 
     @PostMapping("/signout")
-    public ResponseEntity<String> signout(@RequestBody String email) {
-        userService.delete(email);
+    public ResponseEntity<String> signout(@RequestBody Long userId) {
+        userService.delete(userId);
         return ResponseEntity.ok().body("회원탈퇴 완료");
     }
 

@@ -43,8 +43,8 @@ public class UsersService {
         return user.getId();
     }
 
-    public void delete(String email) {
-        Users users = usersRepository.findByEmail(email)
+    public void delete(Long userId) {
+        Users users = usersRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
         usersRepository.delete(users);
     }

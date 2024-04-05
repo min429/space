@@ -23,14 +23,16 @@ public class SeatService {
     private final UsersService usersService;
 
     public void save(ReserveRequestDto reserveRequestDto) {
-        Optional<Seat> seat = seatRedisRepository.findById(reserveRequestDto.getSeatId());
-        if (seat.isPresent()) {
-            throw new IllegalArgumentException("자리 사용중");
-        }
+        Seat seat = seatRedisRepository.findById(reserveRequestDto.getSeatId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 자리"));
 
         Users user = usersService.findByUserId(reserveRequestDto.getUserId());
         if(user.getState() == STATE.RESERVE) {
             throw new IllegalArgumentException("이미 다른 자리를 예약함");
+        }
+
+        if(seat.getUserId() != null){
+            throw new IllegalArgumentException("사용중인 자리");
         }
 
         Seat newSeat = new Seat(reserveRequestDto.getSeatId(), user.getId(), true, 0L);
