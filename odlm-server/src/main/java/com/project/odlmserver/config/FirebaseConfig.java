@@ -24,14 +24,5 @@ public class FirebaseConfig {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-//        FileInputStream serviceAccount =
-//                new FileInputStream("path/to/serviceAccountKey.json");
-//
-//        FirebaseOptions options = new FirebaseOptions.Builder()
-//                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-//                .build();
-//
-//        FirebaseApp.initializeApp(options);
     }
 }
