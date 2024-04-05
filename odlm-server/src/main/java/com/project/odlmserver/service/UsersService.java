@@ -1,6 +1,7 @@
 package com.project.odlmserver.service;
 
 import com.project.odlmserver.controller.dto.user.LogInRequestDto;
+import com.project.odlmserver.controller.dto.user.SignOutRequestDto;
 import com.project.odlmserver.controller.dto.user.SignUpRequestDto;
 import com.project.odlmserver.domain.Grade;
 import com.project.odlmserver.domain.STATE;
@@ -43,8 +44,8 @@ public class UsersService {
         return user.getId();
     }
 
-    public void delete(Long userId) {
-        Users users = usersRepository.findById(userId)
+    public void delete(SignOutRequestDto signOutRequestDto) {
+        Users users = usersRepository.findById(signOutRequestDto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
         usersRepository.delete(users);
     }
