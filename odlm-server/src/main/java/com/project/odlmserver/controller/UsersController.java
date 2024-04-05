@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -31,7 +33,8 @@ public class UsersController {
 
 
     @PostMapping("/signout")
-    public ResponseEntity<String> signout(@RequestBody Long userId) {
+    public ResponseEntity<String> signout(@RequestBody Map<String, Long> requestData) {
+        Long userId = requestData.get("userId");
         userService.delete(userId);
         return ResponseEntity.ok().body("회원탈퇴 완료");
     }

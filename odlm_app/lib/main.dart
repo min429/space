@@ -99,7 +99,7 @@ class MyHomePage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 _sendRequest('user/signout', requestData: {
-                  'email': 'test@google.com',
+                  'userId': 123,
                 });
               },
               child: Text('Sign Out'),
