@@ -3,11 +3,6 @@ import torch
 import time
 import redis
 
-# FastAPI 임포트
-from fastapi import FastAPI
-
-# FastAPI 앱 생성
-app = FastAPI()
 
 # Redis 클라이언트 생성 및 연결 시도
 redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
@@ -20,8 +15,10 @@ except redis.ConnectionError:
 # YOLOv5 모델 로드
 model = torch.hub.load('ultralytics/yolov5', 'custom', path='yolov5s.pt')
 
+# RTSP 스트리밍 주소
+rtsp_url = "rtsp://asdf1013:asdf1013@172.20.10.8:554/stream1"
 # 웹캠 캡처 객체 초기화
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(rtsp_url)
 
 # 캠 화면 크기 설정
 cv2.namedWindow('YOLOv5 Person Detection', cv2.WINDOW_NORMAL)
@@ -92,7 +89,7 @@ while True:
     current_time = time.time()
 
     # 10초가 지난 경우
-    if current_time - start_time >= 3:
+    if current_time - start_time >= 10:
 
         s10_result.append(result_list)  # 10초 결과 저장
         start_time = current_time  # 시작 시간 재설정
@@ -101,13 +98,13 @@ while True:
         print(s10_result)
 
         # 1분이 지난 경우
-        if count_10_seconds == 7:
+        if count_10_seconds == 6:
             print("1분!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             # 1분 동안의 결과 저장
             minute_result = []
             for i in range(4):
-                count_0 = sum(1 for x in s10_result[-7:] if x[i] == 0)  # 인덱스 i에서 0의 개수
-                count_1 = 7 - count_0  # 1의 개수는 총 6개에서 0의 개수를 뺀 것과 같음
+                count_0 = sum(1 for x in s10_result[-6:] if x[i] == 0)  # 인덱스 i에서 0의 개수
+                count_1 = 6 - count_0  # 1의 개수는 총 6개에서 0의 개수를 뺀 것과 같음
                 minute_result.append(0 if count_0 > count_1 else 1)  # 더 많은 쪽으로 결정하여 결과 저장
             print(minute_result)
             # s60_result 대신 minute_result를 사용하여 Redis에 데이터를 업데이트
