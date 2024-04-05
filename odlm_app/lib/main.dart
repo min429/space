@@ -26,18 +26,16 @@ class MyHomePage extends StatelessWidget {
 
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
-  Future<void> _sendRequest(String action, {required int userId, required int seatId}) async {
-    final String url = 'http://10.0.2.2:8080/seat/$action';
+  Future<void> _sendRequest(String action,
+      {required Map<String, dynamic> requestData}) async {
+    final String url = 'http://10.0.2.2:8080/$action';
     try {
       final response = await http.post(
         Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, dynamic>{
-          'userId': userId,
-          'seatId': seatId,
-        }),
+        body: jsonEncode(requestData),
       );
       if (response.statusCode == 200) {
         print('Success: ${response.body}');
@@ -52,7 +50,6 @@ class MyHomePage extends StatelessWidget {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,25 +62,45 @@ class MyHomePage extends StatelessWidget {
           children: <Widget>[
             ElevatedButton(
               onPressed: () {
-                _sendRequest('reserve', userId: 123, seatId: 456);
+                _sendRequest('seat/reserve', requestData: {
+                  'userId': 123,
+                  'seatId': 456,
+                });
               },
               child: Text('Reserve'),
             ),
             ElevatedButton(
               onPressed: () {
-                _sendRequest('reserve', userId: 123, seatId: 456);
+                _sendRequest('seat/return', requestData: {
+                  'userId': 123,
+                });
               },
               child: Text('Return'),
             ),
             ElevatedButton(
               onPressed: () {
-                _sendRequest('reserve', userId: 123, seatId: 456);
+                _sendRequest('user/login', requestData: {
+                  'email': 'test01@google.com',
+                  'password': 'pass123',
+                });
               },
               child: Text('Login'),
             ),
             ElevatedButton(
               onPressed: () {
-                _sendRequest('signout', userId: 123, seatId: 456);
+                _sendRequest('user/signup', requestData: {
+                  'email': 'test01@google.com',
+                  'password': 'pass123',
+                  'name': 'test',
+                });
+              },
+              child: Text('Sign UP'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _sendRequest('user/signout', requestData: {
+                  'email': 'test@google.com',
+                });
               },
               child: Text('Sign Out'),
             ),
