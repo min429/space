@@ -63,7 +63,7 @@ class MyHomePage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 _sendRequest('seat/reserve', requestData: {
-                  'userId': 123,
+                  'userId': 0,
                   'seatId': 456,
                 });
               },
@@ -72,7 +72,7 @@ class MyHomePage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 _sendRequest('seat/return', requestData: {
-                  'userId': 123,
+                  'userId': 0,
                 });
               },
               child: Text('Return'),
@@ -99,10 +99,39 @@ class MyHomePage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 _sendRequest('user/signout', requestData: {
-                  'userId': 123,
+                  'userId': 0,
                 });
               },
               child: Text('Sign Out'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _sendRequest('board/create', requestData: {
+                  'boardId': 102,
+                  'userId': 0,
+                  'content': '도서관 게시판 테스트',
+                });
+              },
+              child: Text('Board Create'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _sendRequest('board/update', requestData: {
+                  'boardId': 102,
+                  'userId': 0,
+                  'content': '도서관 게시판 테스트 수정',
+                });
+              },
+              child: Text('Board Update'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _sendRequest('board/delete', requestData: {
+                  'boardId': 102,
+                  'userId': 2,
+                });
+              },
+              child: Text('Board Delete'),
             ),
           ],
         ),

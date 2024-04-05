@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -34,7 +35,7 @@ public class BoardService {
                 .id(createBoardRequestDto.getBoardId())
                 .user(findUser)
                 .content(createBoardRequestDto.getContent())
-                .postTime(createBoardRequestDto.getPostTime())
+                .postTime(LocalDateTime.now())
                 .build());
     }
 
@@ -50,7 +51,7 @@ public class BoardService {
                 .id(updateBoardRequestDto.getBoardId())
                 .user(findUser)
                 .content(updateBoardRequestDto.getContent())
-                .postTime(updateBoardRequestDto.getPostTime())
+                .postTime(LocalDateTime.now())
                 .build();
 
         boardRepository.update(newBoard.getId(),newBoard.getContent(),newBoard.getPostTime());

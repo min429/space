@@ -12,7 +12,7 @@ import lombok.*;
 public class Users {
     @Id
     @GeneratedValue()
-    @Column(name = "student_id")
+    @Column(name = "user_id")
     private Long id;
 
     @Column(nullable = false, unique = true)

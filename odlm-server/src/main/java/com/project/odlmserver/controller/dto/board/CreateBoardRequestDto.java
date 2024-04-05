@@ -12,5 +12,4 @@ public class CreateBoardRequestDto {
     private Long boardId;
     private Long userId;
     private String content;
-    private LocalDateTime postTime;
 }

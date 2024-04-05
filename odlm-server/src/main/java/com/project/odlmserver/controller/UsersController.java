@@ -38,4 +38,5 @@ public class UsersController {
         userService.delete(request);
         return ResponseEntity.ok().body("회원탈퇴 완료");
     }
+
 }
