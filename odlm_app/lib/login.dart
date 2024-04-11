@@ -184,12 +184,12 @@ class _LoginWidgetState extends State<LoginWidget> {
                   child: Opacity(
                     opacity: 0.9,
                     child: Align(
-                      alignment: AlignmentDirectional(0, 1),
+                      alignment: AlignmentDirectional(0, 2),
                       child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
+                        padding: EdgeInsetsDirectional.fromSTEB(30, 0, 30, 0),
                         child: Container(
                           width: double.infinity,
-                          height: 100,
+                          height: 50,
                           decoration: BoxDecoration(
                             color: FlutterFlowTheme.of(context)
                                 .secondaryBackground,
@@ -199,6 +199,40 @@ class _LoginWidgetState extends State<LoginWidget> {
                             alignment: AlignmentDirectional(0, 0),
                             child: Text(
                               '로그인',
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                fontFamily: 'Readex Pro',
+                                color: Color(0xE1960F29),
+                                fontSize: 18,
+                                letterSpacing: 0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  child: Opacity(
+                    opacity: 0.9,
+                    child: Align(
+                      alignment: AlignmentDirectional(0, 1),
+                      child: Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
+                        child: Container(
+                          width: double.infinity,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Align(
+                            alignment: AlignmentDirectional(0, 0),
+                            child: Text(
+                              '회원가입',
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .override(
