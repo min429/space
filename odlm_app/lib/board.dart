@@ -154,6 +154,7 @@ class _BoardWidgetState extends State<BoardWidget> {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
+                    color: Colors.grey,
                   ),
                 ),
               ),
@@ -164,6 +165,7 @@ class _BoardWidgetState extends State<BoardWidget> {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
+                    color: Colors.grey,
                   ),
                 ),
               ),
