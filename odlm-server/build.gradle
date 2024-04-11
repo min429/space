@@ -24,6 +24,8 @@ repositories {
 dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-task'
+
 
 	// lombok
 	compileOnly 'org.projectlombok:lombok'
@@ -31,23 +33,35 @@ dependencies {
 
 	// jackson
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.3'
-	implementation 'com.fasterxml.jackson.core:jackson-databind'
 
-	// security
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	testImplementation 'org.springframework.security:spring-security-test'
 
-	// jwt
-	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+//	// security
+//	implementation 'org.springframework.boot:spring-boot-starter-security'
+//	testImplementation 'org.springframework.security:spring-security-test'
+
+
+//	// jwt
+//	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
 
 	// xml binding
 	implementation 'javax.xml.bind:jaxb-api:2.3.1'
 
 	// mysql
 	runtimeOnly 'com.mysql:mysql-connector-j'
+	implementation 'mysql:mysql-connector-java:8.0.32'
+
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 	// jpa
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// 쿼리 파라미터 로깅 라이브러리
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
+
+	// firebase
+	implementation 'com.google.firebase:firebase-admin:9.2.0'
 }
 
 tasks.named('test') {
