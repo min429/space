@@ -63,10 +63,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
       if (response.statusCode == 200) {
         print('Success: ${response.body}');
         if (action == "user/signup"){
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => SecondPage()),
-          );
+          Navigator.pop(context); // 로그인 페이지로 이동
         }
       } else {
         print('Error: ${response.statusCode}');
