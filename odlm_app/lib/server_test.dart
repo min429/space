@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'create_account_widget.dart';
+import 'signup.dart';
 
 Future<void> _sendGetRequest(String action) async {
   final String url = 'http://10.0.2.2:8080/$action';

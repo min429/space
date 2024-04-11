@@ -4,16 +4,16 @@ import 'dart:convert';
 import 'second_page.dart';
 
 
-class CreateAccountWidget extends StatefulWidget {
-  const CreateAccountWidget({Key? key}) : super(key: key);
+class SignUpWidget extends StatefulWidget {
+  const SignUpWidget({Key? key}) : super(key: key);
 
   @override
-  _CreateAccountWidgetState createState() => _CreateAccountWidgetState();
+  _SignUpWidgetState createState() => _SignUpWidgetState();
 }
 
 
 
-class _CreateAccountWidgetState extends State<CreateAccountWidget> {
+class _SignUpWidgetState extends State<SignUpWidget> {
   late TextEditingController _emailController;
   late TextEditingController _nameController;
   late TextEditingController _passwordController;
