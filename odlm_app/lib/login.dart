@@ -1,9 +1,14 @@
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'main.dart';
+import 'reservation.dart';
+import 'setting.dart';
+
 void main() {
   runApp(const MaterialApp(
-    home: LoginWidget(),
+    // home: LoginWidget(),
+    home:ReservationWidget(),
   ));
 }
 

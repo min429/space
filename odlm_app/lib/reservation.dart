@@ -3,11 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-
-
-
 class ReservationWidget extends StatefulWidget {
-  const ReservationWidget({super.key});
+  const ReservationWidget({Key? key}) : super(key: key);
 
   @override
   State<ReservationWidget> createState() => _ReservationWidgetState();
@@ -15,7 +12,6 @@ class ReservationWidget extends StatefulWidget {
 
 class _ReservationWidgetState extends State<ReservationWidget> {
   late ReservationModel _model;
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -27,7 +23,6 @@ class _ReservationWidgetState extends State<ReservationWidget> {
   @override
   void dispose() {
     _model.dispose();
-
     super.dispose();
   }
 
@@ -59,62 +54,66 @@ class _ReservationWidgetState extends State<ReservationWidget> {
         ),
         body: SafeArea(
           top: true,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                width: MediaQuery.sizeOf(context).width,
-                height: 700,
-                child: Stack(
-                  children: [
-                    Align(
-                      alignment: AlignmentDirectional(0, 0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.asset(
-                          'assets/images/KakaoTalk_20240410_125405800.jpg',
-                          width: MediaQuery.sizeOf(context).width,
-                          height: 700,
-                          fit: BoxFit.cover,
+          child: SingleChildScrollView( // Wrap your Column with SingleChildScrollView
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 500, // Adjust height as needed
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.asset(
+                            'assets/seat.jpg',
+                            width: MediaQuery.of(context).size.width,
+                            height:700,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional(0.53, -0.5),
-                      child: Icon(
-                        Icons.event_seat_sharp,
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        size: 50,
+                      Align(  //1번 좌석
+                        alignment: Alignment(-0.51, -0.6),
+                        child: Icon(
+                          Icons.event_seat_sharp,
+                          color: FlutterFlowTheme.of(context).primaryBackground,
+                          size: 50,
+                        ),
                       ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional(-0.51, -0.5),
-                      child: Icon(
-                        Icons.event_seat_sharp,
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        size: 50,
+                      Align( // 2번좌석
+                        alignment: Alignment(0.51, -0.6),
+                        child: Icon(
+                          Icons.event_seat_sharp,
+                          color: FlutterFlowTheme.of(context).primaryBackground,
+                          size: 50,
+                        ),
                       ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional(-0.51, -0.2),
-                      child: Icon(
-                        Icons.event_seat_sharp,
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        size: 50,
+
+                      Align(// 3번좌석
+                        alignment: Alignment(-0.51, -0.25),
+                        child: Icon(
+                          Icons.event_seat_sharp,
+                          color: FlutterFlowTheme.of(context).primaryBackground,
+                          size: 50,
+                        ),
                       ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional(0.53, -0.2),
-                      child: Icon(
-                        Icons.event_seat_sharp,
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        size: 50,
+                      
+                      Align( //4번좌석
+                        alignment: Alignment(0.51, -0.25),
+                        child: Icon(
+                          Icons.event_seat_sharp,
+                          color: FlutterFlowTheme.of(context).primaryBackground,
+                          size: 50,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -123,8 +122,6 @@ class _ReservationWidgetState extends State<ReservationWidget> {
 }
 
 class ReservationModel extends FlutterFlowModel<ReservationWidget> {
-  ///  State fields for stateful widgets in this page.
-
   final unfocusNode = FocusNode();
 
   @override
