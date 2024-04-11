@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'second_page.dart';
-
 
 class SignUpWidget extends StatefulWidget {
   const SignUpWidget({Key? key}) : super(key: key);
@@ -65,6 +63,8 @@ class _SignUpWidgetState extends State<SignUpWidget> {
         if (action == "user/signup"){
           Navigator.pop(context); // 로그인 페이지로 이동
         }
+
+
       } else {
         print('Error: ${response.statusCode}');
 
@@ -94,6 +94,8 @@ class _SignUpWidgetState extends State<SignUpWidget> {
     }
 
   }
+
+
 
   @override
   Widget build(BuildContext context) {
