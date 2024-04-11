@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'main.dart';
 import 'reservation.dart';
 import 'setting.dart';
+import 'signup.dart';
 
 void main() {
   runApp(const MaterialApp(
