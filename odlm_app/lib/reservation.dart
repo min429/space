@@ -4,22 +4,24 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 
-class HomePageWidget extends StatefulWidget {
-  const HomePageWidget({super.key});
+
+
+class ReservationWidget extends StatefulWidget {
+  const ReservationWidget({super.key});
 
   @override
-  State<HomePageWidget> createState() => _HomePageWidgetState();
+  State<ReservationWidget> createState() => _ReservationWidgetState();
 }
 
-class _HomePageWidgetState extends State<HomePageWidget> {
-  late HomePageModel _model;
+class _ReservationWidgetState extends State<ReservationWidget> {
+  late ReservationModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => HomePageModel());
+    _model = createModel(context, () => ReservationModel());
   }
 
   @override
@@ -120,8 +122,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   }
 }
 
-
-class HomePageModel extends FlutterFlowModel<HomePageWidget> {
+class ReservationModel extends FlutterFlowModel<ReservationWidget> {
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
