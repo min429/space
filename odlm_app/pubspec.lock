@@ -113,14 +113,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
-  dotted_decoration:
-    dependency: transitive
-    description:
-      name: dotted_decoration
-      sha256: a5c5771367690b4f64ebfa7911954ab472b9675f025c373f514e32ac4bb81d5e
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
   emoji_flag_converter:
     dependency: transitive
     description:
@@ -701,14 +693,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
-  styled_divider:
-    dependency: "direct main"
-    description:
-      name: styled_divider
-      sha256: "7ff552063112e8b35d5c02d078720b2355e3898038818945a69aced8e12a21ad"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.4"
   swipeable_card_stack:
     dependency: transitive
     description:
