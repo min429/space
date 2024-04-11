@@ -13,6 +13,7 @@ public class FCMService {
     private final UsersService usersService;
 
     public void sendNotification(String userToken) {
+
         Message message = Message.builder()
                 .setAndroidConfig(AndroidConfig.builder()
                         .setTtl(3600 * 1000) // 푸시알림을 fcm 서버에 한시간 보관
@@ -27,14 +28,20 @@ public class FCMService {
                 .setToken(userToken)
                 .build();
 
+
+
         try{
             String response = FirebaseMessaging.getInstance().send(message);
             log.debug("response: {}", response);
         }
+
         catch(FirebaseMessagingException e){
             log.error("error: {}", e.getMessage());
         }
+
+
     }
+
 
     public void registerToken(Long userId, String token) {
         usersService.updateToken(userId, token);

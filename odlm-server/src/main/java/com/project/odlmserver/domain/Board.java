@@ -16,7 +16,8 @@ import java.time.LocalDateTime;
 
 public class Board {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue()
+    @Column(name = "board_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,4 +28,6 @@ public class Board {
     private String content;
     private LocalDateTime postTime;
 
+
 }
+

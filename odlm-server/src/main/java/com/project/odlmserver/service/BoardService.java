@@ -1,5 +1,6 @@
 package com.project.odlmserver.service;
 
+import com.project.odlmserver.controller.dto.board.BoardDto;
 import com.project.odlmserver.controller.dto.board.CreateBoardRequestDto;
 import com.project.odlmserver.controller.dto.board.DeleteBoardRequestDto;
 import com.project.odlmserver.controller.dto.board.UpdateBoardRequestDto;
@@ -10,7 +11,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -21,20 +25,15 @@ public class BoardService {
     private final UsersService usersService;
 
     public void createBoard(CreateBoardRequestDto createBoardRequestDto) {
-        Optional<Board> board = boardRepository.findById(createBoardRequestDto.getBoardId());
-        if (board.isPresent()) {
-            throw new IllegalArgumentException("이미 만들어진 게시글입니다.");
-        }
 
         Users findUser = usersService.findByUserId(createBoardRequestDto.getUserId());
 
 
 
         boardRepository.save(Board.builder()
-                .id(createBoardRequestDto.getBoardId())
                 .user(findUser)
                 .content(createBoardRequestDto.getContent())
-                .postTime(createBoardRequestDto.getPostTime())
+                .postTime(LocalDateTime.now())
                 .build());
     }
 
@@ -50,7 +49,7 @@ public class BoardService {
                 .id(updateBoardRequestDto.getBoardId())
                 .user(findUser)
                 .content(updateBoardRequestDto.getContent())
-                .postTime(updateBoardRequestDto.getPostTime())
+                .postTime(LocalDateTime.now())
                 .build();
 
         boardRepository.update(newBoard.getId(),newBoard.getContent(),newBoard.getPostTime());
@@ -67,6 +66,25 @@ public class BoardService {
 
         Board board = boardOptional.get(); // Optional에서 Board 객체 추출
         boardRepository.delete(board);
+    }
+
+    public List<BoardDto> getAllBoards() {
+        List<Board> boards = boardRepository.findAll();
+
+        return boards.stream()
+                .map(board -> {
+                    Long userId = board.getUser().getId();
+                    Users findUser = usersService.findByUserId(userId);
+
+                    // BoardDto에 사용자의 이름을 포함하여 반환
+                    return BoardDto.builder()
+                            .id(board.getId())
+                            .userName(findUser.getName()) // 사용자의 이름 설정
+                            .content(board.getContent())
+                            .postTime(board.getPostTime())
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 
 }

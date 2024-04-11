@@ -5,19 +5,16 @@ import com.project.odlmserver.controller.dto.seat.ReturnRequestDto;
 import com.project.odlmserver.service.SeatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/seat")
+@RequestMapping(value = "/seat")
 @RequiredArgsConstructor
 public class SeatController {
 
     private final SeatService reservationService;
 
-    @PostMapping("/reserve")
+        @PostMapping("/reserve")
     public ResponseEntity<String> reserve(@RequestBody ReserveRequestDto request) {
         reservationService.save(request);
         return ResponseEntity.ok().body("예약 완료");

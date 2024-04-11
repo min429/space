@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CreateBoardRequestDto {
-    private Long boardId;
     private Long userId;
     private String content;
-    private LocalDateTime postTime;
 }
