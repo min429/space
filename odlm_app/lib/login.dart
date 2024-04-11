@@ -1,6 +1,6 @@
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
 void main() {
   runApp(const MaterialApp(
     home: LoginWidget(),
@@ -30,6 +30,70 @@ class _LoginWidgetState extends State<LoginWidget> {
     _model.dispose();
 
     super.dispose();
+  }
+
+  Future<void> _sendGetRequest(String action) async {
+    final String url = 'http://10.0.2.2:8080/$action';
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      if (response.statusCode == 200) {
+        print('Success: ${response.body}');
+        // 서버 응답에 대한 처리를 여기에 추가할 수 있습니다.
+        // if (action == ""){
+        //   //해당 로직 실행
+        // }
+
+      } else {
+        print('Error: ${response.statusCode}');
+        // 에러 처리를 여기에 추가할 수 있습니다.
+        // if (response.statusCode == ) {
+        //   //해당 로직 실행
+        // }
+      }
+    } catch (e) {
+      print('Exception: $e');
+      // 예외 처리를 여기에 추가할 수 있습니다.
+    }
+  }
+
+
+
+  Future<void> _sendPostRequest(String action,
+      {required Map<String, dynamic> requestData}) async {
+    final String url = 'http://10.0.2.2:8080/$action';
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(requestData),
+      );
+      if (response.statusCode == 200) {
+        print('Success: ${response.body}');
+        // 서버 응답에 대한 처리를 여기에 추가할 수 있습니다.
+
+        // if (action == ""){
+        //   //해당 로직 실행
+        // }
+      } else {
+        print('Error: ${response.statusCode}');
+        // 에러 처리를 여기에 추가할 수 있습니다.
+
+        // if (response.statusCode == ) {
+        //   //해당 로직 실행
+        // }
+      }
+    } catch (e) {
+      print('Exception: $e');
+      // 예외 처리를 여기에 추가할 수 있습니다.
+    }
+
   }
 
   @override

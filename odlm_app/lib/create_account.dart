@@ -65,6 +65,8 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
         if (action == "user/signup"){
           Navigator.pop(context); // 로그인 페이지로 이동
         }
+
+
       } else {
         print('Error: ${response.statusCode}');
 
@@ -94,6 +96,8 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
     }
 
   }
+
+
 
   @override
   Widget build(BuildContext context) {

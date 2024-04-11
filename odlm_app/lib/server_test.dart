@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'create_account_widget.dart';
+import 'create_account.dart';
 
 Future<void> _sendGetRequest(String action) async {
   final String url = 'http://10.0.2.2:8080/$action';
@@ -15,10 +15,16 @@ Future<void> _sendGetRequest(String action) async {
     if (response.statusCode == 200) {
       print('Success: ${response.body}');
       // 서버 응답에 대한 처리를 여기에 추가할 수 있습니다.
+      // if (action == ""){
+      //   //해당 로직 실행
+      // }
 
     } else {
       print('Error: ${response.statusCode}');
       // 에러 처리를 여기에 추가할 수 있습니다.
+      // if (response.statusCode == ) {
+      //   //해당 로직 실행
+      // }
     }
   } catch (e) {
     print('Exception: $e');
@@ -42,9 +48,17 @@ Future<void> _sendPostRequest(String action,
     if (response.statusCode == 200) {
       print('Success: ${response.body}');
       // 서버 응답에 대한 처리를 여기에 추가할 수 있습니다.
+
+      // if (action == ""){
+      //   //해당 로직 실행
+      // }
     } else {
       print('Error: ${response.statusCode}');
       // 에러 처리를 여기에 추가할 수 있습니다.
+
+      // if (response.statusCode == ) {
+      //   //해당 로직 실행
+      // }
     }
   } catch (e) {
     print('Exception: $e');
