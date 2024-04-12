@@ -40,10 +40,7 @@ public class RedisUpdateService {
         
 
         List<Seat> reservedSeats = allSeats.stream()
-                .filter(seat -> {
-                    Long userId = seat.getUserId();
-                    return userId != null;
-                })
+                .filter(seat -> seat != null && seat.getUserId() != null)
                 .collect(Collectors.toList());
 
 
