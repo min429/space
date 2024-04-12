@@ -7,10 +7,14 @@ import 'package:odlm_app/signup.dart';
 
 import 'main.dart';
 import 'globals.dart';
+import 'setting.dart';
+import 'my_seat.dart';
+import 'mypage.dart';
+import 'reservation.dart';
 
 void main() {
   runApp(const MaterialApp(
-    home: LoginWidget(),
+    home: ReservationWidget(),
   ));
 }
 

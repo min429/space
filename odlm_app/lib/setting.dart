@@ -51,6 +51,15 @@ class _SettingWidgetState extends State<SettingWidget> {
               fontWeight: FontWeight.w600,
             ),
           ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: Colors.white, // 뒤로 가기 버튼의 색상
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+
+
           actions: [], // 액션 버튼
           centerTitle: false,
           elevation: 2,

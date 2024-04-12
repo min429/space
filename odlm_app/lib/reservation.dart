@@ -145,6 +145,13 @@ class _ReservationWidgetState extends State<ReservationWidget> {
               fontWeight: FontWeight.w600,
             ),
           ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: Colors.white, // 뒤로 가기 버튼의 색상
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
           actions: [],
           centerTitle: false,
           elevation: 2,
