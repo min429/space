@@ -58,6 +58,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
       );
       if (response.statusCode == 200) {
         print('Success: ${response.body}');
+
         if (action == "user/signup"){
           Navigator.pop(context); // 로그인 페이지로 이동
         }

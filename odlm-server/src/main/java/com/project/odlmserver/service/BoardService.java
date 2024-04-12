@@ -79,6 +79,7 @@ public class BoardService {
                     // BoardDto에 사용자의 이름을 포함하여 반환
                     return BoardDto.builder()
                             .id(board.getId())
+                            .userEmail(findUser.getEmail())
                             .userName(findUser.getName()) // 사용자의 이름 설정
                             .content(board.getContent())
                             .postTime(board.getPostTime())
