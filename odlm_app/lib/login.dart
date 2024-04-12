@@ -20,7 +20,7 @@ void main() async {
     MessagingService().setupForegroundNotificationListener();
   });
   runApp(const MaterialApp(
-    home: MainWidget(),
+    home: LoginWidget(),
   ));
 }
 
