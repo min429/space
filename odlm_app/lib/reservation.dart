@@ -2,8 +2,24 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:http/http.dart' as http;
+import 'package:odlm_app/globals.dart';
 
-// 예약 요청을 위한 DTO 클래스 정의
+// 좌석 정보 받는 dto 정의
+class SeatDto {
+  final int seatId;
+  final String userEmail;
+
+  SeatDto(this.seatId, this.userEmail);
+
+  // JSON에서 변환하여 좌석 정보를 생성하는 팩토리 메서드
+  factory SeatDto.fromJson(Map<String, dynamic> json) {
+    return SeatDto(
+      json['seatId'] as int,
+      json['userEmail'] as String,
+    );
+  }
+}
+
 // 예약 요청을 위한 DTO 클래스 정의
 class ReserveRequestDto {
   final int seatId;
@@ -100,6 +116,30 @@ void _sendReservationRequest(ReserveRequestDto requestData) async {
   }
 }
 
+// 서버에서 모든 좌석 정보를 가져오는 함수
+Future<List<SeatDto>> getAllSeats() async {
+  final String url = 'http://10.0.2.2:8080/seat/getAll'; // 서버 엔드포인트 URL
+  try {
+    final response = await http.get(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200) {
+      // JSON을 List<SeatDto>로 변환하여 반환
+      final List<dynamic> seatList = jsonDecode(response.body);
+      return seatList.map((seatJson) => SeatDto.fromJson(seatJson)).toList();
+    } else {
+      print('Error: ${response.statusCode}');
+      return []; // 에러 발생 시 빈 리스트 반환
+    }
+  } catch (e) {
+    print('Exception: $e');
+    return []; // 예외 발생 시 빈 리스트 반환
+  }
+}
+
 class ReservationWidget extends StatefulWidget {
   const ReservationWidget({Key? key}) : super(key: key);
 
@@ -111,16 +151,31 @@ class _ReservationWidgetState extends State<ReservationWidget> {
   late ReservationModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  List<int> reservedSeats = []; // 예약된 좌석 목록
+
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => ReservationModel());
+    _fetchReservedSeats(); // 예약된 좌석 정보 가져오기
   }
 
   @override
   void dispose() {
     _model.dispose();
     super.dispose();
+  }
+
+  // 예약된 좌석 정보 가져오기
+  void _fetchReservedSeats() async {
+    try {
+      final List<SeatDto> seats = await getAllSeats();
+      setState(() {
+        reservedSeats = seats.where((seat) => seat.userEmail.isNotEmpty).map((seat) => seat.seatId).toList();
+      });
+    } catch (e) {
+      print('Error fetching reserved seats: $e');
+    }
   }
 
   @override
@@ -158,7 +213,7 @@ class _ReservationWidgetState extends State<ReservationWidget> {
         ),
         body: SafeArea(
           top: true,
-          child: SingleChildScrollView( // Wrap your Column with SingleChildScrollView
+          child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -174,69 +229,19 @@ class _ReservationWidgetState extends State<ReservationWidget> {
                           child: Image.asset(
                             'assets/seat.jpg',
                             width: MediaQuery.of(context).size.width,
-                            height:700,
+                            height: 700,
                             fit: BoxFit.cover,
                           ),
                         ),
                       ),
                       // 좌석 1
-                      Align(
-                        alignment: Alignment(-0.51, -0.6),
-                        child: GestureDetector(
-                          onTap: () {
-                            _showReservationDialog(context, 1); // 좌석 1을 선택한 경우 예약 다이얼로그 표시
-                          },
-                          child: Icon(
-                            Icons.event_seat_sharp,
-                            color: FlutterFlowTheme.of(context).primaryBackground,
-                            size: 50,
-                          ),
-                        ),
-                      ),
+                      _buildSeatIcon(1),
                       // 좌석 2
-                      Align(
-                        alignment: Alignment(0.51, -0.6),
-                        child: GestureDetector(
-                          onTap: () {
-                            _showReservationDialog(context, 2); // 좌석 2를 선택한 경우 예약 다이얼로그 표시
-                          },
-                          child: Icon(
-                            Icons.event_seat_sharp,
-                            color: FlutterFlowTheme.of(context).primaryBackground,
-                            size: 50,
-                          ),
-                        ),
-                      ),
-
+                      _buildSeatIcon(2),
                       // 좌석 3
-                      Align(
-                        alignment: Alignment(-0.51, -0.25),
-                        child: GestureDetector(
-                          onTap: () {
-                            _showReservationDialog(context, 3); // 좌석 3을 선택한 경우 예약 다이얼로그 표시
-                          },
-                          child: Icon(
-                            Icons.event_seat_sharp,
-                            color: FlutterFlowTheme.of(context).primaryBackground,
-                            size: 50,
-                          ),
-                        ),
-                      ),
-
+                      _buildSeatIcon(3),
                       // 좌석 4
-                      Align(
-                        alignment: Alignment(0.51, -0.25),
-                        child: GestureDetector(
-                          onTap: () {
-                            _showReservationDialog(context, 4); // 좌석 4를 선택한 경우 예약 다이얼로그 표시
-                          },
-                          child: Icon(
-                            Icons.event_seat_sharp,
-                            color: FlutterFlowTheme.of(context).primaryBackground,
-                            size: 50,
-                          ),
-                        ),
-                      ),
+                      _buildSeatIcon(4),
                     ],
                   ),
                 ),
@@ -246,6 +251,42 @@ class _ReservationWidgetState extends State<ReservationWidget> {
         ),
       ),
     );
+  }
+
+  Widget _buildSeatIcon(int seatNumber) {
+    final isReserved = reservedSeats.contains(seatNumber); // 좌석이 예약되었는지 확인
+    final iconColor = isReserved ? Colors.blue : FlutterFlowTheme.of(context).primaryBackground;
+
+    return Align(
+      alignment: _getSeatAlignment(seatNumber),
+      child: GestureDetector(
+        onTap: () {
+          if (!isReserved) {
+            _showReservationDialog(context, seatNumber); // 좌석이 예약되지 않은 경우 다이얼로그 표시
+          }
+        },
+        child: Icon(
+          Icons.event_seat_sharp,
+          color: iconColor,
+          size: 50,
+        ),
+      ),
+    );
+  }
+
+  Alignment _getSeatAlignment(int seatNumber) {
+    switch (seatNumber) {
+      case 1:
+        return Alignment(-0.51, -0.6);
+      case 2:
+        return Alignment(0.51, -0.6);
+      case 3:
+        return Alignment(-0.51, -0.25);
+      case 4:
+        return Alignment(0.51, -0.25);
+      default:
+        return Alignment.center;
+    }
   }
 }
 
