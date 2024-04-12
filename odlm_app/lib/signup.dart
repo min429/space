@@ -9,8 +9,6 @@ class SignUpWidget extends StatefulWidget {
   _SignUpWidgetState createState() => _SignUpWidgetState();
 }
 
-
-
 class _SignUpWidgetState extends State<SignUpWidget> {
   late TextEditingController _emailController;
   late TextEditingController _nameController;

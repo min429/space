@@ -2,6 +2,7 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:odlm_app/service/notification_service.dart';
 
 
 
@@ -96,14 +97,20 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
     ),
   };
 
+  Future<void> initFirebaseMessaging() async {
+    await NotificationService().initFirebaseMessaging();
+  }
+
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => MainModel());
 
+    initFirebaseMessaging();
+
     setupAnimations(
       animationsMap.values.where((anim) =>
-      anim.trigger == AnimationTrigger.onActionTrigger ||
+          anim.trigger == AnimationTrigger.onActionTrigger ||
           !anim.applyInitialState),
       this,
     );
@@ -134,11 +141,11 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
               Text(
                 'ODLM',
                 style: FlutterFlowTheme.of(context).headlineLarge.override(
-                  fontFamily: 'Outfit',
-                  color: Colors.white,
-                  fontSize: 25,
-                  letterSpacing: 0,
-                ),
+                      fontFamily: 'Outfit',
+                      color: Colors.white,
+                      fontSize: 25,
+                      letterSpacing: 0,
+                    ),
               ),
             ],
           ),
@@ -162,8 +169,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
           top: true,
           child: SingleChildScrollView(
             child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min, // Column의 크기를 자식의 크기에 맞춤
               children: [
                 Align(
                   alignment: AlignmentDirectional(0, 0),
@@ -228,59 +234,66 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                                           ),
                                         ),
                                         child: Align(
-                                          alignment: AlignmentDirectional(0, 0),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                            children: [
-                                              Align(
-                                                alignment:
+                                            alignment:
                                                 AlignmentDirectional(0, 0),
-                                                child: Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(0, 0, 0, 10),
-                                                  child: Text(
-                                                    '학습시간',
-                                                    style: FlutterFlowTheme.of(
-                                                        context)
-                                                        .bodyMedium
-                                                        .override(
-                                                      fontFamily:
-                                                      'Readex Pro',
-                                                      color:
-                                                      Color(0x85FFFFFF),
-                                                      fontSize: 10,
-                                                      letterSpacing: 0,
-                                                      fontWeight:
-                                                      FontWeight.bold,
+                                            child: Center(
+                                              child: ListView(
+                                                shrinkWrap: true,
+                                                children: [
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0, 0),
+                                                    child: Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(0, 0,
+                                                                  0, 10),
+                                                      child: Text(
+                                                        '학습시간',
+                                                        style: FlutterFlowTheme
+                                                                .of(context)
+                                                            .bodyMedium
+                                                            .override(
+                                                              fontFamily:
+                                                                  'Readex Pro',
+                                                              color: Color(
+                                                                  0x85FFFFFF),
+                                                              fontSize: 10,
+                                                              letterSpacing:
+                                                                  0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment:
-                                                AlignmentDirectional(0, 0),
-                                                child: Text(
-                                                  '0분',
-                                                  style: FlutterFlowTheme.of(
-                                                      context)
-                                                      .bodyMedium
-                                                      .override(
-                                                    fontFamily:
-                                                    'Readex Pro',
-                                                    color:
-                                                    Color(0xC9FFFFFF),
-                                                    fontSize: 15,
-                                                    letterSpacing: 0,
-                                                    fontWeight:
-                                                    FontWeight.bold,
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0, 0),
+                                                    child: Text(
+                                                      '0분',
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .bodyMedium
+                                                          .override(
+                                                            fontFamily:
+                                                                'Readex Pro',
+                                                            color: Color(
+                                                                0xC9FFFFFF),
+                                                            fontSize: 15,
+                                                            letterSpacing: 0,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold,
+                                                          ),
+                                                    ),
                                                   ),
-                                                ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                        ),
+                                            )),
                                       ),
                                     ),
                                   ],
@@ -327,40 +340,40 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                           height: 160,
                           decoration: BoxDecoration(
                             color:
-                            FlutterFlowTheme.of(context).primaryBackground,
+                                FlutterFlowTheme.of(context).primaryBackground,
                             borderRadius: BorderRadius.circular(24),
                           ),
                           child: Padding(
-                            padding:
-                            EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.space_dashboard,
-                                  color:
-                                  FlutterFlowTheme.of(context).primaryText,
-                                  size: 32,
-                                ),
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0, 12, 0, 12),
-                                  child: Text(
-                                    '예약',
-                                    textAlign: TextAlign.center,
-                                    style: FlutterFlowTheme.of(context)
-                                        .displaySmall
-                                        .override(
-                                      fontFamily: 'Outfit',
-                                      fontSize: 30,
-                                      letterSpacing: 0,
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  12, 12, 12, 12),
+                              child: Center(
+                                child: ListView(
+                                  shrinkWrap: true,
+                                  children: [
+                                    Icon(
+                                      Icons.space_dashboard,
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                      size: 32,
                                     ),
-                                  ),
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0, 12, 0, 12),
+                                      child: Text(
+                                        '예약',
+                                        textAlign: TextAlign.center,
+                                        style: FlutterFlowTheme.of(context)
+                                            .displaySmall
+                                            .override(
+                                              fontFamily: 'Outfit',
+                                              fontSize: 30,
+                                              letterSpacing: 0,
+                                            ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
+                              )),
                         ).animateOnPageLoad(
                             animationsMap['containerOnPageLoadAnimation1']!),
                         Container(
@@ -371,37 +384,38 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                             borderRadius: BorderRadius.circular(24),
                           ),
                           child: Padding(
-                            padding: EdgeInsets.all(12),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.supervisor_account_rounded,
-                                  color:
-                                  FlutterFlowTheme.of(context).primaryText,
-                                  size: 37,
-                                ),
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0, 12, 0, 12),
-                                  child: Text(
-                                    '마이페이지',
-                                    textAlign: TextAlign.center,
-                                    style: FlutterFlowTheme.of(context)
-                                        .displaySmall
-                                        .override(
-                                      fontFamily: 'Outfit',
-                                      color:
-                                      FlutterFlowTheme.of(context).info,
-                                      fontSize: 30,
-                                      letterSpacing: 0,
+                              padding: EdgeInsets.all(12),
+                              child: Center(
+                                child: ListView(
+                                  shrinkWrap: true,
+                                  children: [
+                                    Icon(
+                                      Icons.supervisor_account_rounded,
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                      size: 37,
                                     ),
-                                  ),
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0, 12, 0, 12),
+                                      child: Text(
+                                        '마이페이지',
+                                        textAlign: TextAlign.center,
+                                        style: FlutterFlowTheme.of(context)
+                                            .displaySmall
+                                            .override(
+                                              fontFamily: 'Outfit',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .info,
+                                              fontSize: 30,
+                                              letterSpacing: 0,
+                                            ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
+                              )),
                         ).animateOnPageLoad(
                             animationsMap['containerOnPageLoadAnimation2']!),
                         Container(
@@ -409,39 +423,39 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                           height: 160,
                           decoration: BoxDecoration(
                             color:
-                            FlutterFlowTheme.of(context).primaryBackground,
+                                FlutterFlowTheme.of(context).primaryBackground,
                             borderRadius: BorderRadius.circular(24),
                           ),
                           child: Padding(
-                            padding: EdgeInsets.all(12),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.event_seat,
-                                  color:
-                                  FlutterFlowTheme.of(context).primaryText,
-                                  size: 34,
-                                ),
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0, 12, 0, 12),
-                                  child: Text(
-                                    '나의 자리',
-                                    textAlign: TextAlign.center,
-                                    style: FlutterFlowTheme.of(context)
-                                        .displaySmall
-                                        .override(
-                                      fontFamily: 'Outfit',
-                                      fontSize: 30,
-                                      letterSpacing: 0,
+                              padding: EdgeInsets.all(12),
+                              child: Center(
+                                child: ListView(
+                                  shrinkWrap: true,
+                                  children: [
+                                    Icon(
+                                      Icons.event_seat,
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                      size: 34,
                                     ),
-                                  ),
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0, 12, 0, 12),
+                                      child: Text(
+                                        '나의 자리',
+                                        textAlign: TextAlign.center,
+                                        style: FlutterFlowTheme.of(context)
+                                            .displaySmall
+                                            .override(
+                                              fontFamily: 'Outfit',
+                                              fontSize: 30,
+                                              letterSpacing: 0,
+                                            ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
+                              )),
                         ).animateOnPageLoad(
                             animationsMap['containerOnPageLoadAnimation3']!),
                         Container(
@@ -449,39 +463,39 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                           height: 160,
                           decoration: BoxDecoration(
                             color:
-                            FlutterFlowTheme.of(context).primaryBackground,
+                                FlutterFlowTheme.of(context).primaryBackground,
                             borderRadius: BorderRadius.circular(24),
                           ),
                           child: Padding(
-                            padding: EdgeInsets.all(12),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                FaIcon(
-                                  FontAwesomeIcons.bookReader,
-                                  color:
-                                  FlutterFlowTheme.of(context).primaryText,
-                                  size: 30,
-                                ),
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0, 12, 0, 12),
-                                  child: Text(
-                                    '게시판',
-                                    textAlign: TextAlign.center,
-                                    style: FlutterFlowTheme.of(context)
-                                        .displaySmall
-                                        .override(
-                                      fontFamily: 'Outfit',
-                                      fontSize: 30,
-                                      letterSpacing: 0,
+                              padding: EdgeInsets.all(12),
+                              child: Center(
+                                child: ListView(
+                                  shrinkWrap: true,
+                                  children: [
+                                    FaIcon(
+                                      FontAwesomeIcons.bookOpenReader,
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                      size: 30,
                                     ),
-                                  ),
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0, 12, 0, 12),
+                                      child: Text(
+                                        '게시판',
+                                        textAlign: TextAlign.center,
+                                        style: FlutterFlowTheme.of(context)
+                                            .displaySmall
+                                            .override(
+                                              fontFamily: 'Outfit',
+                                              fontSize: 30,
+                                              letterSpacing: 0,
+                                            ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
+                              )),
                         ).animateOnPageLoad(
                             animationsMap['containerOnPageLoadAnimation4']!),
                       ],
@@ -492,35 +506,37 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                   child: Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
                     child: Container(
-                      width: double.infinity,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.event_note,
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            size: 30,
+                        width: double.infinity,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: FlutterFlowTheme.of(context).primaryBackground,
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        child: Center(
+                          child: ListView(
+                            shrinkWrap: true,
+                            children: [
+                              Icon(
+                                Icons.event_note,
+                                color: FlutterFlowTheme.of(context).primaryText,
+                                size: 30,
+                              ),
+                              Center(
+                                child: Text(
+                                  '공지사항',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'Readex Pro',
+                                        fontSize: 30,
+                                        letterSpacing: 0,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            '공지사항',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                              fontFamily: 'Readex Pro',
-                              fontSize: 30,
-                              letterSpacing: 0,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                        )),
                   ),
                 ),
               ],
