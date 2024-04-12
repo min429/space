@@ -1,14 +1,18 @@
 package com.project.odlmserver.controller;
 
+import com.project.odlmserver.controller.dto.board.BoardDto;
 import com.project.odlmserver.controller.dto.seat.ReserveRequestDto;
 import com.project.odlmserver.controller.dto.seat.ReturnRequestDto;
+import com.project.odlmserver.controller.dto.seat.SeatDto;
 import com.project.odlmserver.service.SeatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping(value = "/seat")
+@RequestMapping( "/seat")
 @RequiredArgsConstructor
 public class SeatController {
 
@@ -25,4 +29,12 @@ public class SeatController {
         reservationService.returns(request);
         return ResponseEntity.ok().body("반납 완료");
     }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<List<SeatDto>> getAllSeats() {
+        List<SeatDto> allSeats = reservationService.getAllSeats();
+        return ResponseEntity.ok().body(allSeats);
+    }
+
+
 }
