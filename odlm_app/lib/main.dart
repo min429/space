@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:odlm_app/service/notification_service.dart';
-
+import 'board.dart';
 
 
 class MainWidget extends StatefulWidget {
@@ -458,15 +458,21 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                               )),
                         ).animateOnPageLoad(
                             animationsMap['containerOnPageLoadAnimation3']!),
-                        Container(
-                          width: MediaQuery.sizeOf(context).width * 0.4,
-                          height: 160,
-                          decoration: BoxDecoration(
-                            color:
-                                FlutterFlowTheme.of(context).primaryBackground,
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          child: Padding(
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => BoardWidget()),
+                            );
+                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            height: 160,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context).primaryBackground,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Padding(
                               padding: EdgeInsets.all(12),
                               child: Center(
                                 child: ListView(
@@ -474,29 +480,28 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                                   children: [
                                     FaIcon(
                                       FontAwesomeIcons.bookOpenReader,
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
+                                      color: FlutterFlowTheme.of(context).primaryText,
                                       size: 30,
                                     ),
                                     Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0, 12, 0, 12),
+                                      padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
                                       child: Text(
                                         '게시판',
                                         textAlign: TextAlign.center,
-                                        style: FlutterFlowTheme.of(context)
-                                            .displaySmall
-                                            .override(
-                                              fontFamily: 'Outfit',
-                                              fontSize: 30,
-                                              letterSpacing: 0,
-                                            ),
+                                        style: FlutterFlowTheme.of(context).displaySmall.override(
+                                          fontFamily: 'Outfit',
+                                          fontSize: 30,
+                                          letterSpacing: 0,
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
-                              )),
-                        ).animateOnPageLoad(
+                              ),
+                            ),
+                          ),
+                        )
+                            .animateOnPageLoad(
                             animationsMap['containerOnPageLoadAnimation4']!),
                       ],
                     ),
