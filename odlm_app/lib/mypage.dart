@@ -1,13 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/material.dart';
-
-
 
 class MypageWidget extends StatefulWidget {
-  const MypageWidget({super.key});
+  const MypageWidget({Key? key}) : super(key: key);
 
   @override
   State<MypageWidget> createState() => _MypageWidgetState();
@@ -16,18 +11,15 @@ class MypageWidget extends StatefulWidget {
 class _MypageWidgetState extends State<MypageWidget> {
   late MypageModel _model;
 
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => MypageModel());
+    _model = MypageModel();
   }
 
   @override
   void dispose() {
     _model.dispose();
-
     super.dispose();
   }
 
@@ -38,10 +30,9 @@ class _MypageWidgetState extends State<MypageWidget> {
           ? FocusScope.of(context).requestFocus(_model.unfocusNode)
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
-        key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         appBar: AppBar(
-          backgroundColor: Color(0xE1960F29),
+          backgroundColor: const Color(0xE1960F29),
           automaticallyImplyLeading: true,
           title: Text(
             '마이페이지',
@@ -49,175 +40,148 @@ class _MypageWidgetState extends State<MypageWidget> {
               fontFamily: 'Readex Pro',
               color: FlutterFlowTheme.of(context).primaryBackground,
               fontSize: 25,
-              letterSpacing: 0,
               fontWeight: FontWeight.w600,
             ),
           ),
-          actions: [],
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            color: Colors.white,
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
           centerTitle: false,
           elevation: 2,
         ),
         body: SafeArea(
-          top: true,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Container(
-                    width: MediaQuery.sizeOf(context).width * 0.5,
-                    height: 160,
-                    decoration: BoxDecoration(
-                      color: FlutterFlowTheme.of(context).primaryBackground,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Container(
-                          width: MediaQuery.sizeOf(context).width * 0.5,
-                          height: 70,
-                          decoration: BoxDecoration(
-                            color:
-                            FlutterFlowTheme.of(context).primaryBackground,
-                          ),
-                          child: Opacity(
-                            opacity: 0.7,
-                            child: Align(
-                              alignment: AlignmentDirectional(0, 0),
-                              child: Text(
-                                '오늘의 학습시간',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                  fontFamily: 'Readex Pro',
-                                  letterSpacing: 0,
-                                ),
-                              ),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal, // 가로 스크롤 가능
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start, // 위쪽 정렬
+              children: [
+                // 첫 번째 컨테이너: 오늘의 학습시간
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  height: 160,
+                  color: FlutterFlowTheme.of(context).primaryBackground,
+                  child: Column(
+                    children: [
+                      // 오늘의 학습시간 타이틀
+                      Container(
+                        height: 70,
+                        color: FlutterFlowTheme.of(context).primaryBackground,
+                        alignment: Alignment.center,
+                        child: Opacity(
+                          opacity: 0.7,
+                          child: Text(
+                            '오늘의 학습시간',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                              fontFamily: 'Readex Pro',
                             ),
                           ),
                         ),
-                        Container(
-                          width: MediaQuery.sizeOf(context).width * 0.5,
-                          height: 90,
-                          decoration: BoxDecoration(
-                            color:
-                            FlutterFlowTheme.of(context).primaryBackground,
-                          ),
-                          child: Opacity(
-                            opacity: 0.7,
-                            child: Align(
-                              alignment: AlignmentDirectional(0, 0),
-                              child: Text(
-                                '0분',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                  fontFamily: 'Readex Pro',
-                                  fontSize: 23,
-                                  letterSpacing: 0,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
+                      ),
+                      // 오늘의 학습시간 값
+                      Container(
+                        height: 90,
+                        color: FlutterFlowTheme.of(context).primaryBackground,
+                        alignment: Alignment.center,
+                        child: Opacity(
+                          opacity: 0.7,
+                          child: Text(
+                            '0분',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                              fontFamily: 'Readex Pro',
+                              fontSize: 23,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  Opacity(
+                ),
+                // 구분선
+                Padding(
+                  padding: const EdgeInsets.only(top: 10), // 위쪽 패딩 추가
+                  child: Opacity(
                     opacity: 0.5,
                     child: Container(
                       width: 1,
                       height: 120,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).primaryText,
-                      ),
+                      color: FlutterFlowTheme.of(context).primaryText,
                     ),
                   ),
-                  Container(
-                    width: MediaQuery.sizeOf(context).width * 0.5,
-                    height: 160,
-                    decoration: BoxDecoration(
-                      color: FlutterFlowTheme.of(context).primaryBackground,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Container(
-                          width: MediaQuery.sizeOf(context).width * 0.5,
-                          height: 70,
-                          decoration: BoxDecoration(
-                            color:
-                            FlutterFlowTheme.of(context).primaryBackground,
-                          ),
-                          child: Opacity(
-                            opacity: 0.7,
-                            child: Align(
-                              alignment: AlignmentDirectional(0, 0),
-                              child: Text(
-                                '이달의 학습시간',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                  fontFamily: 'Readex Pro',
-                                  letterSpacing: 0,
-                                ),
-                              ),
+                ),
+                // 두 번째 컨테이너: 이달의 학습시간
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  height: 160,
+                  color: FlutterFlowTheme.of(context).primaryBackground,
+                  child: Column(
+                    children: [
+                      // 이달의 학습시간 타이틀
+                      Container(
+                        height: 70,
+                        color: FlutterFlowTheme.of(context).primaryBackground,
+                        alignment: Alignment.center,
+                        child: Opacity(
+                          opacity: 0.7,
+                          child: Text(
+                            '이달의 학습시간',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                              fontFamily: 'Readex Pro',
                             ),
                           ),
                         ),
-                        Container(
-                          width: MediaQuery.sizeOf(context).width * 0.5,
-                          height: 90,
-                          decoration: BoxDecoration(
-                            color:
-                            FlutterFlowTheme.of(context).primaryBackground,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Padding(
-                                padding:
-                                EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                      ),
+                      // 이달의 학습시간 값
+                      Container(
+                        height: 90,
+                        color: FlutterFlowTheme.of(context).primaryBackground,
+                        alignment: Alignment.center,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // '총' 텍스트
+                            Text(
+                              '총 ',
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                fontFamily: 'Readex Pro',
+                              ),
+                            ),
+                            // 이달의 학습시간 값
+                            Flexible(
+                              child: Opacity(
+                                opacity: 0.7,
                                 child: Text(
-                                  ' 총 ',
+                                  '20시간 03분',
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
                                     fontFamily: 'Readex Pro',
-                                    letterSpacing: 0,
+                                    fontSize: 23,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ),
-                              Flexible(
-                                child: Opacity(
-                                  opacity: 0.7,
-                                  child: Align(
-                                    alignment: AlignmentDirectional(-1, 0),
-                                    child: Text(
-                                      '20시간 03분',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                        fontFamily: 'Readex Pro',
-                                        fontSize: 23,
-                                        letterSpacing: 0,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -225,15 +189,9 @@ class _MypageWidgetState extends State<MypageWidget> {
   }
 }
 
-class MypageModel extends FlutterFlowModel<MypageWidget> {
-  ///  State fields for stateful widgets in this page.
+class MypageModel {
+  final FocusNode unfocusNode = FocusNode();
 
-  final unfocusNode = FocusNode();
-
-  @override
-  void initState(BuildContext context) {}
-
-  @override
   void dispose() {
     unfocusNode.dispose();
   }
