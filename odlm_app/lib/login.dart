@@ -14,7 +14,7 @@ import 'reservation.dart';
 
 void main() {
   runApp(const MaterialApp(
-    home: ReservationWidget(),
+    home: MainWidget(),
   ));
 }
 
