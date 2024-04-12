@@ -7,15 +7,15 @@ import 'package:odlm_app/globals.dart';
 // 좌석 정보 받는 dto 정의
 class SeatDto {
   final int seatId;
-  final String userEmail;
+  final int? userId;
 
-  SeatDto(this.seatId, this.userEmail);
+  SeatDto(this.seatId, this.userId);
 
   // JSON에서 변환하여 좌석 정보를 생성하는 팩토리 메서드
   factory SeatDto.fromJson(Map<String, dynamic> json) {
     return SeatDto(
       json['seatId'] as int,
-      json['userEmail'] as String,
+      json['userId'] as int?,
     );
   }
 }
@@ -73,6 +73,7 @@ void _showReservationDialog(BuildContext context, int seatNumber) {
               // 예약 요청 함수 호출
               _sendReservationRequest(requestData);
               Navigator.of(context).pop(); // 다이얼로그 닫기
+              Navigator.of(context).pop(); // 예약창 나가기
             },
           ),
           TextButton(
@@ -171,7 +172,7 @@ class _ReservationWidgetState extends State<ReservationWidget> {
     try {
       final List<SeatDto> seats = await getAllSeats();
       setState(() {
-        reservedSeats = seats.where((seat) => seat.userEmail.isNotEmpty).map((seat) => seat.seatId).toList();
+        reservedSeats = seats.where((seat) => seat.userId != null).map((seat) => seat.seatId).toList();
       });
     } catch (e) {
       print('Error fetching reserved seats: $e');
@@ -261,7 +262,7 @@ class _ReservationWidgetState extends State<ReservationWidget> {
       alignment: _getSeatAlignment(seatNumber),
       child: GestureDetector(
         onTap: () {
-          if (!isReserved) {
+          if (!isReserved || reservedSeats.isEmpty) {
             _showReservationDialog(context, seatNumber); // 좌석이 예약되지 않은 경우 다이얼로그 표시
           }
         },
