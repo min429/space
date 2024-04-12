@@ -172,6 +172,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                         child: TextField(
                           controller: _emailController,
                           decoration: InputDecoration(
+                            border: InputBorder.none,
                             labelText: 'email',
                             labelStyle: FlutterFlowTheme.of(context)
                                 .bodyMedium
@@ -206,6 +207,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                           controller: _passwordController,
                           obscureText: !_passwordVisible,
                           decoration: InputDecoration(
+                            border: InputBorder.none,
                             labelText: 'password',
                             labelStyle: FlutterFlowTheme.of(context)
                                 .bodyMedium

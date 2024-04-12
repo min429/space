@@ -69,7 +69,7 @@ public class BoardService {
     }
 
     public List<BoardDto> getAllBoards() {
-        List<Board> boards = boardRepository.findAll();
+        List<Board> boards = boardRepository.findAllByOrderByPostTimeDesc();
 
         return boards.stream()
                 .map(board -> {

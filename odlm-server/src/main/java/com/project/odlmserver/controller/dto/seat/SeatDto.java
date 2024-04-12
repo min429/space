@@ -8,5 +8,5 @@ import lombok.*;
 @Builder
 public class SeatDto {
     private Long seatId;
-    private String userEmail;
+    private Long userId;
 }
