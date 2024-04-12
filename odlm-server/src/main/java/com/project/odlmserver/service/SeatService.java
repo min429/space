@@ -24,7 +24,7 @@ public class SeatService {
 
     public void save(ReserveRequestDto reserveRequestDto) {
         Seat seat = seatRedisRepository.findById(reserveRequestDto.getSeatId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 자리"));
+                .orElseGet(() -> new Seat(reserveRequestDto.getSeatId(), null, false, 0L));
 
         Users user = usersService.findByUserId(reserveRequestDto.getUserId());
         if(user.getState() == STATE.RESERVE) {
