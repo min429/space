@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-
-
+// 설정 화면 위젯
 class SettingWidget extends StatefulWidget {
   const SettingWidget({super.key});
 
@@ -13,19 +12,19 @@ class SettingWidget extends StatefulWidget {
 }
 
 class _SettingWidgetState extends State<SettingWidget> {
-  late SettingModel _model;
+  late SettingModel _model; // 설정 모델
 
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final scaffoldKey = GlobalKey<ScaffoldState>(); // Scaffold 상태 키
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => SettingModel());
+    _model = createModel(context, () => SettingModel()); // 모델 초기화
   }
 
   @override
   void dispose() {
-    _model.dispose();
+    _model.dispose(); // 모델 해제
 
     super.dispose();
   }
@@ -38,12 +37,12 @@ class _SettingWidgetState extends State<SettingWidget> {
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: FlutterFlowTheme.of(context).primaryBackground, // 배경색
         appBar: AppBar(
-          backgroundColor: Color(0xE1960F29),
+          backgroundColor: Color(0xE1960F29), // 앱바 배경색
           automaticallyImplyLeading: true,
           title: Text(
-            '설정',
+            '설정', // 앱바 타이틀
             style: FlutterFlowTheme.of(context).bodyMedium.override(
               fontFamily: 'Readex Pro',
               color: FlutterFlowTheme.of(context).primaryBackground,
@@ -52,7 +51,16 @@ class _SettingWidgetState extends State<SettingWidget> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          actions: [],
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: Colors.white, // 뒤로 가기 버튼의 색상
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+
+
+          actions: [], // 액션 버튼
           centerTitle: false,
           elevation: 2,
         ),
@@ -61,6 +69,7 @@ class _SettingWidgetState extends State<SettingWidget> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
+              // 체크박스로 경고 알림 설정
               Container(
                 width: MediaQuery.sizeOf(context).width,
                 height: 80,
@@ -73,7 +82,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(20, 25, 20, 25),
                       child: Text(
-                        '경고 알림 보내기',
+                        '경고 알림 보내기', // 항목 이름
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'Readex Pro',
                           fontSize: 23,
@@ -121,6 +130,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                   ],
                 ),
               ),
+              // 구분선
               Opacity(
                 opacity: 0.5,
                 child: Container(
@@ -134,6 +144,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                   ),
                 ),
               ),
+              // 체크박스로 반납 알림 설정
               Container(
                 width: MediaQuery.sizeOf(context).width,
                 height: 80,
@@ -146,7 +157,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(20, 25, 20, 25),
                       child: Text(
-                        '반납 알림 보내기',
+                        '반납 알림 보내기', // 항목 이름
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'Readex Pro',
                           fontSize: 23,
@@ -194,6 +205,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                   ],
                 ),
               ),
+              // 구분선
               Opacity(
                 opacity: 0.5,
                 child: Container(
@@ -207,6 +219,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                   ),
                 ),
               ),
+              // 앱 버전
               Container(
                 width: MediaQuery.sizeOf(context).width,
                 height: 80,
@@ -228,6 +241,27 @@ class _SettingWidgetState extends State<SettingWidget> {
                         ),
                       ),
                     ),
+                    Flexible(
+                      child: Opacity(
+                        opacity: 0.5,
+                        child: Align(
+                          alignment: AlignmentDirectional(1, 0),
+                          child: Padding(
+                            padding:
+                            EdgeInsetsDirectional.fromSTEB(0, 0, 30, 0),
+                            child: Text(
+                              '1.0',
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                fontFamily: 'Readex Pro',
+                                letterSpacing: 0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -244,6 +278,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                   ),
                 ),
               ),
+              // 로그아웃 버튼
               Container(
                 width: MediaQuery.sizeOf(context).width,
                 height: 80,
@@ -256,7 +291,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(20, 25, 20, 25),
                       child: Text(
-                        '로그아웃',
+                        '로그아웃', // 항목 이름
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'Readex Pro',
                           fontSize: 23,
@@ -268,6 +303,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                   ],
                 ),
               ),
+              // 구분선
               Opacity(
                 opacity: 0.5,
                 child: Container(
@@ -289,13 +325,12 @@ class _SettingWidgetState extends State<SettingWidget> {
   }
 }
 
+// 설정 모델
 class SettingModel extends FlutterFlowModel<SettingWidget> {
-  ///  State fields for stateful widgets in this page.
-
-  final unfocusNode = FocusNode();
-  // State field(s) for Checkbox widget.
+  final unfocusNode = FocusNode(); // 포커스 해제 노드
+  // 체크박스 상태 필드
   bool? checkboxValue1;
-  // State field(s) for Checkbox widget.
+  // 체크박스 상태 필드
   bool? checkboxValue2;
 
   @override
@@ -303,6 +338,6 @@ class SettingModel extends FlutterFlowModel<SettingWidget> {
 
   @override
   void dispose() {
-    unfocusNode.dispose();
+    unfocusNode.dispose(); // 포커스 해제 노드 해제
   }
 }

@@ -3,6 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:odlm_app/service/notification_service.dart';
+
+
+import 'globals.dart';
+import 'setting.dart';
+import 'my_seat.dart';
+import 'mypage.dart';
+import 'reservation.dart';
 import 'board.dart';
 
 
@@ -110,42 +117,45 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
 
     setupAnimations(
       animationsMap.values.where((anim) =>
-          anim.trigger == AnimationTrigger.onActionTrigger ||
+      anim.trigger == AnimationTrigger.onActionTrigger ||
           !anim.applyInitialState),
       this,
     );
   }
 
-  @override
-  void dispose() {
-    _model.dispose();
-
-    super.dispose();
-  }
-
+// build 메서드 오버라이드
   @override
   Widget build(BuildContext context) {
+    // GestureDetector를 사용하여 화면을 탭하면 포커스를 처리합니다.
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
+      onTap: () =>
+      _model.unfocusNode.canRequestFocus
           ? FocusScope.of(context).requestFocus(_model.unfocusNode)
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
-        key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+        key: scaffoldKey, // Scaffold의 GlobalKey 설정
+        backgroundColor: FlutterFlowTheme
+            .of(context)
+            .secondaryBackground, // 배경색 설정
         appBar: AppBar(
           backgroundColor: Color(0xE1960F29),
+          // 앱 바의 배경색 설정
           automaticallyImplyLeading: false,
+          // 뒤로 가기 버튼 자동 추가 안 함
           title: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
               Text(
-                'ODLM',
-                style: FlutterFlowTheme.of(context).headlineLarge.override(
-                      fontFamily: 'Outfit',
-                      color: Colors.white,
-                      fontSize: 25,
-                      letterSpacing: 0,
-                    ),
+                'ODLM', // 앱 타이틀 설정
+                style: FlutterFlowTheme
+                    .of(context)
+                    .headlineLarge
+                    .override(
+                  fontFamily: 'Outfit', // 글꼴 설정
+                  color: Colors.white, // 글자색 설정
+                  fontSize: 25, // 글자 크기 설정
+                  letterSpacing: 0, // 글자 간격 설정
+                ),
               ),
             ],
           ),
@@ -154,16 +164,28 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
               alignment: AlignmentDirectional(0, 0),
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 0, 20, 0),
-                child: FaIcon(
-                  FontAwesomeIcons.bars,
-                  color: Color(0xCEFFFFFF),
-                  size: 30,
+                child:GestureDetector(
+                  onTap: () {
+                    // 예약 메뉴를 터치했을 때 실행할 동작을 여기에 작성합니다.
+                    print('예약 메뉴가 선택되었습니다.');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SettingWidget()),
+                    );
+                  },
+                  child: FaIcon(
+                    FontAwesomeIcons.bars, // 바 아이콘 설정
+                    color: Color(0xCEFFFFFF), // 아이콘 색상 설정
+                    size: 30, // 아이콘 크기 설정
+                  ),
                 ),
               ),
             ),
           ],
           centerTitle: true,
-          elevation: 0,
+          // 타이틀 가운데 정렬 설정
+          elevation: 0, // 그림자 효과 없앰
         ),
         body: SafeArea(
           top: true,
@@ -171,6 +193,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
             child: Column(
               mainAxisSize: MainAxisSize.min, // Column의 크기를 자식의 크기에 맞춤
               children: [
+                // 상단 컨테이너
                 Align(
                   alignment: AlignmentDirectional(0, 0),
                   child: Container(
@@ -189,6 +212,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [
+                        // 좌측 컨테이너
                         Expanded(
                           flex: 3,
                           child: Container(
@@ -205,6 +229,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                                 child: Stack(
                                   alignment: AlignmentDirectional(0, 0),
                                   children: [
+                                    // 중앙 원
                                     Align(
                                       alignment: AlignmentDirectional(0, 0),
                                       child: Container(
@@ -220,6 +245,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                                         ),
                                       ),
                                     ),
+                                    // 내부 원
                                     Align(
                                       alignment: AlignmentDirectional(0, 0),
                                       child: Container(
@@ -234,61 +260,56 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                                           ),
                                         ),
                                         child: Align(
-                                            alignment:
-                                                AlignmentDirectional(0, 0),
+                                            alignment: AlignmentDirectional(
+                                                0, 0),
                                             child: Center(
                                               child: ListView(
                                                 shrinkWrap: true,
                                                 children: [
                                                   Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0, 0),
+                                                    alignment: AlignmentDirectional(
+                                                        0, 0),
                                                     child: Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(0, 0,
-                                                                  0, 10),
+                                                      padding: EdgeInsetsDirectional
+                                                          .fromSTEB(
+                                                          0, 0, 0, 10),
                                                       child: Text(
                                                         '학습시간',
                                                         style: FlutterFlowTheme
-                                                                .of(context)
+                                                            .of(
+                                                            context)
                                                             .bodyMedium
                                                             .override(
-                                                              fontFamily:
-                                                                  'Readex Pro',
-                                                              color: Color(
-                                                                  0x85FFFFFF),
-                                                              fontSize: 10,
-                                                              letterSpacing:
-                                                                  0,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
+                                                          fontFamily: 'Readex Pro',
+                                                          color: Color(
+                                                              0x85FFFFFF),
+                                                          fontSize: 10,
+                                                          letterSpacing: 0,
+                                                          fontWeight:
+                                                          FontWeight.bold,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
+                                                  // 학습시간 표시
                                                   Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0, 0),
+                                                    alignment: AlignmentDirectional(
+                                                        0, 0),
                                                     child: Text(
                                                       '0분',
                                                       style: FlutterFlowTheme
-                                                              .of(context)
+                                                          .of(
+                                                          context)
                                                           .bodyMedium
                                                           .override(
-                                                            fontFamily:
-                                                                'Readex Pro',
-                                                            color: Color(
-                                                                0xC9FFFFFF),
-                                                            fontSize: 15,
-                                                            letterSpacing: 0,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold,
-                                                          ),
+                                                        fontFamily: 'Readex Pro',
+                                                        color: Color(
+                                                            0xC9FFFFFF),
+                                                        fontSize: 15,
+                                                        letterSpacing: 0,
+                                                        fontWeight:
+                                                        FontWeight.bold,
+                                                      ),
                                                     ),
                                                   ),
                                                 ],
@@ -302,6 +323,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                             ),
                           ),
                         ),
+                        // 우측 컨테이너
                         Flexible(
                           flex: 4,
                           child: Align(
@@ -319,6 +341,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
+                // 메뉴 그리드
                 Align(
                   alignment: AlignmentDirectional(0, 0),
                   child: Padding(
@@ -335,24 +358,39 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
                       children: [
-                        Container(
-                          width: MediaQuery.sizeOf(context).width * 0.4,
+                        GestureDetector(
+                        onTap: () {
+                          // 예약 메뉴를 터치했을 때 실행할 동작을 여기에 작성합니다.
+                          print('예약 메뉴가 선택되었습니다.');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ReservationWidget()),
+                            );
+                          },
+                        // 예약 메뉴
+                        child:Container(
+                          width: MediaQuery
+                              .sizeOf(context)
+                              .width * 0.4,
                           height: 160,
                           decoration: BoxDecoration(
-                            color:
-                                FlutterFlowTheme.of(context).primaryBackground,
+                            color: FlutterFlowTheme
+                                .of(context)
+                                .primaryBackground,
                             borderRadius: BorderRadius.circular(24),
                           ),
                           child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  12, 12, 12, 12),
+                              padding:
+                              EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
                               child: Center(
                                 child: ListView(
                                   shrinkWrap: true,
                                   children: [
                                     Icon(
                                       Icons.space_dashboard,
-                                      color: FlutterFlowTheme.of(context)
+                                      color: FlutterFlowTheme
+                                          .of(context)
                                           .primaryText,
                                       size: 32,
                                     ),
@@ -362,13 +400,14 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                                       child: Text(
                                         '예약',
                                         textAlign: TextAlign.center,
-                                        style: FlutterFlowTheme.of(context)
+                                        style: FlutterFlowTheme
+                                            .of(context)
                                             .displaySmall
                                             .override(
-                                              fontFamily: 'Outfit',
-                                              fontSize: 30,
-                                              letterSpacing: 0,
-                                            ),
+                                          fontFamily: 'Outfit',
+                                          fontSize: 30,
+                                          letterSpacing: 0,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -376,8 +415,22 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                               )),
                         ).animateOnPageLoad(
                             animationsMap['containerOnPageLoadAnimation1']!),
-                        Container(
-                          width: MediaQuery.sizeOf(context).width * 0.4,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            // 마이페이지가를 터치했을 때 실행할 동작을 여기에 작성합니다.
+                            print('마이페이지가 선택되었습니다.');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MypageWidget()),
+                            );
+                          },
+                        // 마이페이지 메뉴
+                        child: Container(
+                          width: MediaQuery
+                              .sizeOf(context)
+                              .width * 0.4,
                           height: 160,
                           decoration: BoxDecoration(
                             color: Color(0xFFA4A9B0),
@@ -391,7 +444,8 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                                   children: [
                                     Icon(
                                       Icons.supervisor_account_rounded,
-                                      color: FlutterFlowTheme.of(context)
+                                      color: FlutterFlowTheme
+                                          .of(context)
                                           .primaryText,
                                       size: 37,
                                     ),
@@ -401,16 +455,18 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                                       child: Text(
                                         '마이페이지',
                                         textAlign: TextAlign.center,
-                                        style: FlutterFlowTheme.of(context)
+                                        style: FlutterFlowTheme
+                                            .of(context)
                                             .displaySmall
                                             .override(
-                                              fontFamily: 'Outfit',
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .info,
-                                              fontSize: 30,
-                                              letterSpacing: 0,
-                                            ),
+                                          fontFamily: 'Outfit',
+                                          color:
+                                          FlutterFlowTheme
+                                              .of(context)
+                                              .info,
+                                          fontSize: 29,
+                                          letterSpacing: 0,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -418,12 +474,29 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                               )),
                         ).animateOnPageLoad(
                             animationsMap['containerOnPageLoadAnimation2']!),
-                        Container(
-                          width: MediaQuery.sizeOf(context).width * 0.4,
+                        ),
+
+                        GestureDetector(
+                          onTap: () {
+                            // 나의자리를 터치했을 때 실행할 동작을 여기에 작성합니다.
+                            print('나의자리가 선택되었습니다.');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MySeatWidget()),
+                            );
+
+                          },
+                        // 나의 자리 메뉴
+                        child:Container(
+                          width: MediaQuery
+                              .sizeOf(context)
+                              .width * 0.4,
                           height: 160,
                           decoration: BoxDecoration(
-                            color:
-                                FlutterFlowTheme.of(context).primaryBackground,
+                            color: FlutterFlowTheme
+                                .of(context)
+                                .primaryBackground,
                             borderRadius: BorderRadius.circular(24),
                           ),
                           child: Padding(
@@ -434,7 +507,8 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                                   children: [
                                     Icon(
                                       Icons.event_seat,
-                                      color: FlutterFlowTheme.of(context)
+                                      color: FlutterFlowTheme
+                                          .of(context)
                                           .primaryText,
                                       size: 34,
                                     ),
@@ -444,51 +518,10 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                                       child: Text(
                                         '나의 자리',
                                         textAlign: TextAlign.center,
-                                        style: FlutterFlowTheme.of(context)
+                                        style: FlutterFlowTheme
+                                            .of(context)
                                             .displaySmall
                                             .override(
-                                              fontFamily: 'Outfit',
-                                              fontSize: 30,
-                                              letterSpacing: 0,
-                                            ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )),
-                        ).animateOnPageLoad(
-                            animationsMap['containerOnPageLoadAnimation3']!),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => BoardWidget()),
-                            );
-                          },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            height: 160,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context).primaryBackground,
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(12),
-                              child: Center(
-                                child: ListView(
-                                  shrinkWrap: true,
-                                  children: [
-                                    FaIcon(
-                                      FontAwesomeIcons.bookOpenReader,
-                                      color: FlutterFlowTheme.of(context).primaryText,
-                                      size: 30,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
-                                      child: Text(
-                                        '게시판',
-                                        textAlign: TextAlign.center,
-                                        style: FlutterFlowTheme.of(context).displaySmall.override(
                                           fontFamily: 'Outfit',
                                           fontSize: 30,
                                           letterSpacing: 0,
@@ -497,24 +530,90 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                                     ),
                                   ],
                                 ),
-                              ),
-                            ),
+                              )),
+                        ).animateOnPageLoad(
+                            animationsMap['containerOnPageLoadAnimation3']!),
+
+                        ),
+                      GestureDetector(
+                        onTap: () {
+                          // 게시판를 터치했을 때 실행할 동작을 여기에 작성합니다.
+                          print('게시판 선택되었습니다.');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BoardWidget()),
+                          );
+
+                        },
+                        // 게시판 메뉴
+                        child:Container(
+                          width: MediaQuery
+                              .sizeOf(context)
+                              .width * 0.4,
+                          height: 160,
+                          decoration: BoxDecoration(
+                            color: FlutterFlowTheme
+                                .of(context)
+                                .primaryBackground,
+                            borderRadius: BorderRadius.circular(24),
                           ),
-                        )
-                            .animateOnPageLoad(
+                          child: Padding(
+                              padding: EdgeInsets.all(12),
+                              child: Center(
+                                child: ListView(
+                                  shrinkWrap: true,
+                                  children: [
+                                    Icon(
+                                      FontAwesomeIcons.bookOpenReader,
+                                      color: FlutterFlowTheme
+                                          .of(context)
+                                          .primaryText,
+                                      size: 30,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0, 12, 0, 12),
+                                      child: Text(
+                                        '게시판',
+                                        textAlign: TextAlign.center,
+                                        style: FlutterFlowTheme
+                                            .of(context)
+                                            .displaySmall
+                                            .override(
+                                          fontFamily: 'Outfit',
+                                          fontSize: 30,
+                                          letterSpacing: 0,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                        ).animateOnPageLoad(
                             animationsMap['containerOnPageLoadAnimation4']!),
+                        ),
                       ],
                     ),
                   ),
                 ),
+                // 공지사항 컨테이너
                 Flexible(
                   child: Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
-                    child: Container(
+                    child:GestureDetector(
+                      onTap: () {
+                        // 공지사항를 터치했을 때 실행할 동작을 여기에 작성합니다.
+                        print('공지사항 선택되었습니다.');
+
+                      },
+                      child: Container(
                         width: double.infinity,
                         height: 100,
                         decoration: BoxDecoration(
-                          color: FlutterFlowTheme.of(context).primaryBackground,
+                          color: FlutterFlowTheme
+                              .of(context)
+                              .primaryBackground,
                           borderRadius: BorderRadius.circular(24),
                         ),
                         child: Center(
@@ -523,25 +622,29 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                             children: [
                               Icon(
                                 Icons.event_note,
-                                color: FlutterFlowTheme.of(context).primaryText,
+                                color: FlutterFlowTheme
+                                    .of(context)
+                                    .primaryText,
                                 size: 30,
                               ),
                               Center(
                                 child: Text(
                                   '공지사항',
-                                  style: FlutterFlowTheme.of(context)
+                                  style: FlutterFlowTheme
+                                      .of(context)
                                       .bodyMedium
                                       .override(
-                                        fontFamily: 'Readex Pro',
-                                        fontSize: 30,
-                                        letterSpacing: 0,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                    fontFamily: 'Readex Pro',
+                                    fontSize: 30,
+                                    letterSpacing: 0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         )),
+                    ),
                   ),
                 ),
               ],
