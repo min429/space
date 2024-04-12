@@ -24,12 +24,13 @@ class BoardItem {
 
     return BoardItem(
       id: json['id'],
-      usermail: json['usermail'],
-      userName: json['userName'],
-      content: json['content'],
+      usermail: json['usermail'] ?? '', // null 체크 추가
+      userName: json['userName'] ?? '', // null 체크 추가
+      content: json['content'] ?? '', // null 체크 추가
       postDate: formattedPostDate,
     );
   }
+
 }
 
 Future<List<BoardItem>> _sendGetRequest(String action) async {
