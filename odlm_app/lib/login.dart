@@ -1,14 +1,20 @@
 import 'dart:convert';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:odlm_app/service/messaging_service.dart';
 import 'package:odlm_app/signup.dart';
 
 import 'main.dart';
 import 'globals.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();  // Flutter 바인딩 초기화
+  await Firebase.initializeApp().then((_) {
+    MessagingService().setupForegroundNotificationListener();
+  });
   runApp(const MaterialApp(
     home: LoginWidget(),
   ));
