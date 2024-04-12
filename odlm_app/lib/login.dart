@@ -224,6 +224,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                   _passwordVisible = !_passwordVisible;
                                 });
                               },
+                              color: Colors.white,
                             ),
                           ),
                         ),
