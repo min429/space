@@ -1,6 +1,8 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:odlm_app/globals.dart';
+import 'writeboard.dart';
 
 class BoardItem {
   final int id;
@@ -24,13 +26,12 @@ class BoardItem {
 
     return BoardItem(
       id: json['id'],
-      usermail: json['usermail'] ?? '', // null 체크 추가
-      userName: json['userName'] ?? '', // null 체크 추가
-      content: json['content'] ?? '', // null 체크 추가
+      usermail: json['usermail'] ?? '',
+      userName: json['userName'] ?? '',
+      content: json['content'] ?? '',
       postDate: formattedPostDate,
     );
   }
-
 }
 
 Future<List<BoardItem>> _sendGetRequest(String action) async {
@@ -69,7 +70,13 @@ class _BoardWidgetState extends State<BoardWidget> {
   @override
   void initState() {
     super.initState();
-    _boardDataFuture = _sendGetRequest('board/getAll');
+    _refreshBoardData();
+  }
+
+  Future<void> _refreshBoardData() async {
+    setState(() {
+      _boardDataFuture = _sendGetRequest('board/getAll');
+    });
   }
 
   @override
@@ -79,20 +86,18 @@ class _BoardWidgetState extends State<BoardWidget> {
         title: Text(
           '게시판',
           style: TextStyle(
-            color: Colors.white, // 텍스트의 색상을 변경하려면 여기에 원하는 색상을 지정하세요
+            color: Colors.white,
           ),
         ),
-        backgroundColor: Color(0xFFE1960F29), // 원하는 배경색으로 변경
+        backgroundColor: Color(0xFFE1960F29),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          color: Colors.white, // 뒤로 가기 버튼의 색상
+          color: Colors.white,
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
       ),
-
-
       body: FutureBuilder<List<BoardItem>>(
         future: _boardDataFuture,
         builder: (context, snapshot) {
@@ -118,6 +123,20 @@ class _BoardWidgetState extends State<BoardWidget> {
             );
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => WriteBoardWidget(),
+            ),
+          ).then((_) {
+            _refreshBoardData();
+          });
+        },
+        backgroundColor: Color(0xFFE1960F29),
+        child: Icon(Icons.create, color: Colors.white),
       ),
     );
   }
@@ -187,10 +206,4 @@ class _BoardWidgetState extends State<BoardWidget> {
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: BoardWidget(),
-  ));
 }

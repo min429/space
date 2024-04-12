@@ -64,19 +64,12 @@ public class SeatService {
         return seats.stream()
                 .map(seat -> {
                     Long userId = seat.getUserId();
-                    String findUseremail;
-                    if (userId == null){
-                        findUseremail = null;
-                    }
-                    else {
-                        Users findUser = usersService.findByUserId(userId);
-                        findUseremail = findUser.getEmail();
-                    }
+
 
                     // BoardDto에 사용자의 이름을 포함하여 반환
                     return SeatDto.builder()
                             .seatId(seat.getSeatId())
-                            .userEmail(findUseremail)
+                            .userId(userId)
                             .build();
                 })
                 .collect(Collectors.toList());
