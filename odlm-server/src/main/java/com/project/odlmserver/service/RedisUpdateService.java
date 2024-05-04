@@ -39,9 +39,7 @@ public class RedisUpdateService {
         List<Seat> allSeats = seatRedisRepository.findAll();
         
 
-        List<Seat> reservedSeats = allSeats.stream()
-                .filter(seat -> seat != null && seat.getUserId() != null)
-                .collect(Collectors.toList());
+
 
         List<Seat> leavedSeats = allSeats.stream()
                 .filter(seat -> seat != null && seat.getLeaveId() != null)
@@ -58,6 +56,10 @@ public class RedisUpdateService {
             }
 
         }
+
+        List<Seat> reservedSeats = allSeats.stream()
+                .filter(seat -> seat != null && seat.getUserId() != null)
+                .collect(Collectors.toList());
         // isUsed가 false이면 useCount의 값을 1 증가시키고, useCount가 20인 경우 경고 메서드 호출 ,useCount가 30인 경우 자리 박탈 메서드 호출
         for (Seat seat : reservedSeats) {
             seatCustomRedisRepository.updateDuration(seat.getSeatId(), seat.getDuration() + 1);
