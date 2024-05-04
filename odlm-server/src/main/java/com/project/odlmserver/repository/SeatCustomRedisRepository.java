@@ -26,9 +26,22 @@ public class SeatCustomRedisRepository {
         setOperations.add("seat:userId:" + userId, seatId.toString());
     }
 
+    public void updateDuration(Long seatId, Long duration) {
+        hashOperations.put("seat:" + seatId, "duration", duration.toString());
+    }
+    public void updateLeaveCount(Long seatId, Long leaveCount) {
+        hashOperations.put("seat:" + seatId, "leaveCount", leaveCount.toString());
+    }
+
+    public void updateLeaveId(Long seatId, Long leaveId) {
+        hashOperations.put("seat:" + seatId, "leaveId", leaveId.toString());
+    }
+
+
     public void deleteUserId(Long seatId, Long userId) {
         hashOperations.put("seat:" + seatId, "userId", ""); // redis는 null 지원x
         hashOperations.put("seat:" + seatId, "useCount", "0"); // redis는 숫자 타입 지원x
+        hashOperations.put("seat:" + seatId, "duration", "0"); // redis는 숫자 타입 지원x
         setOperations.remove("seat:userId:" + userId, seatId.toString());
     }
 
