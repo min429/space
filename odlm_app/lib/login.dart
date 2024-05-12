@@ -5,6 +5,7 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:odlm_app/service/messaging_service.dart';
+import 'package:odlm_app/service/notification_service.dart';
 import 'package:odlm_app/signup.dart';
 
 import 'main.dart';
@@ -18,7 +19,8 @@ import 'no_my_seat.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();  // Flutter 바인딩 초기화
   await Firebase.initializeApp().then((_) {
-    MessagingService().setupForegroundNotificationListener();
+    NotificationService().initFirebaseMessaging();  // 서버와 통신을 관리하는 서비스 초기화
+    MessagingService().setupForegroundNotificationListener();  // 포그라운드 알림 리스너 설정
   });
   runApp(const MaterialApp(
     home: LoginWidget(),

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import 'login.dart';
+
 // 설정 화면 위젯
 class SettingWidget extends StatefulWidget {
   const SettingWidget({super.key});
@@ -290,13 +292,26 @@ class _SettingWidgetState extends State<SettingWidget> {
                   children: [
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(20, 25, 20, 25),
-                      child: Text(
-                        '로그아웃', // 항목 이름
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                          fontFamily: 'Readex Pro',
-                          fontSize: 23,
-                          letterSpacing: 0,
-                          fontWeight: FontWeight.w600,
+                      child: GestureDetector(
+                        onTap: () {
+                          // Insert the logout logic here
+                          // For example, clear user data or preferences
+
+                          // Navigate to login screen
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => LoginWidget()),  // Use LoginWidget directly
+                                (Route<dynamic> route) => false,  // Remove all routes below the pushed route
+                          );
+                        },
+                        child: Text(
+                          '로그아웃', // 항목 이름
+                          style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            fontFamily: 'Readex Pro',
+                            fontSize: 23,
+                            letterSpacing: 0,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),
