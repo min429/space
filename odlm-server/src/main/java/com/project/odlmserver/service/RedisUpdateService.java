@@ -49,7 +49,7 @@ public class RedisUpdateService {
             seatCustomRedisRepository.updateLeaveCount(seat.getSeatId(), seat.getLeaveCount()+1);
 
             //자리비움 시간이 60분이면
-            if (seat.getLeaveCount()== 7) {
+            if (seat.getLeaveCount()== 60) {
 
                 depriveSeat(seat.getSeatId(), seat.getUserId());
                 changeAuthority(seat.getSeatId(),seat.getLeaveId());
