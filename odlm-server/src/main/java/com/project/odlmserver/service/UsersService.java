@@ -1,10 +1,12 @@
 package com.project.odlmserver.service;
 
 import com.project.odlmserver.controller.dto.user.LogInRequestDto;
+import com.project.odlmserver.controller.dto.user.MySeatRequestDto;
 import com.project.odlmserver.controller.dto.user.SignOutRequestDto;
 import com.project.odlmserver.controller.dto.user.SignUpRequestDto;
 import com.project.odlmserver.domain.Grade;
 import com.project.odlmserver.domain.STATE;
+import com.project.odlmserver.domain.Seat;
 import com.project.odlmserver.domain.Users;
 import com.project.odlmserver.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
@@ -67,6 +69,11 @@ public class UsersService {
     public String findUserTokenById(Long userId) {
         return usersRepository.findTokenByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
+    }
+
+    public Seat findMySeat(MySeatRequestDto mySeatRequestDto) {
+
+        return
     }
 
     public void updateToken(Long userId, String token) {
