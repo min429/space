@@ -2,6 +2,9 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:styled_divider/styled_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'globals.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class MySeatWidget extends StatefulWidget {
   const MySeatWidget({super.key});
@@ -515,29 +518,33 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                           children: [
                             Flexible(
                               child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    20, 20, 10, 20),
-                                child: Container(
-                                  width: double.infinity,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    color: Color(0x00FFFFFF),
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  child: Align(
-                                    alignment: AlignmentDirectional(0, 0),
-                                    child: Text(
-                                      '자리 반납',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                        fontFamily: 'Readex Pro',
+                                padding: EdgeInsetsDirectional.fromSTEB(20, 20, 10, 20),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    print('자리반납이 선택되었습니다.');
+                                    showReturnDialog(context);
+
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      color: Color(0x00FFFFFF),
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(
                                         color: Colors.white,
-                                        fontSize: 15,
-                                        letterSpacing: 0,
+                                      ),
+                                    ),
+                                    child: Align(
+                                      alignment: AlignmentDirectional(0, 0),
+                                      child: Text(
+                                        '자리 반납',
+                                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                          fontFamily: 'Readex Pro',
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          letterSpacing: 0,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -546,29 +553,34 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                             ),
                             Flexible(
                               child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    10, 20, 20, 20),
-                                child: Container(
-                                  width: double.infinity,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    color: Color(0x00FFFFFF),
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  child: Align(
-                                    alignment: AlignmentDirectional(0, 0),
-                                    child: Text(
-                                      '자리 비움',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                        fontFamily: 'Readex Pro',
+                                padding: EdgeInsetsDirectional.fromSTEB(10, 20, 20, 20),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    // 자리 비움 버튼이 눌렸을 때 실행할 코드 작성
+                                    // 예를 들어 자리 비움 함수를 호출하거나
+                                    // 특정 동작을 수행할 수 있습니다.
+                                    print('자리비움이 선택되었습니다.');
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      color: Color(0x00FFFFFF),
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(
                                         color: Colors.white,
-                                        fontSize: 15,
-                                        letterSpacing: 0,
+                                      ),
+                                    ),
+                                    child: Align(
+                                      alignment: AlignmentDirectional(0, 0),
+                                      child: Text(
+                                        '자리 비움',
+                                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                          fontFamily: 'Readex Pro',
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          letterSpacing: 0,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -589,6 +601,76 @@ class _MySeatWidgetState extends State<MySeatWidget> {
     );
   }
 }
+
+
+// 반납 다이얼로그를 표시하고 반납 요청을 보내는 함수
+void showReturnDialog(BuildContext context) {
+  // 다이얼로그 내에서 userId를 사용하여 반납 요청을 보냅니다.
+  int? currentUserID = userId;
+  print('Sending return request for user ID: $currentUserID');
+  // 만약 userId가 null이면 반납 다이얼로그를 표시하지 않고 함수를 종료합니다.
+  if (currentUserID == null) {
+    print('User ID is null');
+    return;
+  }
+
+  print('Sending return request for user ID: $currentUserID');
+
+
+  // 여기에 반납 다이얼로그를 표시하는 코드를 작성합니다.
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('자리 반납'),
+        content: Text('자리 반납을 하시겠습니까?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              // 반납 요청 로직을 수행합니다.
+              sendReturnRequest(currentUserID);
+              Navigator.of(context).pop();
+            },
+            child: Text('예'),
+          ),
+          TextButton(
+            onPressed: () {
+              // 다이얼로그를 닫습니다.
+              Navigator.of(context).pop();
+            },
+            child: Text('아니요'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
+void sendReturnRequest(int userId) async {
+  final String url = 'http://10.0.2.2:8080/seat/return'; // 서버 엔드포인트 URL
+  try {
+    final response = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({'userId': userId}), // 반납 요청 데이터를 JSON으로 직렬화하여 전송
+    );
+    if (response.statusCode == 200) {
+      print('Return request successful');
+      // 서버 응답에 대한 처리를 여기에 추가할 수 있습니다.
+    } else {
+      print('Return request failed with status code: ${response.statusCode}');
+      // 에러 처리를 여기에 추가할 수 있습니다.
+    }
+  } catch (e) {
+    print('Exception: $e');
+    // 예외 처리를 여기에 추가할 수 있습니다.
+  }
+}
+
+
 
 class MySeatModel extends FlutterFlowModel<MySeatWidget> {
   ///  State fields for stateful widgets in this page.
