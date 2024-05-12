@@ -43,7 +43,7 @@ class NotificationService {
     }
   }
 
-  Future<void> initFirebaseMessaging(BuildContext context) async {
+  Future<void> initFirebaseMessaging() async {
     // 기기 등록 ID 토큰을 요청합니다.
     String? token = await _firebaseMessaging.getToken();
     print("FCM Token: $token");

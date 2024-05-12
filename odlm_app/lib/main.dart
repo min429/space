@@ -105,7 +105,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
   };
 
   Future<void> initFirebaseMessaging() async {
-    await NotificationService().initFirebaseMessaging(context);
+    await NotificationService().initFirebaseMessaging();
   }
 
   @override
