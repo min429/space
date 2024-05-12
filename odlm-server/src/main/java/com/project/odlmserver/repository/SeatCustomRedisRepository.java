@@ -37,6 +37,10 @@ public class SeatCustomRedisRepository {
         hashOperations.put("seat:" + seatId, "leaveId", leaveId.toString());
     }
 
+    public void updateLeaveIdNull(Long seatId) {
+        hashOperations.put("seat:" + seatId, "leaveId", "");
+    }
+
 
     public void deleteUserId(Long seatId, Long userId) {
         hashOperations.put("seat:" + seatId, "userId", ""); // redis는 null 지원x

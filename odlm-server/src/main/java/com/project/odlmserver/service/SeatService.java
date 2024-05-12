@@ -87,6 +87,7 @@ public class SeatService {
 
         seatCustomRedisRepository.updateLeaveId(seat.getSeatId(), seat.getUserId());
         seatCustomRedisRepository.deleteUserId(seat.getSeatId(), seat.getUserId());
+        seatCustomRedisRepository.updateLeaveCount(seat.getSeatId(),0L);
         usersService.updateState(user.getId(), STATE.LEAVE);
 
     }
