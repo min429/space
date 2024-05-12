@@ -39,13 +39,30 @@ public class RedisUpdateService {
         List<Seat> allSeats = seatRedisRepository.findAll();
         
 
+
+
+        List<Seat> leavedSeats = allSeats.stream()
+                .filter(seat -> seat != null && seat.getLeaveId() != null)
+                .collect(Collectors.toList());
+        for (Seat seat : leavedSeats) {
+
+            seatCustomRedisRepository.updateLeaveCount(seat.getSeatId(), seat.getLeaveCount()+1);
+
+            //자리비움 시간이 60분이면
+            if (seat.getLeaveCount()== 60) {
+
+                depriveSeat(seat.getSeatId(), seat.getUserId());
+                changeAuthority(seat.getSeatId(),seat.getLeaveId());
+            }
+
+        }
+
         List<Seat> reservedSeats = allSeats.stream()
                 .filter(seat -> seat != null && seat.getUserId() != null)
                 .collect(Collectors.toList());
-
-
         // isUsed가 false이면 useCount의 값을 1 증가시키고, useCount가 20인 경우 경고 메서드 호출 ,useCount가 30인 경우 자리 박탈 메서드 호출
         for (Seat seat : reservedSeats) {
+            seatCustomRedisRepository.updateDuration(seat.getSeatId(), seat.getDuration() + 1);
 
             //실제로 사용하는데 useCount가 0이 아니면 0으로 초기화
             if (seat.getIsUsed() && seat.getUseCount() != 0 )
@@ -84,4 +101,12 @@ public class RedisUpdateService {
         usersService.updateState(userId, STATE.RETURN);
 
     }
+
+    public void changeAuthority(Long seatId, Long leavedId){
+        seatCustomRedisRepository.updateUserId(seatId,leavedId);
+        seatCustomRedisRepository.updateLeaveIdNull(seatId);
+        seatCustomRedisRepository.updateLeaveCount(seatId,0L);
+        usersService.updateState(leavedId, STATE.RESERVE);
+    }
+
 }
