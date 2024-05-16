@@ -9,9 +9,7 @@ class MessagingService {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       // 포그라운드에서 메시지가 수신될 때 실행됩니다.
       if (message.notification != null) {
-        // 알림이 있을 경우, UI에 표시
-        var notification = message.notification as RemoteNotification;
-        print('Message also contained a notification: ${notification.body}');
+        print('Message also contained a notification: ${message.notification!.body}');
       }
     });
 
