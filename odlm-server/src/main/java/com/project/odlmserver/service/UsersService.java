@@ -71,10 +71,10 @@ public class UsersService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
     }
 
-    public Seat findMySeat(MySeatRequestDto mySeatRequestDto) {
-
-        return
-    }
+//    public Seat findMySeat(MySeatRequestDto mySeatRequestDto) {
+//
+//        return
+//    }
 
     public void updateToken(Long userId, String token) {
         usersRepository.updateToken(userId, token);

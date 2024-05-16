@@ -38,9 +38,9 @@ public class UsersController {
         return ResponseEntity.ok().body("회원탈퇴 완료");
     }
 
-    @GetMapping("/myseat")
-    public ResponseEntity<SeatDto> myseat(@RequestBody MySeatRequestDto request) {
-        return ResponseEntity.ok().body(userService.findMySeat(request));
-    }
+//    @GetMapping("/myseat")
+//    public ResponseEntity<SeatDto> myseat(@RequestBody MySeatRequestDto request) {
+//        return ResponseEntity.ok().body(userService.findMySeat(request));
+//    }
 
 }
