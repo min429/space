@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:http/http.dart' as http;
-import 'package:odlm_app/globals.dart';
+import 'globals.dart';
 
 // 좌석 정보 받는 dto 정의
 class SeatDto {
@@ -36,10 +36,18 @@ class ReserveRequestDto {
   }
 }
 
-// 예약 다이얼로그를 표시하고 서버에 요청을 보내는 함수
 void _showReservationDialog(BuildContext context, int seatNumber) {
-  // 사용자 ID와 좌석 ID 생성 (임의의 값 사용)
-  int userId = 1;
+  // 전역 변수로 선언된 userId를 사용하여 사용자 ID를 가져옵니다.
+  int? currentUserID = userId;
+  print(currentUserID);
+  // 만약 userId가 null이면 다이얼로그를 표시하지 않고 함수를 종료합니다.
+  if (currentUserID == null) {
+    print('User ID is null');
+    return;
+  }
+  print(currentUserID);
+
+  // 좌석 ID는 함수 매개변수로 받은 값 사용
   int seatId = seatNumber;
 
   showDialog(
@@ -69,7 +77,7 @@ void _showReservationDialog(BuildContext context, int seatNumber) {
             ),
             onPressed: () {
               // 예약 요청 데이터 생성
-              ReserveRequestDto requestData = ReserveRequestDto(seatId, userId);
+              ReserveRequestDto requestData = ReserveRequestDto(seatId, currentUserID);
               // 예약 요청 함수 호출
               _sendReservationRequest(requestData);
               Navigator.of(context).pop(); // 다이얼로그 닫기

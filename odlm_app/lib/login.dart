@@ -14,6 +14,7 @@ import 'setting.dart';
 import 'my_seat.dart';
 import 'mypage.dart';
 import 'reservation.dart';
+import 'no_my_seat.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();  // Flutter 바인딩 초기화
