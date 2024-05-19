@@ -27,8 +27,8 @@ public class Users {
     @Enumerated(EnumType.STRING)
     private Grade grade; // LOW, MIDDLE, HIGH
 
-    private Long dailyReservationTime; // 16, 12 ,0
-    private Long dailyAwayTime; //4, 3 , 0
+    private Long dailyReservationTime; // 16, 12 ,0 실제로는 분으로 치환함 960, 720, 0
+    private Long dailyAwayTime; //4, 3 , 0 실제로는 분으로 치환함 240, 180, 0
 
 
     @Builder
