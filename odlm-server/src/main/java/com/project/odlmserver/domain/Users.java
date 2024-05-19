@@ -27,6 +27,10 @@ public class Users {
     @Enumerated(EnumType.STRING)
     private Grade grade; // LOW, MIDDLE, HIGH
 
+    private Long dailyReservationTime; // 16, 12 ,0
+    private Long dailyAwayTime; //4, 3 , 0
+
+
     @Builder
     public Users(Long id, String email, String password, String name, Grade grade, STATE state, String token) {
         this.id = id;

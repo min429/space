@@ -30,4 +30,21 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("UPDATE Users u SET u.token = :token WHERE u.id = :id")
     void updateToken(@Param("id") Long userId, @Param("token") String token);
+
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query("UPDATE Users u SET u.dailyReservationTime = :dailyReservationTime, u.dailyAwayTime = :dailyAwayTime WHERE u.id = :id")
+    void updateTimes(@Param("id") Long userId, @Param("dailyReservationTime") Long dailyReservationTime, @Param("dailyAwayTime") Long dailyAwayTime);
+
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query("UPDATE Users u SET u.dailyReservationTime = CASE " +
+            "WHEN u.grade = 'HIGH' THEN 16 " +
+            "WHEN u.grade = 'MIDDLE' THEN 12 " +
+            "WHEN u.grade = 'LOW' THEN 0 " +
+            "END, " +
+            "u.dailyAwayTime = CASE " +
+            "WHEN u.grade = 'HIGH' THEN 4 " +
+            "WHEN u.grade = 'MIDDLE' THEN 3 " +
+            "WHEN u.grade = 'LOW' THEN 0 " +
+            "END")
+    void updateAllTimesBasedOnGrade();
 }
