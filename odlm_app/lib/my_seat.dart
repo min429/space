@@ -32,7 +32,6 @@ class _MySeatWidgetState extends State<MySeatWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-
   // 변수 선언
   late String userName = '';
   late int seatNumber = 0;
@@ -506,10 +505,10 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                                 padding: EdgeInsetsDirectional.fromSTEB(10, 20, 20, 20),
                                 child: GestureDetector(
                                   onTap: () {
-                                    // 자리 비움 버튼이 눌렸을 때 실행할 코드 작성
-                                    // 예를 들어 자리 비움 함수를 호출하거나
-                                    // 특정 동작을 수행할 수 있습니다.
                                     print('자리비움이 선택되었습니다.');
+                                    // 다이얼로그 표시 함수 호출
+                                    // 다이얼로그 표시 함수 호출
+                                    showAwayDialog(context, dailyReservationTime, dailyAwayTime);
                                   },
                                   child: Container(
                                     width: double.infinity,
@@ -622,6 +621,63 @@ void sendReturnRequest(int userId) async {
     // 예외 처리를 여기에 추가할 수 있습니다.
   }
 }
+
+void showAwayDialog(BuildContext context, int dailyReservationTime, int dailyAwayTime) {
+  int maxAwayTime = dailyReservationTime < dailyAwayTime ? dailyReservationTime : dailyAwayTime;
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      int selectedNumber = 0; // 초기 선택값은 0으로 설정
+
+      return AlertDialog(
+        title: Text("자리 비움 시간 선택"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("최대 $maxAwayTime분 까지 자리 비움을 하실 수 있습니다."),
+            SizedBox(height: 20),
+            TextFormField(
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: '시간을 입력하세요',
+                hintText: '0부터 $maxAwayTime분 까지 입력 가능합니다.',
+              ),
+              onChanged: (value) {
+                // 입력된 값을 정수로 변환하여 selectedNumber에 할당
+                selectedNumber = int.tryParse(value) ?? 0;
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // 다이얼로그 닫기
+            },
+            child: Text("취소"),
+          ),
+          TextButton(
+            onPressed: () {
+              if (selectedNumber <= maxAwayTime) {
+                // 선택된 값이 최대 값 이하일 경우에만 확인 처리
+                // 여기에 선택된 시간을 처리하는 코드를 추가하세요.
+                Navigator.of(context).pop(); // 다이얼로그 닫기
+              } else {
+                // 최대 값보다 큰 값을 선택한 경우 경고 메시지 출력
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text('최대 $maxAwayTime 시간까지 선택 가능합니다.'),
+                ));
+              }
+            },
+            child: Text("확인"),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
 
 

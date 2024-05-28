@@ -546,6 +546,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
 
                         GestureDetector(
                           onTap: () {
+
                             // 나의자리를 터치했을 때 실행할 동작을 여기에 작성합니다.
                             print('나의자리가 선택되었습니다.');
                             Navigator.push(
