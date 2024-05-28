@@ -68,17 +68,6 @@ class _MySeatWidgetState extends State<MySeatWidget> {
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
-
-        // final String userName = responseData['name'] as String;
-        // final int seatNumber = responseData['seatId'] as int;
-        // final int dailyReservationTime = responseData['dailyReservationTime'] as int;
-        // final int dailyAwayTime = responseData['dailyAwayTime'] as int;
-        //
-        // print('User Name: $userName');
-        // print('Seat Number: $seatNumber');
-        // print('Daily Reservation Time: $dailyReservationTime');
-        // print('Daily Away Time: $dailyAwayTime');
-
         setState(() {
           userName = responseData['name'] as String;
           seatNumber = responseData['seatId'] as int;
@@ -622,6 +611,7 @@ void sendReturnRequest(int userId) async {
   }
 }
 
+// 다이얼로그 표시 함수
 void showAwayDialog(BuildContext context, int dailyReservationTime, int dailyAwayTime) {
   int maxAwayTime = dailyReservationTime < dailyAwayTime ? dailyReservationTime : dailyAwayTime;
 
@@ -660,8 +650,8 @@ void showAwayDialog(BuildContext context, int dailyReservationTime, int dailyAwa
           TextButton(
             onPressed: () {
               if (selectedNumber <= maxAwayTime) {
-                // 선택된 값이 최대 값 이하일 경우에만 확인 처리
                 // 여기에 선택된 시간을 처리하는 코드를 추가하세요.
+                _leaveSeat(selectedNumber); // leave 메서드 호출
                 Navigator.of(context).pop(); // 다이얼로그 닫기
               } else {
                 // 최대 값보다 큰 값을 선택한 경우 경고 메시지 출력
@@ -676,6 +666,36 @@ void showAwayDialog(BuildContext context, int dailyReservationTime, int dailyAwa
       );
     },
   );
+}
+
+// 자리 비움 요청을 보내는 함수
+Future<void> _leaveSeat(int selectedTime) async {
+  final String url = 'http://10.0.2.2:8080/seat/leave';
+
+  // leave 메서드에 전달할 데이터 구성
+  final leaveData = {
+    'userId': userId, // 사용자 ID
+    'leaveTime': selectedTime, // 선택된 자리 비움 시간
+  };
+
+
+  try {
+    final response = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(leaveData),
+    );
+
+    if (response.statusCode == 200) {
+      print('자리 비움 요청이 성공적으로 전송되었습니다.');
+    } else {
+      print('자리 비움 요청 실패: ${response.reasonPhrase}');
+    }
+  } catch (e) {
+    print('오류: $e');
+  }
 }
 
 
