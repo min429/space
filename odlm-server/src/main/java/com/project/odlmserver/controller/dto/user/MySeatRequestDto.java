@@ -8,5 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MySeatRequestDto {
+
     private Long userId;
+
 }

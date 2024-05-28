@@ -116,9 +116,12 @@ class _LoginWidgetState extends State<LoginWidget> {
         print('Error: ${response.statusCode}');
         // 에러 처리를 여기에 추가할 수 있습니다
 
-        // if (response.statusCode == ) {
-        //   //해당 로직 실행
-        // }
+        if (action == "user/login") {
+          setState(() {
+            late bool _loading = false;
+            late String _errorMessage = 'Invalid email or password';
+          });
+        }
       }
     } catch (e) {
       print('Exception: $e');
