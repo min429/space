@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,13 +44,13 @@ public class SeatService {
             throw new IllegalArgumentException("사용중인 자리");
         }
 
-        Long currentTimeInMillis = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        LocalDateTime currentDateTime = LocalDateTime.now();
 
         ReservationTable newReservation = ReservationTable.builder()
                 .user(user)
                 .seatId(reserveRequestDto.getSeatId())
-                .startTime(currentTimeInMillis)
-                .endTime(null) // Set endTime to default value, adjust as necessary
+                .startTime(currentDateTime) // 현재 날짜와 시간으로 설정
+                .endTime(null) // 기본값으로 설정, 필요에 따라 수정
                 .build();
 
         // Save the new ReservationTable object
@@ -70,8 +71,8 @@ public class SeatService {
             throw new IllegalArgumentException("예약자 본인 아님");
         }
 
-        Long currentTimeInMillis = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        reservationTableRepository.updateEndTimeByUserIdAndSeatId(user.getId(), seat.getSeatId(), currentTimeInMillis);
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        reservationTableRepository.updateEndTimeByUserIdAndSeatId(user.getId(), seat.getSeatId(), currentDateTime);
 
         seatCustomRedisRepository.deleteUserId(seat.getSeatId(), seat.getUserId());
         usersService.updateState(user.getId(), STATE.RETURN);
@@ -98,8 +99,8 @@ public class SeatService {
 
         seatCustomRedisRepository.updateMaxLeaveCount(seat.getSeatId(),leaveReauestDto.getLeaveTime());
 
-        Long currentTimeInMillis = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        reservationTableRepository.updateEndTimeByUserIdAndSeatId(user.getId(), seat.getSeatId(), currentTimeInMillis);
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        reservationTableRepository.updateEndTimeByUserIdAndSeatId(user.getId(), seat.getSeatId(), currentDateTime);
 
         seatCustomRedisRepository.updateLeaveId(seat.getSeatId(), seat.getUserId());
         seatCustomRedisRepository.deleteUserId(seat.getSeatId(), seat.getUserId());

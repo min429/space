@@ -35,8 +35,10 @@ public class UsersService {
                 .email(signUpRequestDto.getEmail())
                 .password(signUpRequestDto.getPassword())
                 .name(signUpRequestDto.getName())
-                .grade(Grade.MIDDLE)
+                .grade(Grade.HIGH)
                 .state(STATE.RETURN)
+                .dailyAwayTime(240L)
+                .dailyReservationTime(960L)
                 .build());
     }
 

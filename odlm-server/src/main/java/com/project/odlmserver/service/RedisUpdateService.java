@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -102,8 +103,8 @@ public class RedisUpdateService {
 
     public void depriveSeat(Long seatId, Long userId) {
 
-        Long currentTimeInMillis = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        reservationTableRepository.updateEndTimeByUserIdAndSeatId(userId, seatId, currentTimeInMillis);
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        reservationTableRepository.updateEndTimeByUserIdAndSeatId(userId, seatId, currentDateTime);
 
         seatCustomRedisRepository.deleteUserId(seatId, userId);
         seatCustomRedisRepository.updateUseCount(seatId, 0L);
@@ -113,13 +114,13 @@ public class RedisUpdateService {
 
     public void changeAuthority(Long seatId, Long leavedId){
 
-        Long currentTimeInMillis = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         Users user = usersService.findByUserId(leavedId);
+        LocalDateTime currentDateTime = LocalDateTime.now();
         ReservationTable newReservation = ReservationTable.builder()
                 .user(user)
                 .seatId(seatId)
-                .startTime(currentTimeInMillis)
-                .endTime(null) // Set endTime to default value, adjust as necessary
+                .startTime(currentDateTime) // 현재 날짜와 시간으로 설정
+                .endTime(null) // 기본값으로 설정, 필요에 따라 수정
                 .build();
 
         reservationTableRepository.save(newReservation);
