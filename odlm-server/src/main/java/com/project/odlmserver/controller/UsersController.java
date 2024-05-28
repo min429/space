@@ -1,17 +1,14 @@
 package com.project.odlmserver.controller;
 
-import com.project.odlmserver.controller.dto.user.LogInRequestDto;
-import com.project.odlmserver.controller.dto.user.SignOutRequestDto;
-import com.project.odlmserver.controller.dto.user.SignUpRequestDto;
+import com.project.odlmserver.controller.dto.seat.SeatDto;
+import com.project.odlmserver.controller.dto.user.*;
 import com.project.odlmserver.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -37,6 +34,12 @@ public class UsersController {
     public ResponseEntity<String> signout(@RequestBody SignOutRequestDto request) {
         userService.delete(request);
         return ResponseEntity.ok().body("회원탈퇴 완료");
+    }
+
+    @GetMapping("/myseat")
+    public ResponseEntity<MySeatDto> myseat(@RequestBody MySeatRequestDto request) {
+        MySeatDto mySeat = userService.findMySeat(request);
+        return ResponseEntity.ok().body(mySeat);
     }
 
 }

@@ -37,13 +37,13 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("UPDATE Users u SET u.dailyReservationTime = CASE " +
-            "WHEN u.grade = 'HIGH' THEN 16 " +
-            "WHEN u.grade = 'MIDDLE' THEN 12 " +
+            "WHEN u.grade = 'HIGH' THEN 960 " +
+            "WHEN u.grade = 'MIDDLE' THEN 720 " +
             "WHEN u.grade = 'LOW' THEN 0 " +
             "END, " +
             "u.dailyAwayTime = CASE " +
-            "WHEN u.grade = 'HIGH' THEN 4 " +
-            "WHEN u.grade = 'MIDDLE' THEN 3 " +
+            "WHEN u.grade = 'HIGH' THEN 240 " +
+            "WHEN u.grade = 'MIDDLE' THEN 180 " +
             "WHEN u.grade = 'LOW' THEN 0 " +
             "END")
     void updateAllTimesBasedOnGrade();
