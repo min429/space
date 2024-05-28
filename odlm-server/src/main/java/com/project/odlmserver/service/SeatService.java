@@ -86,16 +86,12 @@ public class SeatService {
         if(user.getId() != seat.getUserId()) {
             throw new IllegalArgumentException("예약자 본인 아님");
         }
-        Long reservationTime;
-        if(user.getGrade() == Grade.HIGH){
-            reservationTime = 240L;
+        if(user.getGrade() == Grade.LOW){
+            throw new IllegalArgumentException("사용자의 등급이 LOW 등급임");
         }
-        else if (user.getGrade() == Grade.MIDDLE){
-            reservationTime = 180L;
-        }
-        else {
-            throw new IllegalArgumentException("사용자의 현재 등급이 0므로 자리 비움이 불가능합니다.");
-        }
+
+        // usersService.updateDailyReservatationTime(user.getId() , ); 예약 가능시간 (미완)
+        usersService.updateDailyAwayTime(user.getId() , leaveReauestDto.getLeaveTime());
 
         seatCustomRedisRepository.updateMaxLeaveCount(seat.getSeatId(),leaveReauestDto.getLeaveTime());
 

@@ -174,6 +174,14 @@ public class UsersService {
         usersRepository.updateGradeAndTimes(userId, newGrade, newReservationTime, newAwayTime);
     }
 
+    public void updateDailyAwayTime(Long userId, Long leaveTime){
+        usersRepository.updateDailyAwayTime(userId , -leaveTime);
+    }
+
+    public void updateDailyReservationTime(Long userId, Long reservationTime) {
+        usersRepository.updateDailyReservationTime(userId, -reservationTime);
+    }
+
 }
 
 

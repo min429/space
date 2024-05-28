@@ -60,4 +60,13 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
     @Modifying
     @Query("UPDATE Users u SET u.grade = :grade, u.depriveCount = 0, u.dailyReservationTime = :reservationTime, u.dailyAwayTime = :awayTime")
     void resetAllUsersGradeAndTimes(@Param("grade") Grade grade, @Param("reservationTime") Long reservationTime, @Param("awayTime") Long awayTime);
+
+
+    @Modifying
+    @Query("UPDATE Users u SET u.dailyAwayTime = :leaveTime WHERE u.id = :userId")
+    void updateDailyAwayTime(Long userId, Long leaveTime);
+
+    @Modifying
+    @Query("UPDATE Users u SET u.dailyReservationTime = u.dailyReservationTime + :reservationTime WHERE u.id = :userId")
+    void updateDailyReservationTime(Long userId, Long reservationTime);
 }
