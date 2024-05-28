@@ -1,13 +1,12 @@
 package com.project.odlmserver.service;
 
-import com.project.odlmserver.controller.dto.user.LogInRequestDto;
-import com.project.odlmserver.controller.dto.user.MySeatRequestDto;
-import com.project.odlmserver.controller.dto.user.SignOutRequestDto;
-import com.project.odlmserver.controller.dto.user.SignUpRequestDto;
+import com.project.odlmserver.controller.dto.board.BoardDto;
+import com.project.odlmserver.controller.dto.user.*;
 import com.project.odlmserver.domain.Grade;
 import com.project.odlmserver.domain.STATE;
 import com.project.odlmserver.domain.Seat;
 import com.project.odlmserver.domain.Users;
+import com.project.odlmserver.repository.SeatRedisRepository;
 import com.project.odlmserver.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -24,6 +24,7 @@ import java.util.Optional;
 public class UsersService {
 
     private final UsersRepository usersRepository;
+    private final SeatRedisRepository seatRepository;
 
     public void save(SignUpRequestDto signUpRequestDto) {
         Optional<Users> user = usersRepository.findByEmail(signUpRequestDto.getEmail());
@@ -87,4 +88,30 @@ public class UsersService {
     public void performDailyTask() {
         usersRepository.updateAllTimesBasedOnGrade();
     }
-}
+
+
+    public MySeatDto findMySeat(MySeatRequestDto mySeatRequestDto) {
+        Users user = usersRepository.findById(mySeatRequestDto.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
+
+        Optional<Seat> seatOptional = seatRepository.findByUserId(user.getId());
+
+        if (seatOptional.isEmpty()) {
+            throw new IllegalArgumentException("좌석 정보가 존재하지 않습니다");
+        }
+
+        Seat seat = seatOptional.get();
+
+        return MySeatDto.builder()
+                .userId(user.getId())
+                .seatId(seat.getSeatId())
+                .name(user.getName())
+                .dailyReservationTime(user.getDailyReservationTime())
+                .dailyAwayTime(user.getDailyAwayTime())
+                .grade(user.getGrade())
+                .build();
+    }
+
+    }
+
+
