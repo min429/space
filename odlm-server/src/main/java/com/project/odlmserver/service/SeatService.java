@@ -8,6 +8,7 @@ import com.project.odlmserver.controller.dto.seat.ReserveRequestDto;
 import com.project.odlmserver.controller.dto.seat.ReturnRequestDto;
 import com.project.odlmserver.controller.dto.seat.SeatDto;
 import com.project.odlmserver.domain.*;
+import com.project.odlmserver.repository.ReservationTableRepository;
 import com.project.odlmserver.repository.SeatCustomRedisRepository;
 import com.project.odlmserver.repository.SeatRedisRepository;
 import com.project.odlmserver.repository.StudyLogCustomRedisRepository;
@@ -15,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,10 +31,11 @@ public class SeatService {
     private final SeatRedisRepository seatRedisRepository;
     private final UsersService usersService;
     private final MyPageService myPageService;
+    private final ReservationTableRepository reservationTableRepository;
 
     public void save(ReserveRequestDto reserveRequestDto) {
         Seat seat = seatRedisRepository.findById(reserveRequestDto.getSeatId())
-                .orElseGet(() -> new Seat(reserveRequestDto.getSeatId(), null, false, 0L,null,0L,0L));
+                .orElseGet(() -> new Seat(reserveRequestDto.getSeatId(), null, false, 0L,null,0L,0L,0L));
 
         Users user = usersService.findByUserId(reserveRequestDto.getUserId());
         if(user.getState() == STATE.RESERVE) {
@@ -42,7 +46,19 @@ public class SeatService {
             throw new IllegalArgumentException("사용중인 자리");
         }
 
-        Seat newSeat = new Seat(reserveRequestDto.getSeatId(), user.getId(), true, 0L,null,0L,0L);
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        ReservationTable newReservation = ReservationTable.builder()
+                .user(user)
+                .seatId(reserveRequestDto.getSeatId())
+                .startTime(currentDateTime) // 현재 날짜와 시간으로 설정
+                .endTime(null) // 기본값으로 설정, 필요에 따라 수정
+                .build();
+
+        // Save the new ReservationTable object
+        reservationTableRepository.save(newReservation);
+
+        Seat newSeat = new Seat(reserveRequestDto.getSeatId(), user.getId(), true, 0L,null,0L,0L , 0L);
         seatRedisRepository.save(newSeat);
         usersService.updateState(user.getId(), STATE.RESERVE);
     }
@@ -57,6 +73,9 @@ public class SeatService {
             throw new IllegalArgumentException("예약자 본인 아님");
         }
 
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        reservationTableRepository.updateEndTimeByUserIdAndSeatId(user.getId(), seat.getSeatId(), currentDateTime);
+
         seatCustomRedisRepository.deleteUserId(seat.getSeatId(), seat.getUserId());
         usersService.updateState(user.getId(), STATE.RETURN);
     }
@@ -69,23 +88,17 @@ public class SeatService {
         if(user.getId() != seat.getUserId()) {
             throw new IllegalArgumentException("예약자 본인 아님");
         }
-        Long reservationTime;
-        if(user.getGrade() == Grade.HIGH){
-            reservationTime = 240L;
-        }
-        else if (user.getGrade() == Grade.MIDDLE){
-            reservationTime = 180L;
-        }
-        else {
-            throw new IllegalArgumentException("사용자의 현재 등급이 0므로 자리 비움이 불가능합니다.");
+        if(user.getGrade() == Grade.LOW){
+            throw new IllegalArgumentException("사용자의 등급이 LOW 등급임");
         }
 
-        Long presentDuration = seat.getDuration();
-        Long remainTime = reservationTime - presentDuration;
-        if (remainTime < 60L) {
-            throw new IllegalArgumentException("빌려주고도 남은시간이 1시간 이상이 아닙니다.");
-        }
+        // usersService.updateDailyReservatationTime(user.getId() , ); 예약 가능시간 (미완)
+        usersService.updateDailyAwayTime(user.getId() , leaveReauestDto.getLeaveTime());
 
+        seatCustomRedisRepository.updateMaxLeaveCount(seat.getSeatId(),leaveReauestDto.getLeaveTime());
+
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        reservationTableRepository.updateEndTimeByUserIdAndSeatId(user.getId(), seat.getSeatId(), currentDateTime);
 
         seatCustomRedisRepository.updateLeaveId(seat.getSeatId(), seat.getUserId());
         seatCustomRedisRepository.deleteUserId(seat.getSeatId(), seat.getUserId());

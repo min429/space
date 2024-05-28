@@ -1,9 +1,11 @@
 package com.project.odlmserver.service;
 
 import com.google.firebase.messaging.FirebaseMessagingException;
+import com.project.odlmserver.domain.ReservationTable;
 import com.project.odlmserver.domain.STATE;
 import com.project.odlmserver.domain.Seat;
 import com.project.odlmserver.domain.Users;
+import com.project.odlmserver.repository.ReservationTableRepository;
 import com.project.odlmserver.repository.SeatCustomRedisRepository;
 import com.project.odlmserver.repository.SeatRedisRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -27,6 +33,7 @@ public class RedisUpdateService {
     private final SeatRedisRepository seatRedisRepository;
     private final UsersService usersService;
     private final FCMService fcmService;
+    private final ReservationTableRepository reservationTableRepository;
 
     // Logger 인스턴스 가져오기 1분마다 실행되는 지 로그를 보기위함임 나중엔 지움
     private static final Logger logger = LoggerFactory.getLogger(RedisUpdateService.class);
@@ -49,7 +56,7 @@ public class RedisUpdateService {
             seatCustomRedisRepository.updateLeaveCount(seat.getSeatId(), seat.getLeaveCount()+1);
 
             //자리비움 시간이 60분이면
-            if (seat.getLeaveCount()== 60) {
+            if (seat.getLeaveCount() == seat.getMaxLeaveCount()) {
 
                 depriveSeat(seat.getSeatId(), seat.getUserId());
                 changeAuthority(seat.getSeatId(),seat.getLeaveId());
@@ -81,10 +88,22 @@ public class RedisUpdateService {
                 }
 
                 else if (updatedUseCount == 30) {
+                    //등급 하락 메서드 호출
+                    gradeManage(seat.getUserId());
                     //자리 박탈 메서드 호출
                     depriveSeat(seat.getSeatId(), seat.getUserId());
+
                 }
             }
+        }
+
+    }
+
+    public void gradeManage(Long userId){
+        Users user = usersService.findByUserId(userId);
+        usersService.updateDepirveCount(user.getId());
+        if (user.getDepriveCount() == 3L){
+            usersService.updateGradeandReservationTimeandAwayTime(user.getId());
         }
 
     }
@@ -96,6 +115,9 @@ public class RedisUpdateService {
 
     public void depriveSeat(Long seatId, Long userId) {
 
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        reservationTableRepository.updateEndTimeByUserIdAndSeatId(userId, seatId, currentDateTime);
+
         seatCustomRedisRepository.deleteUserId(seatId, userId);
         seatCustomRedisRepository.updateUseCount(seatId, 0L);
         usersService.updateState(userId, STATE.RETURN);
@@ -103,6 +125,17 @@ public class RedisUpdateService {
     }
 
     public void changeAuthority(Long seatId, Long leavedId){
+
+        Users user = usersService.findByUserId(leavedId);
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        ReservationTable newReservation = ReservationTable.builder()
+                .user(user)
+                .seatId(seatId)
+                .startTime(currentDateTime) // 현재 날짜와 시간으로 설정
+                .endTime(null) // 기본값으로 설정, 필요에 따라 수정
+                .build();
+
+        reservationTableRepository.save(newReservation);
         seatCustomRedisRepository.updateUserId(seatId,leavedId);
         seatCustomRedisRepository.updateLeaveIdNull(seatId);
         seatCustomRedisRepository.updateLeaveCount(seatId,0L);

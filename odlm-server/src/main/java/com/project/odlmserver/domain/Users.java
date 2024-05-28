@@ -10,6 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Users {
+
     @Id
     @GeneratedValue()
     @Column(name = "user_id")
@@ -30,7 +31,7 @@ public class Users {
     private Long dailyReservationTime; // 16, 12 ,0 실제로는 분으로 치환함 960, 720, 0
     private Long dailyAwayTime; //4, 3 , 0 실제로는 분으로 치환함 240, 180, 0
 
-
+    private Long depriveCount;
     @Builder
     public Users(Long id, String email, String password, String name, Grade grade, STATE state, String token) {
         this.id = id;
