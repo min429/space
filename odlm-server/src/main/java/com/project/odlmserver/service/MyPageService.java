@@ -19,6 +19,7 @@ import java.time.Month;
 import java.time.YearMonth;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,17 +57,20 @@ public class MyPageService {
         dailyStudyRepository.save(new DailyStudy(new DailyStudyId(userId, day), time));
     }
 
-    public void saveMonthlyStudyTime(Long userId) {
-        List<DailyStudy> dailyStudyTimes = dailyStudyRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("이번 달 공부 시간 없음"));
+    public void saveMonthlyStudyTime() {
+        List<DailyStudy> dailyStudyTimes = dailyStudyRepository.findAll();
 
-        Long studyTime = dailyStudyTimes.stream()
-                .mapToLong(DailyStudy::getTime)
-                .sum();
+        Map<Long, Long> userStudyTimes = dailyStudyTimes.stream()
+                .collect(Collectors.groupingBy(
+                        dailyStudy -> dailyStudy.getId().getUserId(),
+                        Collectors.summingLong(DailyStudy::getTime)
+                )); // user별 학습량 총합
 
         Long month = (long) LocalDate.now().getMonthValue();
 
-        monthlyStudyRepository.save(new MonthlyStudy(new MonthlyStudyId(userId, month), studyTime));
+        userStudyTimes.forEach((userId, studyTime) ->
+                monthlyStudyRepository.save(new MonthlyStudy(new MonthlyStudyId(userId, month), studyTime))
+        );
     }
 
     public void saveStudyLog(Long userId, StudyLogType studyLogType) {
