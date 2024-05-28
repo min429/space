@@ -18,11 +18,60 @@ class _MySeatWidgetState extends State<MySeatWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+
+  // 변수 선언
+  late String userName = '';
+  late int seatNumber = 0;
+  late int dailyReservationTime = 0;
+  late int dailyAwayTime = 0;
+
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => MySeatModel());
+
+    // 서버로부터 데이터 받아오기
+    fetchData();
   }
+
+  void fetchData() async {
+    try {
+      final response = await http.get(
+        Uri.parse('http://10.0.2.2:8080/myseat?userId=${userId ?? ''}'),
+        // 쿼리 매개변수로 사용자 ID를 보냅니다.
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+
+        // 받아온 데이터를 변수에 저장
+        final String userName = responseData['name'] as String;
+        final int seatNumber = responseData['seatId'] as int;
+        final int dailyReservationTime = responseData['dailyReservationTime'] as int;
+        final int dailyAwayTime = responseData['dailyAwayTime'] as int;
+
+        // 출력하여 확인
+        print('User Name: $userName');
+        print('Seat Number: $seatNumber');
+        print('Daily Reservation Time: $dailyReservationTime');
+        print('Daily Away Time: $dailyAwayTime');
+
+        // setState(() {
+        //   // 받아온 데이터를 변수에 저장
+        //   userName = userName;
+        //   seatNumber = seatNumber;
+        //   dailyReservationTime = dailyReservationTime;
+        //   dailyAwayTime = dailyAwayTime;
+        // });
+      } else {
+        print('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
+
+
 
   @override
   void dispose() {
@@ -157,7 +206,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                                                 padding: EdgeInsetsDirectional
                                                     .fromSTEB(0, 20, 30, 0),
                                                 child: Text(
-                                                  '남은 시간 30분',
+                                                  '남은 시간 $dailyReservationTime분',
                                                   style: FlutterFlowTheme.of(
                                                       context)
                                                       .bodyMedium
@@ -204,7 +253,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                                                 padding: EdgeInsetsDirectional
                                                     .fromSTEB(0, 20, 30, 0),
                                                 child: Text(
-                                                  '남은 시간 40분',
+                                                  '남은 시간 $dailyAwayTime분',
                                                   style: FlutterFlowTheme.of(
                                                       context)
                                                       .bodyMedium
@@ -275,7 +324,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      '이찬 님',
+                                                      '$userName 님',
                                                       textAlign:
                                                       TextAlign.start,
                                                       style: FlutterFlowTheme
@@ -337,7 +386,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      '0번',
+                                                      '$seatNumber 번',
                                                       textAlign:
                                                       TextAlign.start,
                                                       style: FlutterFlowTheme
