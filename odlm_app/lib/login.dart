@@ -40,6 +40,7 @@ class _LoginWidgetState extends State<LoginWidget> {
   late TextEditingController _passwordController;
   late bool _passwordVisible;
   bool _isSelected = false;
+  late String _errorMessage = '';
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -119,9 +120,20 @@ class _LoginWidgetState extends State<LoginWidget> {
         if (action == "user/login") {
           setState(() {
             late bool _loading = false;
-            late String _errorMessage = 'Invalid email or password';
+            _errorMessage = 'Invalid email or password'; // 에러 메시지 할당
           });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(_errorMessage,
+                style: TextStyle(
+                  fontSize: 25, // 원하는 크기로 조절하세요
+                ),
+              ),
+            ),
+          );
+
         }
+
       }
     } catch (e) {
       print('Exception: $e');
