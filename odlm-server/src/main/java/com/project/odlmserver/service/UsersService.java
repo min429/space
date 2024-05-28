@@ -2,10 +2,8 @@ package com.project.odlmserver.service;
 
 import com.project.odlmserver.controller.dto.board.BoardDto;
 import com.project.odlmserver.controller.dto.user.*;
-import com.project.odlmserver.domain.Grade;
-import com.project.odlmserver.domain.STATE;
-import com.project.odlmserver.domain.Seat;
-import com.project.odlmserver.domain.Users;
+import com.project.odlmserver.domain.*;
+import com.project.odlmserver.repository.ReservationTableRepository;
 import com.project.odlmserver.repository.SeatRedisRepository;
 import com.project.odlmserver.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +23,7 @@ public class UsersService {
 
     private final UsersRepository usersRepository;
     private final SeatRedisRepository seatRepository;
+    private final ReservationTableRepository reservationTableRepository;
 
     public void save(SignUpRequestDto signUpRequestDto) {
         Optional<Users> user = usersRepository.findByEmail(signUpRequestDto.getEmail());
@@ -114,6 +113,26 @@ public class UsersService {
                 .build();
     }
 
+    public List<MyReservationTableDto> findMyReservationTable(MyReservationTableRequestDto myReservationTableRequestDto) {
+        // 사용자 ID를 이용하여 예약 정보를 데이터베이스에서 가져옵니다.
+        List<ReservationTable> reservationTables = reservationTableRepository.findByUserId(myReservationTableRequestDto.getUserId());
+
+        // 예약 정보를 DTO로 변환하여 반환합니다.
+        return reservationTables.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
+
+    private MyReservationTableDto mapToDto(ReservationTable reservationTable) {
+        return MyReservationTableDto.builder()
+                .userId(reservationTable.getUser().getId())
+                .seatId(reservationTable.getSeatId())
+                .startTime(reservationTable.getStartTime())
+                .endTime(reservationTable.getEndTime())
+                .build();
+    }
+
+
+}
 
 

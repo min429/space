@@ -42,4 +42,10 @@ public class UsersController {
         return ResponseEntity.ok().body(mySeat);
     }
 
+    @GetMapping("/myreservationtable")
+    public ResponseEntity<List<MyReservationTableDto>> myreservationtable(@RequestBody MyReservationTableRequestDto request) {
+        List<MyReservationTableDto> myReservationTables = userService.findMyReservationTable(request);
+        return ResponseEntity.ok().body(myReservationTables);
+    }
+
 }
