@@ -115,7 +115,7 @@ public class UsersService {
 
     public List<MyReservationTableDto> findMyReservationTable(MyReservationTableRequestDto myReservationTableRequestDto) {
         // 사용자 ID를 이용하여 예약 정보를 데이터베이스에서 가져옵니다.
-        List<ReservationTable> reservationTables = reservationTableRepository.findByUserId(myReservationTableRequestDto.getUserId());
+        List<ReservationTable> reservationTables = reservationTableRepository.findByUserIdOrderByEndTimeDesc(myReservationTableRequestDto.getUserId());
 
         // 예약 정보를 DTO로 변환하여 반환합니다.
         return reservationTables.stream()

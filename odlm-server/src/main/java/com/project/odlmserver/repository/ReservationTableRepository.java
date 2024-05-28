@@ -16,6 +16,8 @@ import java.util.List;
 public interface ReservationTableRepository extends JpaRepository<ReservationTable, Long> {
     // Custom query methods can be defined here if needed
     List<ReservationTable> findByUserId(Long userId);
+
+    List<ReservationTable> findByUserIdOrderByEndTimeDesc(Long userId);
     List<ReservationTable> findBySeatId(Long seatId);
 
     @Transactional
