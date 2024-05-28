@@ -1,5 +1,6 @@
 package com.project.odlmserver.repository;
 
+import com.project.odlmserver.domain.Grade;
 import com.project.odlmserver.domain.STATE;
 import com.project.odlmserver.domain.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -47,4 +48,16 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
             "WHEN u.grade = 'LOW' THEN 0 " +
             "END")
     void updateAllTimesBasedOnGrade();
+
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query("UPDATE Users u SET u.depriveCount = u.depriveCount + :count WHERE u.id = :userId")
+    void updateDepirveCount(@Param("userId") Long userId, @Param("count") int count);
+
+    @Modifying
+    @Query("UPDATE Users u SET u.grade = :grade, u.dailyReservationTime = :reservationTime, u.dailyAwayTime = :awayTime WHERE u.id = :userId")
+    void updateGradeAndTimes(@Param("userId") Long userId, @Param("grade") Grade grade, @Param("reservationTime") Long reservationTime, @Param("awayTime") Long awayTime);
+
+    @Modifying
+    @Query("UPDATE Users u SET u.grade = :grade, u.depriveCount = 0, u.dailyReservationTime = :reservationTime, u.dailyAwayTime = :awayTime")
+    void resetAllUsersGradeAndTimes(@Param("grade") Grade grade, @Param("reservationTime") Long reservationTime, @Param("awayTime") Long awayTime);
 }

@@ -90,6 +90,12 @@ public class UsersService {
         usersRepository.updateAllTimesBasedOnGrade();
     }
 
+    @Scheduled(cron = "0 0 0 1 * ?") // 매월 1일 0시에 실행
+    public void resetAllUsersGradeAndTimes() {
+        // 등급 및 시간을 초기화합니다.
+        usersRepository.resetAllUsersGradeAndTimes(Grade.HIGH, 960L, 240L);
+    }
+
 
     public MySeatDto findMySeat(MySeatRequestDto mySeatRequestDto) {
         Users user = usersRepository.findById(mySeatRequestDto.getUserId())
@@ -132,6 +138,41 @@ public class UsersService {
                 .build();
     }
 
+    public void updateDepirveCount(Long userId){
+        usersRepository.updateDepirveCount(userId,1);
+
+    }
+
+    public void updateGradeandReservationTimeandAwayTime(Long userId) {
+        Users user = usersRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
+
+        // 현재 사용자의 등급을 확인하여 해당하는 조건에 따라 등급, dailyReservationTime 및 dailyAwayTime을 설정합니다.
+        Grade newGrade;
+        Long newReservationTime;
+        Long newAwayTime;
+
+        switch (user.getGrade()) {
+            case HIGH:
+                newGrade = Grade.MIDDLE;
+                newReservationTime = 720L;
+                newAwayTime = 180L;
+                break;
+            case MIDDLE:
+                newGrade = Grade.LOW;
+                newReservationTime = 0L;
+                newAwayTime = 0L;
+                break;
+            // 만약 현재 등급이 LOW이면 추가적인 업데이트가 필요하지 않습니다.
+            case LOW:
+                return;
+            default:
+                throw new IllegalArgumentException("유효하지 않은 등급입니다");
+        }
+
+        // 등급 및 시간을 업데이트합니다.
+        usersRepository.updateGradeAndTimes(userId, newGrade, newReservationTime, newAwayTime);
+    }
 
 }
 

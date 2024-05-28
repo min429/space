@@ -88,10 +88,22 @@ public class RedisUpdateService {
                 }
 
                 else if (updatedUseCount == 30) {
+                    //등급 하락 메서드 호출
+                    gradeManage(seat.getUserId());
                     //자리 박탈 메서드 호출
                     depriveSeat(seat.getSeatId(), seat.getUserId());
+
                 }
             }
+        }
+
+    }
+
+    public void gradeManage(Long userId){
+        Users user = usersService.findByUserId(userId);
+        usersService.updateDepirveCount(user.getId());
+        if (user.getDepriveCount() == 3L){
+            usersService.updateGradeandReservationTimeandAwayTime(user.getId());
         }
 
     }
