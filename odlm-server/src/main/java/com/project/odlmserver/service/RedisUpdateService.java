@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -34,6 +35,7 @@ public class RedisUpdateService {
     private final UsersService usersService;
     private final FCMService fcmService;
     private final ReservationTableRepository reservationTableRepository;
+    private final MyPageService myPageService;
 
     // Logger 인스턴스 가져오기 1분마다 실행되는 지 로그를 보기위함임 나중엔 지움
     private static final Logger logger = LoggerFactory.getLogger(RedisUpdateService.class);
@@ -116,6 +118,12 @@ public class RedisUpdateService {
     public void depriveSeat(Long seatId, Long userId) {
 
         LocalDateTime currentDateTime = LocalDateTime.now();
+
+        // 현재 날짜의 일을 가져옵니다.
+        Long dayOfMonth = (long) currentDateTime.getDayOfMonth();
+
+        Long dailyStudyTime= myPageService.getDailyStudyTime(userId, dayOfMonth);
+        usersService.updateDailyReservationTime(userId , dailyStudyTime);
         reservationTableRepository.updateEndTimeByUserIdAndSeatId(userId, seatId, currentDateTime);
 
         seatCustomRedisRepository.deleteUserId(seatId, userId);
