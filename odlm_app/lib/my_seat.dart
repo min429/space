@@ -92,68 +92,6 @@ class _MySeatWidgetState extends State<MySeatWidget> {
               children: [
                 Stack(
                   children: [
-                    Opacity(
-                      opacity: 0,
-                      child: Align(
-                        alignment: AlignmentDirectional(0, 0),
-                        child: Container(
-                          width: double.infinity,
-                          height: 200,
-                          decoration: BoxDecoration(
-                            color: Color(0xE1960F29),
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(0),
-                              bottomRight: Radius.circular(0),
-                              topLeft: Radius.circular(0),
-                              topRight: Radius.circular(0),
-                            ),
-                            shape: BoxShape.rectangle,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16, 12, 16, 12),
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Align(
-                                      alignment: AlignmentDirectional(0, 0),
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            70, 0, 70, 0),
-                                        child: Text(
-                                          '발권된 좌석 또는 예약된 스터디룸이 없습니다.',
-                                          textAlign: TextAlign.center,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                            fontFamily: 'Readex Pro',
-                                            color:
-                                            FlutterFlowTheme.of(context)
-                                                .secondaryText,
-                                            fontSize: 20,
-                                            letterSpacing: 0,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
                     Align(
                       alignment: AlignmentDirectional(0, 0),
                       child: Container(
@@ -169,6 +107,8 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                           ),
                           shape: BoxShape.rectangle,
                         ),
+
+                        //열람실 발권 정보 / 좌석 정보 나누는 ROW
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
                           children: [
@@ -197,7 +137,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(30, 20, 0, 0),
                                               child: Text(
-                                                '열람실 발권 정보',
+                                                '일일 사용 시간',
                                                 style:
                                                 FlutterFlowTheme.of(context)
                                                     .bodyMedium
@@ -217,7 +157,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                                                 padding: EdgeInsetsDirectional
                                                     .fromSTEB(0, 20, 30, 0),
                                                 child: Text(
-                                                  '00:30 남음',
+                                                  '남은 시간 30분',
                                                   style: FlutterFlowTheme.of(
                                                       context)
                                                       .bodyMedium
@@ -234,21 +174,37 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                                           ),
                                         ],
                                       ),
-                                      Align(
-                                        alignment: AlignmentDirectional(0, 0),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                          children: [
-                                            Align(
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Align(
+                                            alignment:
+                                            AlignmentDirectional(-1, -1),
+                                            child: Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(30, 20, 0, 0),
+                                              child: Text(
+                                                '일일 자리비움 시간',
+                                                style:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .override(
+                                                  fontFamily:
+                                                  'Readex Pro',
+                                                  letterSpacing: 0,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Flexible(
+                                            child: Align(
                                               alignment:
-                                              AlignmentDirectional(-1, 0),
+                                              AlignmentDirectional(1, -1),
                                               child: Padding(
                                                 padding: EdgeInsetsDirectional
-                                                    .fromSTEB(30, 20, 0, 0),
+                                                    .fromSTEB(0, 20, 30, 0),
                                                 child: Text(
-                                                  '홍길동 님',
+                                                  '남은 시간 40분',
                                                   style: FlutterFlowTheme.of(
                                                       context)
                                                       .bodyMedium
@@ -256,16 +212,14 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                                                     fontFamily:
                                                     'Readex Pro',
                                                     color:
-                                                    FlutterFlowTheme.of(
-                                                        context)
-                                                        .secondaryText,
+                                                    Color(0xFF4AB1F3),
                                                     letterSpacing: 0,
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
                                       StyledDivider(
                                         thickness: 2,
@@ -284,6 +238,68 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                                               child: Padding(
                                                 padding: EdgeInsetsDirectional
                                                     .fromSTEB(30, 10, 0, 0),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                  MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  children: [
+                                                    Align(
+                                                      alignment:
+                                                      AlignmentDirectional(
+                                                          -1, 0),
+                                                      child: Padding(
+                                                        padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                            0, 0, 0, 5),
+                                                        child: Text(
+                                                          '사용자명',
+                                                          textAlign:
+                                                          TextAlign.center,
+                                                          style: FlutterFlowTheme
+                                                              .of(context)
+                                                              .bodyMedium
+                                                              .override(
+                                                            fontFamily:
+                                                            'Readex Pro',
+                                                            color: FlutterFlowTheme.of(
+                                                                context)
+                                                                .secondaryText,
+                                                            letterSpacing:
+                                                            0,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      '이찬 님',
+                                                      textAlign:
+                                                      TextAlign.start,
+                                                      style: FlutterFlowTheme
+                                                          .of(context)
+                                                          .bodyMedium
+                                                          .override(
+                                                        fontFamily:
+                                                        'Readex Pro',
+                                                        fontSize: 15,
+                                                        letterSpacing: 0,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Flexible(
+                                            child: Align(
+                                              alignment:
+                                              AlignmentDirectional(0, 0),
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(20, 10, 0, 0),
                                                 child: Column(
                                                   mainAxisSize:
                                                   MainAxisSize.max,
@@ -339,155 +355,6 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                                               ),
                                             ),
                                           ),
-                                          Flexible(
-                                            child: Align(
-                                              alignment:
-                                              AlignmentDirectional(0, 0),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(20, 10, 0, 0),
-                                                child: Column(
-                                                  mainAxisSize:
-                                                  MainAxisSize.max,
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                      AlignmentDirectional(
-                                                          -1, 0),
-                                                      child: Padding(
-                                                        padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                            0, 0, 0, 5),
-                                                        child: Text(
-                                                          '사용시간',
-                                                          textAlign:
-                                                          TextAlign.center,
-                                                          style: FlutterFlowTheme
-                                                              .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                            fontFamily:
-                                                            'Readex Pro',
-                                                            color: FlutterFlowTheme.of(
-                                                                context)
-                                                                .secondaryText,
-                                                            letterSpacing:
-                                                            0,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      '13:27 ~ 17:27',
-                                                      textAlign:
-                                                      TextAlign.start,
-                                                      style: FlutterFlowTheme
-                                                          .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                        fontFamily:
-                                                        'Readex Pro',
-                                                        fontSize: 15,
-                                                        letterSpacing: 0,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Flexible(
-                                            child: Align(
-                                              alignment:
-                                              AlignmentDirectional(0, 0),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(30, 10, 0, 0),
-                                                child: Column(
-                                                  mainAxisSize:
-                                                  MainAxisSize.max,
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                      AlignmentDirectional(
-                                                          -1, 0),
-                                                      child: Padding(
-                                                        padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                            0, 0, 0, 5),
-                                                        child: Text(
-                                                          '연장횟수',
-                                                          textAlign:
-                                                          TextAlign.center,
-                                                          style: FlutterFlowTheme
-                                                              .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                            fontFamily:
-                                                            'Readex Pro',
-                                                            color: FlutterFlowTheme.of(
-                                                                context)
-                                                                .secondaryText,
-                                                            letterSpacing:
-                                                            0,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Row(
-                                                      mainAxisSize:
-                                                      MainAxisSize.max,
-                                                      children: [
-                                                        Text(
-                                                          '0번',
-                                                          textAlign:
-                                                          TextAlign.start,
-                                                          style: FlutterFlowTheme
-                                                              .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                            fontFamily:
-                                                            'Readex Pro',
-                                                            fontSize: 15,
-                                                            letterSpacing:
-                                                            0,
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          '/3회',
-                                                          textAlign:
-                                                          TextAlign.start,
-                                                          style: FlutterFlowTheme
-                                                              .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                            fontFamily:
-                                                            'Readex Pro',
-                                                            color: FlutterFlowTheme.of(
-                                                                context)
-                                                                .secondaryText,
-                                                            fontSize: 15,
-                                                            letterSpacing:
-                                                            0,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
                                         ],
                                       ),
                                     ],
@@ -499,8 +366,11 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                         ),
                       ),
                     ),
-                  ],
+                  ]
                 ),
+
+
+                // 아래 버튼 두개!!!!!!!!!!!!!!!
                 Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
