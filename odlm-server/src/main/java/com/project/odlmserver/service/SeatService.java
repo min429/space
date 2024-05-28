@@ -10,6 +10,7 @@ import com.project.odlmserver.controller.dto.seat.SeatDto;
 import com.project.odlmserver.domain.*;
 import com.project.odlmserver.repository.SeatCustomRedisRepository;
 import com.project.odlmserver.repository.SeatRedisRepository;
+import com.project.odlmserver.repository.StudyLogCustomRedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ public class SeatService {
     private final SeatCustomRedisRepository seatCustomRedisRepository;
     private final SeatRedisRepository seatRedisRepository;
     private final UsersService usersService;
+    private final MyPageService myPageService;
 
     public void save(ReserveRequestDto reserveRequestDto) {
         Seat seat = seatRedisRepository.findById(reserveRequestDto.getSeatId())

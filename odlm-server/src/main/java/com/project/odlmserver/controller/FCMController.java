@@ -1,6 +1,6 @@
 package com.project.odlmserver.controller;
 
-import com.project.odlmserver.controller.dto.fcm.RegisterTokenRequest;
+import com.project.odlmserver.controller.dto.fcm.RegisterTokenRequestDto;
 import com.project.odlmserver.service.FCMService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +16,7 @@ public class FCMController {
     private final FCMService fcmService;
 
     @PostMapping("/register")
-    public void registerToken(@RequestBody RegisterTokenRequest request) {
+    public void registerToken(@RequestBody RegisterTokenRequestDto request) {
         fcmService.registerToken(request.getUserId(), request.getToken());
     }
 }

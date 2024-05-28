@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class RegisterTokenRequest {
+public class RegisterTokenRequestDto {
     private Long userId;
     private String token;
 }
