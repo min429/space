@@ -1,6 +1,7 @@
 package com.project.odlmserver.service;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import com.project.odlmserver.controller.dto.board.BoardDto;
 import com.project.odlmserver.controller.dto.seat.LeaveRequestDto;
@@ -72,8 +73,16 @@ public class SeatService {
             throw new IllegalArgumentException("예약자 본인 아님");
         }
 
+
+
         LocalDateTime currentDateTime = LocalDateTime.now();
         reservationTableRepository.updateEndTimeByUserIdAndSeatId(user.getId(), seat.getSeatId(), currentDateTime);
+
+        // 현재 날짜의 일을 가져옵니다.
+        Long dayOfMonth = (long) currentDateTime.getDayOfMonth();
+
+        Long dailyStudyTime= myPageService.getDailyStudyTime(user.getId(), dayOfMonth);
+        usersService.updateDailyReservationTime(user.getId() , dailyStudyTime);
 
         seatCustomRedisRepository.deleteUserId(seat.getSeatId(), seat.getUserId());
         usersService.updateState(user.getId(), STATE.RETURN);
@@ -91,7 +100,13 @@ public class SeatService {
             throw new IllegalArgumentException("사용자의 등급이 LOW 등급임");
         }
 
-        // usersService.updateDailyReservatationTime(user.getId() , ); 예약 가능시간 (미완)
+        LocalDate currentDate = LocalDate.now();
+
+        // 현재 날짜의 일을 가져옵니다.
+        Long dayOfMonth = (long) currentDate.getDayOfMonth();
+
+        Long dailyStudyTime= myPageService.getDailyStudyTime(user.getId(), dayOfMonth);
+        usersService.updateDailyReservationTime(user.getId() , dailyStudyTime);
         usersService.updateDailyAwayTime(user.getId() , leaveReauestDto.getLeaveTime());
 
         seatCustomRedisRepository.updateMaxLeaveCount(seat.getSeatId(),leaveReauestDto.getLeaveTime());
