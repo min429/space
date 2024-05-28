@@ -1,17 +1,12 @@
 import 'dart:convert';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-
-
 import '../globals.dart';
 
 class NotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-  Future<void> _sendPostRequest(String action,
-      {required Map<String, dynamic> requestData}) async {
+  Future<void> _sendPostRequest(String action, {required Map<String, dynamic> requestData}) async {
     final String url = 'http://10.0.2.2:8080/$action';
     try {
       final response = await http.post(
@@ -24,18 +19,13 @@ class NotificationService {
       if (response.statusCode == 200) {
         print('Success: ${response.body}');
         // 서버 응답에 대한 처리를 여기에 추가할 수 있습니다.
-
         if (action == "fcm/register") {
           //해당 로직 실행
           print(response.body);
         }
       } else {
         print('Error: ${response.statusCode}');
-        // 에러 처리를 여기에 추가할 수 있습니다
-
-        // if (response.statusCode == ) {
-        //   //해당 로직 실행
-        // }
+        // 에러 처리를 여기에 추가할 수 있습니다.
       }
     } catch (e) {
       print('Exception: $e');

@@ -11,8 +11,6 @@ import org.springframework.data.redis.core.index.Indexed;
 @Getter
 @RedisHash("seat")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
 public class Seat {
 
     @Id
@@ -28,4 +26,15 @@ public class Seat {
 
     private Long duration = 0L; // 자리 사용 기간 (분 단위)
     private Long leaveCount = 0L; //자리 비움 시간 카운트 (분 단위 측정)
+
+    @Builder
+    public Seat(Long seatId, Long userId, Boolean isUsed, Long useCount, Long leaveId, Long duration, Long leaveCount) {
+        this.seatId = seatId;
+        this.userId = userId == null ? null : userId;
+        this.isUsed = isUsed == null ? false : isUsed;
+        this.useCount = useCount == null ? 0L : useCount;
+        this.leaveId = leaveId == null ? null : leaveId;
+        this.duration = duration == null ? 0L : duration;
+        this.leaveCount = leaveCount == null ? 0L : leaveCount;
+    }
 }

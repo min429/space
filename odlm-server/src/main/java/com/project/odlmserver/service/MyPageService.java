@@ -15,9 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.YearMonth;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,11 +35,12 @@ public class MyPageService {
 
     public Long getMonthlyStudyTime(Long userId, Long month) {
         return monthlyStudyRepository.findById(new MonthlyStudyId(userId, month))
-                .orElseThrow(() -> new IllegalArgumentException(new StringBuilder().append(month).append("월 공부 시간 없음").toString())).getTime();
+                .map(MonthlyStudy::getTime)
+                .orElse(0L);
     }
 
     public List<Long> getAllMonthlyStudyTime(Long userId) {
-        return monthlyStudyRepository.findByUserId(userId)
+        return monthlyStudyRepository.findByIdUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("전체 공부 시간 없음"))
                 .stream()
                 .map(MonthlyStudy::getTime)
