@@ -32,6 +32,7 @@ public class SeatService {
     private final SeatRedisRepository seatRedisRepository;
     private final UsersService usersService;
     private final ReservationTableRepository reservationTableRepository;
+    private final MyPageService myPageService;
 
     public void save(ReserveRequestDto reserveRequestDto) {
         Seat seat = seatRedisRepository.findById(reserveRequestDto.getSeatId())

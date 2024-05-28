@@ -33,7 +33,6 @@ public class RedisUpdateService {
     private final FCMService fcmService;
     private final MyPageService myPageService;
     private final ReservationTableRepository reservationTableRepository;
-    private final MyPageService myPageService;
 
     // Logger 인스턴스 가져오기 1분마다 실행되는 지 로그를 보기위함임 나중엔 지움
     private static final Logger logger = LoggerFactory.getLogger(RedisUpdateService.class);
