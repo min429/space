@@ -2,6 +2,7 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:odlm_app/service/messaging_service.dart';
 import 'package:odlm_app/service/notification_service.dart';
 import 'package:http/http.dart' as http;
 
@@ -104,8 +105,9 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
     ),
   };
 
-  Future<void> initFirebaseMessaging() async {
-    await NotificationService().initFirebaseMessaging();
+  Future<void> initMessaging() async {
+    NotificationService().initFirebaseMessaging();  // 서버와 통신을 관리하는 서비스 초기화
+    MessagingService().setupForegroundNotificationListener();  // 포그라운드 알림 리스너 설정
   }
 
   @override
@@ -113,7 +115,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
     super.initState();
     _model = createModel(context, () => MainModel());
 
-    initFirebaseMessaging();
+    initMessaging();
 
     setupAnimations(
       animationsMap.values.where((anim) =>

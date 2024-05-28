@@ -1,5 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+
+import 'globals.dart';
 
 class MypageWidget extends StatefulWidget {
   const MypageWidget({Key? key}) : super(key: key);
@@ -9,25 +14,75 @@ class MypageWidget extends StatefulWidget {
 }
 
 class _MypageWidgetState extends State<MypageWidget> {
-  late MypageModel _model;
+  final FocusNode unfocusNode = FocusNode();
+  String dailyStudyTime = '0분';
+  String monthlyStudyTime = '0시간 0분';
 
   @override
   void initState() {
     super.initState();
-    _model = MypageModel();
+    _loadStudyTimes();
   }
 
   @override
   void dispose() {
-    _model.dispose();
+    unfocusNode.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadStudyTimes() async {
+    try {
+      final int today = DateTime.now().day;
+      final int thisMonth = DateTime.now().month;
+
+      final dailyTimeInMinutes = await _fetchDailyStudyTime(today);
+      final monthlyTimeInMinutes = await _fetchMonthlyStudyTime(thisMonth);
+
+      setState(() {
+        dailyStudyTime = '$dailyTimeInMinutes분';
+        final monthlyMinutes = int.parse(monthlyTimeInMinutes);
+        final hours = monthlyMinutes ~/ 60;
+        final minutes = monthlyMinutes % 60;
+        monthlyStudyTime = '$hours시간 $minutes분';
+      });
+    } catch (e) {
+      print('Failed to load study times: $e');
+    }
+  }
+
+  Future<String> _fetchDailyStudyTime(int day) async {
+    final String url = 'http://10.0.2.2:8080/mypage/day/$day';
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'userId': userId}),
+    );
+    if (response.statusCode == 200) {
+      return response.body; // 서버에서 받은 "분" 데이터
+    } else {
+      throw Exception('Failed to load daily study time');
+    }
+  }
+
+  Future<String> _fetchMonthlyStudyTime(int month) async {
+    final String url = 'http://10.0.2.2:8080/mypage/month/$month';
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'userId': userId}),
+    );
+    if (response.statusCode == 200) {
+      return response.body; // 서버에서 받은 "분" 데이터
+    } else {
+      throw Exception('Failed to load monthly study time');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+      onTap: () => unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(unfocusNode)
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -91,7 +146,7 @@ class _MypageWidgetState extends State<MypageWidget> {
                         child: Opacity(
                           opacity: 0.7,
                           child: Text(
-                            '0분',
+                            dailyStudyTime,
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
@@ -149,21 +204,12 @@ class _MypageWidgetState extends State<MypageWidget> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // '총' 텍스트
-                            Text(
-                              '총 ',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                fontFamily: 'Readex Pro',
-                              ),
-                            ),
                             // 이달의 학습시간 값
                             Flexible(
                               child: Opacity(
                                 opacity: 0.7,
                                 child: Text(
-                                  '20시간 03분',
+                                  monthlyStudyTime,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -186,13 +232,5 @@ class _MypageWidgetState extends State<MypageWidget> {
         ),
       ),
     );
-  }
-}
-
-class MypageModel {
-  final FocusNode unfocusNode = FocusNode();
-
-  void dispose() {
-    unfocusNode.dispose();
   }
 }

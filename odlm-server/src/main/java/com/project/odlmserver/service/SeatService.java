@@ -1,6 +1,7 @@
 package com.project.odlmserver.service;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import com.project.odlmserver.controller.dto.board.BoardDto;
 import com.project.odlmserver.controller.dto.seat.LeaveRequestDto;
@@ -11,6 +12,7 @@ import com.project.odlmserver.domain.*;
 import com.project.odlmserver.repository.ReservationTableRepository;
 import com.project.odlmserver.repository.SeatCustomRedisRepository;
 import com.project.odlmserver.repository.SeatRedisRepository;
+import com.project.odlmserver.repository.StudyLogCustomRedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,7 @@ public class SeatService {
     private final SeatCustomRedisRepository seatCustomRedisRepository;
     private final SeatRedisRepository seatRedisRepository;
     private final UsersService usersService;
+    private final MyPageService myPageService;
     private final ReservationTableRepository reservationTableRepository;
 
     public void save(ReserveRequestDto reserveRequestDto) {
@@ -71,8 +74,16 @@ public class SeatService {
             throw new IllegalArgumentException("예약자 본인 아님");
         }
 
+
+
         LocalDateTime currentDateTime = LocalDateTime.now();
         reservationTableRepository.updateEndTimeByUserIdAndSeatId(user.getId(), seat.getSeatId(), currentDateTime);
+
+        // 현재 날짜의 일을 가져옵니다.
+        Long dayOfMonth = (long) currentDateTime.getDayOfMonth();
+
+        Long dailyStudyTime= myPageService.getDailyStudyTime(user.getId(), dayOfMonth);
+        usersService.updateDailyReservationTime(user.getId() , dailyStudyTime);
 
         seatCustomRedisRepository.deleteUserId(seat.getSeatId(), seat.getUserId());
         usersService.updateState(user.getId(), STATE.RETURN);
@@ -86,16 +97,18 @@ public class SeatService {
         if(user.getId() != seat.getUserId()) {
             throw new IllegalArgumentException("예약자 본인 아님");
         }
-        Long reservationTime;
-        if(user.getGrade() == Grade.HIGH){
-            reservationTime = 240L;
+        if(user.getGrade() == Grade.LOW){
+            throw new IllegalArgumentException("사용자의 등급이 LOW 등급임");
         }
-        else if (user.getGrade() == Grade.MIDDLE){
-            reservationTime = 180L;
-        }
-        else {
-            throw new IllegalArgumentException("사용자의 현재 등급이 0므로 자리 비움이 불가능합니다.");
-        }
+
+        LocalDate currentDate = LocalDate.now();
+
+        // 현재 날짜의 일을 가져옵니다.
+        Long dayOfMonth = (long) currentDate.getDayOfMonth();
+
+        Long dailyStudyTime= myPageService.getDailyStudyTime(user.getId(), dayOfMonth);
+        usersService.updateDailyReservationTime(user.getId() , dailyStudyTime);
+        usersService.updateDailyAwayTime(user.getId() , leaveReauestDto.getLeaveTime());
 
         seatCustomRedisRepository.updateMaxLeaveCount(seat.getSeatId(),leaveReauestDto.getLeaveTime());
 
