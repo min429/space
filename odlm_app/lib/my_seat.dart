@@ -13,6 +13,20 @@ class MySeatWidget extends StatefulWidget {
   State<MySeatWidget> createState() => _MySeatWidgetState();
 }
 
+class MySeatRequestDto {
+  final int userId;
+
+  MySeatRequestDto({required this.userId});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'userId': userId,
+    };
+  }
+}
+
+
+
 class _MySeatWidgetState extends State<MySeatWidget> {
   late MySeatModel _model;
 
@@ -29,40 +43,55 @@ class _MySeatWidgetState extends State<MySeatWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => MySeatModel());
+    int userIdNonNull=52;
+    if (userId != null) {
+      userIdNonNull = userId!;
+    }
 
+    MySeatRequestDto requestDto = MySeatRequestDto(userId: userIdNonNull);
     // 서버로부터 데이터 받아오기
-    fetchData();
+    fetchMySeat(requestDto);
   }
 
-  void fetchData() async {
+
+
+  Future<void> fetchMySeat(MySeatRequestDto request) async {
+    final String url = 'http://10.0.2.2:8080/user/myseat';
+
     try {
-      final response = await http.get(
-        Uri.parse('http://10.0.2.2:8080/myseat?userId=${userId ?? ''}'),
-        // 쿼리 매개변수로 사용자 ID를 보냅니다.
+      final response = await http.post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(request.toJson()),
       );
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
 
-        // 받아온 데이터를 변수에 저장
-        final String userName = responseData['name'] as String;
-        final int seatNumber = responseData['seatId'] as int;
-        final int dailyReservationTime = responseData['dailyReservationTime'] as int;
-        final int dailyAwayTime = responseData['dailyAwayTime'] as int;
+        // final String userName = responseData['name'] as String;
+        // final int seatNumber = responseData['seatId'] as int;
+        // final int dailyReservationTime = responseData['dailyReservationTime'] as int;
+        // final int dailyAwayTime = responseData['dailyAwayTime'] as int;
+        //
+        // print('User Name: $userName');
+        // print('Seat Number: $seatNumber');
+        // print('Daily Reservation Time: $dailyReservationTime');
+        // print('Daily Away Time: $dailyAwayTime');
 
-        // 출력하여 확인
+        setState(() {
+          userName = responseData['name'] as String;
+          seatNumber = responseData['seatId'] as int;
+          dailyReservationTime = responseData['dailyReservationTime'] as int;
+          dailyAwayTime = responseData['dailyAwayTime'] as int;
+        });
+
         print('User Name: $userName');
         print('Seat Number: $seatNumber');
         print('Daily Reservation Time: $dailyReservationTime');
         print('Daily Away Time: $dailyAwayTime');
 
-        // setState(() {
-        //   // 받아온 데이터를 변수에 저장
-        //   userName = userName;
-        //   seatNumber = seatNumber;
-        //   dailyReservationTime = dailyReservationTime;
-        //   dailyAwayTime = dailyAwayTime;
-        // });
       } else {
         print('Failed to load data: ${response.statusCode}');
       }
@@ -70,6 +99,8 @@ class _MySeatWidgetState extends State<MySeatWidget> {
       print('Error fetching data: $e');
     }
   }
+
+
 
 
 
@@ -549,13 +580,16 @@ void showReturnDialog(BuildContext context) {
               // 반납 요청 로직을 수행합니다.
               sendReturnRequest(currentUserID);
               Navigator.of(context).pop();
+              Navigator.of(context).pop();
             },
             child: Text('예'),
           ),
           TextButton(
             onPressed: () {
+
               // 다이얼로그를 닫습니다.
               Navigator.of(context).pop();
+
             },
             child: Text('아니요'),
           ),
