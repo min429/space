@@ -30,7 +30,6 @@ public class SeatService {
     private final SeatCustomRedisRepository seatCustomRedisRepository;
     private final SeatRedisRepository seatRedisRepository;
     private final UsersService usersService;
-    private final MyPageService myPageService;
     private final ReservationTableRepository reservationTableRepository;
 
     public void save(ReserveRequestDto reserveRequestDto) {

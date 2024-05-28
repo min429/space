@@ -11,11 +11,16 @@ public class SeatRepositoryTest {
     @Autowired
     private SeatRedisRepository seatRedisRepository;
 
+    @Autowired
+    private SeatCustomRedisRepository seatCustomRedisRepository;
+
     @Test
     void createSeat() {
         for(long i=1; i<=20; i++){
             seatRedisRepository.save(Seat.builder().seatId(i).build());
         }
+        seatCustomRedisRepository.updateUserId(1L, 1L);
+        seatCustomRedisRepository.deleteUserId(1L, 1L);
     }
 
     @Test
