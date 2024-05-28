@@ -1,10 +1,7 @@
 package com.project.odlmserver.service;
 
 import com.google.firebase.messaging.FirebaseMessagingException;
-import com.project.odlmserver.domain.ReservationTable;
-import com.project.odlmserver.domain.STATE;
-import com.project.odlmserver.domain.Seat;
-import com.project.odlmserver.domain.Users;
+import com.project.odlmserver.domain.*;
 import com.project.odlmserver.repository.ReservationTableRepository;
 import com.project.odlmserver.repository.SeatCustomRedisRepository;
 import com.project.odlmserver.repository.SeatRedisRepository;
@@ -34,6 +31,7 @@ public class RedisUpdateService {
     private final SeatRedisRepository seatRedisRepository;
     private final UsersService usersService;
     private final FCMService fcmService;
+    private final MyPageService myPageService;
     private final ReservationTableRepository reservationTableRepository;
     private final MyPageService myPageService;
 
@@ -59,9 +57,9 @@ public class RedisUpdateService {
 
             //자리비움 시간이 60분이면
             if (seat.getLeaveCount() == seat.getMaxLeaveCount()) {
-
                 depriveSeat(seat.getSeatId(), seat.getUserId());
                 changeAuthority(seat.getSeatId(),seat.getLeaveId());
+                myPageService.saveStudyLog(seat.getLeaveId(), StudyLog.StudyLogType.START);
             }
 
         }

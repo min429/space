@@ -22,8 +22,8 @@ public class SeatCustomRedisRepository {
     public void updateUserId(Long seatId, Long userId) {
         hashOperations.put("seat:" + seatId, "userId", userId.toString());
         hashOperations.put("seat:" + seatId, "useCount", "0");
-        setOperations.remove("seat:userId:" + userId, seatId.toString());
         setOperations.add("seat:userId:" + userId, seatId.toString());
+        setOperations.add("seat:" + seatId + ":idx", "seat:userId:" + userId);
     }
 
     public void updateDuration(Long seatId, Long duration) {
@@ -47,6 +47,7 @@ public class SeatCustomRedisRepository {
         hashOperations.put("seat:" + seatId, "useCount", "0"); // redis는 숫자 타입 지원x
         hashOperations.put("seat:" + seatId, "duration", "0"); // redis는 숫자 타입 지원x
         setOperations.remove("seat:userId:" + userId, seatId.toString());
+        setOperations.remove("seat:" + seatId + ":idx", "seat:userId:" + userId);
     }
 
     public void updateUseCount(Long seatId, Long useCount) {

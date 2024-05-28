@@ -30,7 +30,8 @@ public class MyPageService {
 
     public Long getDailyStudyTime(Long userId, Long day) {
         return dailyStudyRepository.findById(new DailyStudyId(userId, day))
-                .orElseThrow(() -> new IllegalArgumentException(new StringBuilder().append(day).append("일 공부 시간 없음").toString())).getTime();
+                .map(DailyStudy::getTime)
+                .orElse(0L);
     }
 
     public Long getMonthlyStudyTime(Long userId, Long month) {
