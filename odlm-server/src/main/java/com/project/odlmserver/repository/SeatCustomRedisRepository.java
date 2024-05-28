@@ -52,4 +52,8 @@ public class SeatCustomRedisRepository {
     public void updateUseCount(Long seatId, Long useCount) {
         hashOperations.put("seat:" + seatId, "useCount", useCount.toString());
     }
+
+    public void updateMaxLeaveCount(Long seatId, Long maxLeaveCount) {
+        hashOperations.put("seat:" + seatId, "maxLeaveCount", maxLeaveCount.toString());
+    }
 }

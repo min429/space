@@ -8,4 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LeaveRequestDto {
     private Long userId;
+    private Long leaveTime;
 }
