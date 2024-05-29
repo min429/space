@@ -20,7 +20,15 @@ class _MypageWidgetState extends State<MypageWidget> {
   String dailyStudyTime = '0분';
   String monthlyStudyTime = '0시간 0분';
 
-  List<BarChartGroupData> barChartData = [];
+  List<BarChartGroupData> barChartData = List.generate(
+    12,
+        (index) => BarChartGroupData(
+      x: index + 1,
+      barRods: [
+        BarChartRodData(toY: 0, color: Colors.lightBlueAccent, borderRadius: BorderRadius.zero),
+      ],
+    ),
+  );
 
   @override
   void initState() {
@@ -390,6 +398,8 @@ class _MypageWidgetState extends State<MypageWidget> {
                       ),
                       maxY: 50, // 세로 축의 최대 값을 50으로 설정합니다.
                     ),
+                    swapAnimationDuration: Duration(milliseconds: 500), // 애니메이션 지속 시간
+                    swapAnimationCurve: Curves.easeInOut, // 애니메이션 곡선
                   ),
                 ),
                 // 범례 추가
