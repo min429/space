@@ -116,6 +116,7 @@ public class UsersService {
         return MySeatDto.builder()
                 .userId(user.getId())
                 .seatId(seat.getSeatId())
+                .leaveId(seat.getLeaveId())
                 .name(user.getName())
                 .dailyReservationTime(user.getDailyReservationTime())
                 .dailyAwayTime(user.getDailyAwayTime())
