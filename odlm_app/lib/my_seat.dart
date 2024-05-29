@@ -25,11 +25,8 @@ class MySeatRequestDto {
   }
 }
 
-
-
 class _MySeatWidgetState extends State<MySeatWidget> {
   late MySeatModel _model;
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   // 변수 선언
@@ -52,12 +49,10 @@ class _MySeatWidgetState extends State<MySeatWidget> {
       userIdNonNull = userId!;
     }
 
-
     MySeatRequestDto requestDto = MySeatRequestDto(userId: userIdNonNull);
     // 서버로부터 데이터 받아오기
     fetchMySeat(requestDto);
   }
-
 
 
   Future<void> fetchMySeat(MySeatRequestDto request) async {
@@ -75,7 +70,6 @@ class _MySeatWidgetState extends State<MySeatWidget> {
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
         setState(() {
-
           RuserId = responseData['userId'] as int?;
           seatId = responseData['seatId'] as int?;
           leaveId = responseData['leaveId'] as int?;
@@ -99,7 +93,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
           }
 
         });
-        print('userId: $userId');
+        print('seatId: $RuserId');
         print('seatId: $seatId');
         print('leaveId: $leaveId');
         print('User Name: $userName');
@@ -118,7 +112,6 @@ class _MySeatWidgetState extends State<MySeatWidget> {
   @override
   void dispose() {
     _model.dispose();
-
     super.dispose();
   }
 
@@ -147,8 +140,6 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                   letterSpacing: 0,
                 ),
               ),
-
-
             ],
           ),
           leading: IconButton(
@@ -719,7 +710,7 @@ void showReturnDialog(BuildContext context) {
   );
 }
 
-
+//
 void sendReturnRequest(int userId) async {
   final String url = 'http://10.0.2.2:8080/seat/return'; // 서버 엔드포인트 URL
   try {
@@ -785,6 +776,7 @@ void showAwayDialog(BuildContext context, int dailyReservationTime, int dailyAwa
                 // 여기에 선택된 시간을 처리하는 코드를 추가하세요.
                 _leaveSeat(selectedNumber); // leave 메서드 호출
                 Navigator.of(context).pop(); // 다이얼로그 닫기
+                Navigator.of(context).pop();
               } else {
                 // 최대 값보다 큰 값을 선택한 경우 경고 메시지 출력
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -810,7 +802,6 @@ Future<void> _leaveSeat(int selectedTime) async {
     'leaveTime': selectedTime, // 선택된 자리 비움 시간
   };
 
-
   try {
     final response = await http.post(
       Uri.parse(url),
@@ -829,9 +820,6 @@ Future<void> _leaveSeat(int selectedTime) async {
     print('오류: $e');
   }
 }
-
-
-
 
 class MySeatModel extends FlutterFlowModel<MySeatWidget> {
   ///  State fields for stateful widgets in this page.
