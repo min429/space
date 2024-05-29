@@ -122,6 +122,8 @@ public class UsersService {
                 .dailyAwayTime(user.getDailyAwayTime())
                 .grade(user.getGrade())
                 .build();
+
+
     }
 
     public List<MyReservationTableDto> findMyReservationTable(MyReservationTableRequestDto myReservationTableRequestDto) {

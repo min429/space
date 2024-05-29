@@ -47,10 +47,22 @@ public class SeatService {
         // 조회된 seat 객체가 null이 아닌지 확인합니다.
         System.out.println("============== "+seat.getSeatId() +"========== "+seat.getLeaveId() );
 
+        List<Seat> seatsWithLeaveId = seatRedisRepository.findByLeaveIdNotNull();
         Users user = usersService.findByUserId(reserveRequestDto.getUserId());
+
+        if (user.getState() == STATE.LEAVE){
+            throw new IllegalArgumentException("현재 사용자가 자리비움 상태이므로 예약이 불가능합니다.");
+            
+        }
+
+
+
+
         if(user.getState() == STATE.RESERVE) {
             throw new IllegalArgumentException("이미 다른 자리를 예약함");
         }
+
+
 
         if(seat.getUserId() != null){
             throw new IllegalArgumentException("사용중인 자리");
@@ -86,8 +98,7 @@ public class SeatService {
         usersService.updateState(user.getId(), STATE.RESERVE);
     }
 
-    private void assertNotNull(Seat seat) {
-    }
+
 
     public void returns(ReturnRequestDto returnRequestDto) {
         Users user = usersService.findByUserId(returnRequestDto.getUserId());
