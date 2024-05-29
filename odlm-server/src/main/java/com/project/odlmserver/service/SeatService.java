@@ -128,12 +128,13 @@ public class SeatService {
         return seats.stream()
                 .map(seat -> {
                     Long userId = seat.getUserId();
-
+                    Long leaveId = seat.getLeaveId();
 
                     // BoardDto에 사용자의 이름을 포함하여 반환
                     return SeatDto.builder()
                             .seatId(seat.getSeatId())
                             .userId(userId)
+                            .leaveId(leaveId)
                             .build();
                 })
                 .collect(Collectors.toList());
