@@ -22,7 +22,7 @@ public class SeatCustomRedisRepository {
 
     public void updateUserId(Long seatId, Long userId) {
         String id = hashOperations.get("seat:" + seatId, "userId");
-        if(id != null){
+        if(id != null && !id.isEmpty()){
             Long beforeId = Long.valueOf(id);
             setOperations.remove("seat:" + seatId + ":idx", "seat:userId:"+beforeId);
         }
@@ -43,7 +43,7 @@ public class SeatCustomRedisRepository {
 
     public void updateLeaveId(Long seatId, Long leaveId) {
         String id = hashOperations.get("seat:" + seatId, "leaveId");
-        if(id != null){
+        if(id != null && !id.isEmpty()){
             Long beforeId = Long.valueOf(id);
             setOperations.remove("seat:" + seatId + ":idx", "seat:leaveId:"+beforeId);
         }
@@ -55,7 +55,7 @@ public class SeatCustomRedisRepository {
 
     public void updateLeaveIdNull(Long seatId) {
         String id = hashOperations.get("seat:" + seatId, "leaveId");
-        if(id != null){
+        if(id != null && !id.isEmpty()){
             Long beforeId = Long.valueOf(id);
             setOperations.remove("seat:" + seatId + ":idx", "seat:leaveId:"+beforeId);
             setOperations.pop("seat:leaveId:" + beforeId);
@@ -66,7 +66,7 @@ public class SeatCustomRedisRepository {
 
     public void deleteUserId(Long seatId, Long userId) {
         String id = hashOperations.get("seat:" + seatId, "userId");
-        if(id != null){
+        if(id != null && !id.isEmpty()){
             Long beforeId = Long.valueOf(id);
             setOperations.pop("seat:userId:" + beforeId);
             setOperations.remove("seat:" + seatId + ":idx", "seat:userId:"+beforeId);

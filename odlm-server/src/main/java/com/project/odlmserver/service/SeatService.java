@@ -69,8 +69,9 @@ public class SeatService {
         Seat seat = seatRedisRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new IllegalArgumentException("이미 반납된 자리"));
 
-
-        if(user.getId() != seat.getUserId()) {
+        System.out.println(user.getId());
+        System.out.println(seat.getUserId());
+        if(!user.getId().equals(seat.getUserId())) {
             throw new IllegalArgumentException("예약자 본인 아님");
         }
 

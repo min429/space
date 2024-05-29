@@ -14,4 +14,6 @@ public interface SeatRedisRepository extends CrudRepository<Seat, Long> {
     Optional<Seat> findByLeaveId(Long leaveId);
     List<Seat> findAll();
 
+    void deleteAll();
+
 }
