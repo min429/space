@@ -77,10 +77,6 @@ public class UsersService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
     }
 
-//    public Seat findMySeat(MySeatRequestDto mySeatRequestDto) {
-//
-//        return
-//    }
 
     public void updateToken(Long userId, String token) {
         usersRepository.updateToken(userId, token);
@@ -104,14 +100,12 @@ public class UsersService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
 
         Optional<Seat> seatOptional = seatRepository.findByUserId(user.getId());
-
-        log.info("seatOptional: "+seatOptional);
+        
 
         if (seatOptional.isEmpty()) {
             seatOptional = seatRepository.findByLeaveId(user.getId());
         }
 
-        log.info("seatOptional: "+seatOptional);
 
         if (seatOptional.isEmpty()) {
             throw new IllegalArgumentException("좌석 정보가 존재하지 않습니다");
