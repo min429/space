@@ -33,7 +33,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   // 변수 선언
-  late int? userId = -1;
+  late int? RuserId = -1;
   late int? seatId = -1;
   late int? leaveId = -1;
   late String userName = '';
@@ -76,7 +76,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
         final responseData = jsonDecode(response.body);
         setState(() {
 
-          userId = responseData['userId'] as int?;
+          RuserId = responseData['userId'] as int?;
           seatId = responseData['seatId'] as int?;
           leaveId = responseData['leaveId'] as int?;
           userName = responseData['name'] as String;
@@ -84,13 +84,13 @@ class _MySeatWidgetState extends State<MySeatWidget> {
           dailyReservationTime = responseData['dailyReservationTime'] as int;
           dailyAwayTime = responseData['dailyAwayTime'] as int;
           // Status와 색상 설정
-          if (userId != null && leaveId == null) {
+          if (RuserId != null && leaveId == null) {
             Status = "자리사용중";
             statusColor = Colors.blue;
-          } else if (userId == null && leaveId != null) {
+          } else if (RuserId == null && leaveId != null) {
             Status = "자리비움중";
             statusColor = Colors.red;
-          } else if (userId != null && leaveId != null) {
+          } else if (RuserId != null && leaveId != null) {
             Status = "임시자리사용중";
             statusColor = Colors.orange;
           } else {
@@ -99,7 +99,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
           }
 
         });
-
+        print('userId: $userId');
         print('seatId: $seatId');
         print('leaveId: $leaveId');
         print('User Name: $userName');
