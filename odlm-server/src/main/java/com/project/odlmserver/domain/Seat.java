@@ -22,6 +22,7 @@ public class Seat {
     private Boolean isUsed; // 실제 사용 여부
     private Long useCount = 0L; // 사용 시간 카운트 (분 단위 측정)
 
+    @Indexed
     private Long leaveId; //자리비움을 신청한 아이디
 
     private Long duration = 0L; // 자리 사용 기간 (분 단위)
