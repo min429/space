@@ -64,9 +64,9 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
 
     @Modifying
     @Query("UPDATE Users u SET u.dailyAwayTime = :leaveTime WHERE u.id = :userId")
-    void updateDailyAwayTime(Long userId, Long leaveTime);
+    void updateDailyAwayTime(@Param("userId") Long userId,@Param("leaveTime")Long leaveTime);
 
     @Modifying
     @Query("UPDATE Users u SET u.dailyReservationTime = u.dailyReservationTime + :reservationTime WHERE u.id = :userId")
-    void updateDailyReservationTime(Long userId, Long reservationTime);
+    void updateDailyReservationTime(@Param("userId") Long userId,@Param("reservationTime") Long reservationTime);
 }
