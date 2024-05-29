@@ -33,20 +33,25 @@ class _MySeatWidgetState extends State<MySeatWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   // 변수 선언
+  late int? userId = -1;
+  late int? seatId = -1;
+  late int? leaveId = -1;
   late String userName = '';
   late int seatNumber = 0;
   late int dailyReservationTime = 0;
   late int dailyAwayTime = 0;
   late String Status = '';
+  late Color statusColor = Colors.black; // 기본 텍스트 색상
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => MySeatModel());
-    int userIdNonNull=52;
+    int userIdNonNull=-999;
     if (userId != null) {
       userIdNonNull = userId!;
     }
+
 
     MySeatRequestDto requestDto = MySeatRequestDto(userId: userIdNonNull);
     // 서버로부터 데이터 받아오기
@@ -70,12 +75,33 @@ class _MySeatWidgetState extends State<MySeatWidget> {
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
         setState(() {
+
+          userId = responseData['userId'] as int?;
+          seatId = responseData['seatId'] as int?;
+          leaveId = responseData['leaveId'] as int?;
           userName = responseData['name'] as String;
           seatNumber = responseData['seatId'] as int;
           dailyReservationTime = responseData['dailyReservationTime'] as int;
           dailyAwayTime = responseData['dailyAwayTime'] as int;
+          // Status와 색상 설정
+          if (userId != null && leaveId == null) {
+            Status = "자리사용중";
+            statusColor = Colors.blue;
+          } else if (userId == null && leaveId != null) {
+            Status = "자리비움중";
+            statusColor = Colors.red;
+          } else if (userId != null && leaveId != null) {
+            Status = "임시자리사용중";
+            statusColor = Colors.orange;
+          } else {
+            Status = "상태 없음";
+            statusColor = Colors.black;
+          }
+
         });
 
+        print('seatId: $seatId');
+        print('leaveId: $leaveId');
         print('User Name: $userName');
         print('Seat Number: $seatNumber');
         print('Daily Reservation Time: $dailyReservationTime');
@@ -88,10 +114,6 @@ class _MySeatWidgetState extends State<MySeatWidget> {
       print('Error fetching data: $e');
     }
   }
-
-
-
-
 
   @override
   void dispose() {
@@ -511,7 +533,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                                                             .fromSTEB(
                                                             0, 0, 0, 5),
                                                         child: Text(
-                                                          '!$Status',
+                                                          '$Status',
                                                           textAlign:
                                                           TextAlign.center,
                                                           style: FlutterFlowTheme
@@ -520,9 +542,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                                                               .override(
                                                             fontFamily:
                                                             'Readex Pro',
-                                                            color: FlutterFlowTheme.of(
-                                                                context)
-                                                                .secondaryText,
+                                                            color: statusColor,
                                                             letterSpacing:
                                                             0,
                                                             fontSize: 20, // 원하는 크기로 변경
