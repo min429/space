@@ -7,6 +7,7 @@ import com.project.odlmserver.repository.ReservationTableRepository;
 import com.project.odlmserver.repository.SeatRedisRepository;
 import com.project.odlmserver.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -103,9 +105,13 @@ public class UsersService {
 
         Optional<Seat> seatOptional = seatRepository.findByUserId(user.getId());
 
+        log.info("seatOptional: "+seatOptional);
+
         if (seatOptional.isEmpty()) {
             seatOptional = seatRepository.findByLeaveId(user.getId());
         }
+
+        log.info("seatOptional: "+seatOptional);
 
         if (seatOptional.isEmpty()) {
             throw new IllegalArgumentException("좌석 정보가 존재하지 않습니다");

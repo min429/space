@@ -17,14 +17,15 @@ public class SeatRepositoryTest {
     @Test
     void createSeat() {
         for(long i=1; i<=20; i++){
-            seatRedisRepository.save(Seat.builder().seatId(i).build());
+            seatRedisRepository.save(Seat.builder().seatId(i).userId(i).leaveId(i).build());
         }
-        seatCustomRedisRepository.updateUserId(1L, 1L);
-        seatCustomRedisRepository.deleteUserId(1L, 1L);
+        seatCustomRedisRepository.updateLeaveId(1L, 3L);
+        seatCustomRedisRepository.updateLeaveIdNull(1L);
     }
 
     @Test
     void deleteSeat() {
         seatRedisRepository.deleteAll();
     }
+
 }
