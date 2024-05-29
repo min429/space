@@ -102,7 +102,7 @@ public class UsersService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
 
         Optional<Seat> seatOptional = seatRepository.findByUserId(user.getId());
-        
+
         if (seatOptional.isEmpty()) {
             seatOptional = seatRepository.findByLeaveId(user.getId());
         }
