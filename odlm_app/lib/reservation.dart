@@ -8,14 +8,16 @@ import 'globals.dart';
 class SeatDto {
   final int seatId;
   final int? userId;
+  final int? leaveId;
 
-  SeatDto(this.seatId, this.userId);
+  SeatDto(this.seatId, this.userId,this.leaveId);
 
   // JSON에서 변환하여 좌석 정보를 생성하는 팩토리 메서드
   factory SeatDto.fromJson(Map<String, dynamic> json) {
     return SeatDto(
       json['seatId'] as int,
       json['userId'] as int?,
+      json['leaveId'] as int?,
     );
   }
 }
@@ -161,6 +163,7 @@ class _ReservationWidgetState extends State<ReservationWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<int> reservedSeats = []; // 예약된 좌석 목록
+  List<int> leaveSeats = []; // 비움된 좌석 목록
 
   @override
   void initState() {
@@ -181,6 +184,7 @@ class _ReservationWidgetState extends State<ReservationWidget> {
       final List<SeatDto> seats = await getAllSeats();
       setState(() {
         reservedSeats = seats.where((seat) => seat.userId != null).map((seat) => seat.seatId).toList();
+        leaveSeats = seats.where((seat) => seat.leaveId != null).map((seat) => seat.seatId).toList();
       });
     } catch (e) {
       print('Error fetching reserved seats: $e');
@@ -264,14 +268,21 @@ class _ReservationWidgetState extends State<ReservationWidget> {
 
   Widget _buildSeatIcon(int seatNumber) {
     final isReserved = reservedSeats.contains(seatNumber); // 좌석이 예약되었는지 확인
-    final iconColor = isReserved ? Colors.blue : FlutterFlowTheme.of(context).primaryBackground;
+    final isLeave = leaveSeats.contains(seatNumber); // 좌석에 leaveId가 있는지 확인
+
+    print(isReserved);
+    print(isLeave);
+
+
+    // userId가 있으면 무조건 파란색, leaveId만 있으면 빨간색
+    final iconColor = isReserved ? Colors.blue : (isLeave ? Colors.red : FlutterFlowTheme.of(context).primaryBackground);
 
     return Align(
       alignment: _getSeatAlignment(seatNumber),
       child: GestureDetector(
         onTap: () {
-          if (!isReserved || reservedSeats.isEmpty) {
-            _showReservationDialog(context, seatNumber); // 좌석이 예약되지 않은 경우 다이얼로그 표시
+          if (!isReserved) {
+            _showReservationDialog(context, seatNumber); // userId가 없는 경우에만 다이얼로그 표시
           }
         },
         child: Icon(
@@ -282,6 +293,7 @@ class _ReservationWidgetState extends State<ReservationWidget> {
       ),
     );
   }
+
 
   Alignment _getSeatAlignment(int seatNumber) {
     switch (seatNumber) {
