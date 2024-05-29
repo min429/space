@@ -38,6 +38,6 @@ public class Seat {
         this.leaveId = leaveId == null ? null : leaveId;
         this.duration = duration == null ? 0L : duration;
         this.leaveCount = leaveCount == null ? 0L : leaveCount;
-        this.maxLeaveCount = leaveCount == null ? null : leaveCount;
+        this.maxLeaveCount = maxLeaveCount == null ? null : maxLeaveCount;
     }
 }
