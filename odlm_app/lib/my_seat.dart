@@ -37,6 +37,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
   late int seatNumber = 0;
   late int dailyReservationTime = 0;
   late int dailyAwayTime = 0;
+  late String Status = '';
 
   @override
   void initState() {
@@ -164,7 +165,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                       alignment: AlignmentDirectional(0, 0),
                       child: Container(
                         width: double.infinity,
-                        height: 200,
+                        height:260,
                         decoration: BoxDecoration(
                           color: Color(0xE1960F29),
                           borderRadius: BorderRadius.only(
@@ -416,6 +417,117 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                                                         'Readex Pro',
                                                         fontSize: 15,
                                                         letterSpacing: 0,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      StyledDivider(
+                                        thickness: 2,
+                                        indent: 20,
+                                        endIndent: 20,
+                                        color: Color(0xFFC7CACE),
+                                        lineStyle: DividerLineStyle.dotted,
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Flexible(
+                                            child: Align(
+                                              alignment:
+                                              AlignmentDirectional(0, 0),
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(30, 10, 0, 0),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                  MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  children: [
+                                                    Align(
+                                                      alignment:
+                                                      AlignmentDirectional(
+                                                          -1, 0),
+                                                      child: Padding(
+                                                        padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                            0, 0, 0, 5),
+                                                        child: Text(
+                                                          '현재상태',
+                                                          textAlign:
+                                                          TextAlign.center,
+                                                          style: FlutterFlowTheme
+                                                              .of(context)
+                                                              .bodyMedium
+                                                              .override(
+                                                            fontFamily:
+                                                            'Readex Pro',
+                                                            color: FlutterFlowTheme.of(
+                                                                context)
+                                                                .secondaryText,
+                                                            letterSpacing:
+                                                            0,
+                                                            fontSize: 20,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Flexible(
+                                            child: Align(
+                                              alignment:
+                                              AlignmentDirectional(0, 0),
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(20, 10, 0, 0),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                  MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  children: [
+                                                    Align(
+                                                      alignment:
+                                                      AlignmentDirectional(
+                                                          -1, 0),
+                                                      child: Padding(
+                                                        padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                            0, 0, 0, 5),
+                                                        child: Text(
+                                                          '!$Status',
+                                                          textAlign:
+                                                          TextAlign.center,
+                                                          style: FlutterFlowTheme
+                                                              .of(context)
+                                                              .bodyMedium
+                                                              .override(
+                                                            fontFamily:
+                                                            'Readex Pro',
+                                                            color: FlutterFlowTheme.of(
+                                                                context)
+                                                                .secondaryText,
+                                                            letterSpacing:
+                                                            0,
+                                                            fontSize: 20, // 원하는 크기로 변경
+                                                          ),
+                                                        ),
                                                       ),
                                                     ),
                                                   ],
