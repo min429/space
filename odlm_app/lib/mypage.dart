@@ -69,11 +69,16 @@ class _MypageWidgetState extends State<MypageWidget> {
     // 예제 데이터로 설정
     setState(() {
       barChartData = [
-        BarChartGroupData(x: 6, barRods: [BarChartRodData(toY: 5, color: Colors.lightBlueAccent)]),
-        BarChartGroupData(x: 7, barRods: [BarChartRodData(toY: 10, color: Colors.lightBlueAccent)]),
-        BarChartGroupData(x: 8, barRods: [BarChartRodData(toY: 15, color: Colors.lightBlueAccent)]),
-        BarChartGroupData(x: 9, barRods: [BarChartRodData(toY: 20, color: Colors.lightBlueAccent)]),
-        BarChartGroupData(x: 10, barRods: [BarChartRodData(toY: 25, color: Colors.lightBlueAccent)]),
+        BarChartGroupData(x: 1, barRods: [BarChartRodData(toY: 10, color: Colors.lightBlueAccent)]),
+        BarChartGroupData(x: 2, barRods: [BarChartRodData(toY: 20, color: Colors.lightBlueAccent)]),
+        BarChartGroupData(x: 3, barRods: [BarChartRodData(toY: 30, color: Colors.lightBlueAccent)]),
+        BarChartGroupData(x: 4, barRods: [BarChartRodData(toY: 40, color: Colors.lightBlueAccent)]),
+        BarChartGroupData(x: 5, barRods: [BarChartRodData(toY: 50, color: Colors.lightBlueAccent)]),
+        BarChartGroupData(x: 6, barRods: [BarChartRodData(toY: 60, color: Colors.lightBlueAccent)]),
+        BarChartGroupData(x: 7, barRods: [BarChartRodData(toY: 70, color: Colors.lightBlueAccent)]),
+        BarChartGroupData(x: 8, barRods: [BarChartRodData(toY: 80, color: Colors.lightBlueAccent)]),
+        BarChartGroupData(x: 9, barRods: [BarChartRodData(toY: 90, color: Colors.lightBlueAccent)]),
+        BarChartGroupData(x: 10, barRods: [BarChartRodData(toY: 100, color: Colors.lightBlueAccent)]),
       ];
     });
   }
@@ -271,14 +276,30 @@ class _MypageWidgetState extends State<MypageWidget> {
                         bottomTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
+                            reservedSize: 30,
                             getTitlesWidget: (double value, TitleMeta meta) {
                               const style = TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14,
+                                fontSize: 12,
                               );
                               Widget text;
                               switch (value.toInt()) {
+                                case 1:
+                                  text = const Text('1월', style: style);
+                                  break;
+                                case 2:
+                                  text = const Text('2월', style: style);
+                                  break;
+                                case 3:
+                                  text = const Text('3월', style: style);
+                                  break;
+                                case 4:
+                                  text = const Text('4월', style: style);
+                                  break;
+                                case 5:
+                                  text = const Text('5월', style: style);
+                                  break;
                                 case 6:
                                   text = const Text('6월', style: style);
                                   break;
@@ -294,6 +315,12 @@ class _MypageWidgetState extends State<MypageWidget> {
                                 case 10:
                                   text = const Text('10월', style: style);
                                   break;
+                                case 11:
+                                  text = const Text('11월', style: style);
+                                  break;
+                                case 12:
+                                  text = const Text('12월', style: style);
+                                  break;
                                 default:
                                   text = const Text('', style: style);
                                   break;
@@ -306,17 +333,62 @@ class _MypageWidgetState extends State<MypageWidget> {
                           ),
                         ),
                         leftTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            getTitlesWidget: (double value, TitleMeta meta) {
+                              if ([10, 30, 50, 70, 90].contains(value.toInt())) {
+                                return Container(); // 빈 컨테이너 반환
+                              }
+                              const style = TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              );
+                              return SideTitleWidget(
+                                axisSide: meta.axisSide,
+                                space: 0, // 그래프와 숫자 간의 공간을 줄입니다.
+                                child: Text(value.toInt().toString(), style: style),
+                              );
+                            },
+                            interval: 10,
+                            reservedSize: 28, // 공간을 줄이기 위해 예약 크기를 조정합니다.
+                          ),
+                        ),
+                        topTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        rightTitles: AxisTitles(
                           sideTitles: SideTitles(showTitles: false),
                         ),
                       ),
                       borderData: FlBorderData(
-                        show: false,
+                        show: true, // 그래프 테두리를 추가합니다.
+                        border: const Border(
+                          top: BorderSide(color: Colors.black),
+                          bottom: BorderSide(color: Colors.black),
+                          left: BorderSide(color: Colors.black),
+                          right: BorderSide(color: Colors.black),
+                        ),
                       ),
                       barTouchData: BarTouchData(
                         touchTooltipData: BarTouchTooltipData(
                           tooltipBgColor: Colors.blueAccent,
                         ),
                       ),
+                      gridData: FlGridData(
+                        show: true, // 가로줄을 추가합니다.
+                        drawHorizontalLine: true,
+                        horizontalInterval: 20,
+                        getDrawingHorizontalLine: (value) {
+                          return FlLine(
+                            color: Colors.grey,
+                            strokeWidth: 1,
+                            dashArray: [1, 0], // 점선으로 그리려면 이 부분을 추가합니다.
+                          );
+                        },
+                        drawVerticalLine: false,
+                      ),
+                      maxY: 100, // 세로 축의 최대 값을 100으로 설정합니다.
                     ),
                   ),
                 ),

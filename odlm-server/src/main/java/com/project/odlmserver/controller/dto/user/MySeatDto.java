@@ -11,15 +11,17 @@ import lombok.NoArgsConstructor;
 public class MySeatDto {
     private Long userId;
     private Long seatId;
+    private Long leaveId;
     private String name;
     private Long dailyReservationTime;
     private Long dailyAwayTime;
     private Grade grade;
 
     @Builder
-    public MySeatDto(Long userId, Long seatId, String name, Long dailyReservationTime, Long dailyAwayTime, Grade grade) {
+    public MySeatDto(Long userId, Long seatId, Long leaveId, String name, Long dailyReservationTime, Long dailyAwayTime, Grade grade) {
         this.userId = userId;
         this.seatId = seatId;
+        this.leaveId = leaveId;
         this.name = name;
         this.dailyReservationTime = dailyReservationTime;
         this.dailyAwayTime = dailyAwayTime;
