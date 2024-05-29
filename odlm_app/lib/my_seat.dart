@@ -25,24 +25,26 @@ class MySeatRequestDto {
   }
 }
 
-
-
 class _MySeatWidgetState extends State<MySeatWidget> {
   late MySeatModel _model;
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   // 변수 선언
+  late int? RuserId = -1;
+  late int? seatId = -1;
+  late int? leaveId = -1;
   late String userName = '';
   late int seatNumber = 0;
   late int dailyReservationTime = 0;
   late int dailyAwayTime = 0;
+  late String Status = '';
+  late Color statusColor = Colors.black; // 기본 텍스트 색상
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => MySeatModel());
-    int userIdNonNull=52;
+    int userIdNonNull=-999;
     if (userId != null) {
       userIdNonNull = userId!;
     }
@@ -51,7 +53,6 @@ class _MySeatWidgetState extends State<MySeatWidget> {
     // 서버로부터 데이터 받아오기
     fetchMySeat(requestDto);
   }
-
 
 
   Future<void> fetchMySeat(MySeatRequestDto request) async {
@@ -69,12 +70,32 @@ class _MySeatWidgetState extends State<MySeatWidget> {
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
         setState(() {
+          RuserId = responseData['userId'] as int?;
+          seatId = responseData['seatId'] as int?;
+          leaveId = responseData['leaveId'] as int?;
           userName = responseData['name'] as String;
           seatNumber = responseData['seatId'] as int;
           dailyReservationTime = responseData['dailyReservationTime'] as int;
           dailyAwayTime = responseData['dailyAwayTime'] as int;
-        });
+          // Status와 색상 설정
+          if (RuserId != null && leaveId == null) {
+            Status = "자리사용중";
+            statusColor = Colors.blue;
+          } else if (RuserId == null && leaveId != null) {
+            Status = "자리비움중";
+            statusColor = Colors.red;
+          } else if (RuserId != null && leaveId != null) {
+            Status = "임시자리사용중";
+            statusColor = Colors.orange;
+          } else {
+            Status = "상태 없음";
+            statusColor = Colors.black;
+          }
 
+        });
+        print('seatId: $RuserId');
+        print('seatId: $seatId');
+        print('leaveId: $leaveId');
         print('User Name: $userName');
         print('Seat Number: $seatNumber');
         print('Daily Reservation Time: $dailyReservationTime');
@@ -88,14 +109,9 @@ class _MySeatWidgetState extends State<MySeatWidget> {
     }
   }
 
-
-
-
-
   @override
   void dispose() {
     _model.dispose();
-
     super.dispose();
   }
 
@@ -124,8 +140,6 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                   letterSpacing: 0,
                 ),
               ),
-
-
             ],
           ),
           leading: IconButton(
@@ -164,7 +178,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                       alignment: AlignmentDirectional(0, 0),
                       child: Container(
                         width: double.infinity,
-                        height: 200,
+                        height:260,
                         decoration: BoxDecoration(
                           color: Color(0xE1960F29),
                           borderRadius: BorderRadius.only(
@@ -425,6 +439,115 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                                           ),
                                         ],
                                       ),
+                                      StyledDivider(
+                                        thickness: 2,
+                                        indent: 20,
+                                        endIndent: 20,
+                                        color: Color(0xFFC7CACE),
+                                        lineStyle: DividerLineStyle.dotted,
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Flexible(
+                                            child: Align(
+                                              alignment:
+                                              AlignmentDirectional(0, 0),
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(30, 10, 0, 0),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                  MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  children: [
+                                                    Align(
+                                                      alignment:
+                                                      AlignmentDirectional(
+                                                          -1, 0),
+                                                      child: Padding(
+                                                        padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                            0, 0, 0, 5),
+                                                        child: Text(
+                                                          '현재상태',
+                                                          textAlign:
+                                                          TextAlign.center,
+                                                          style: FlutterFlowTheme
+                                                              .of(context)
+                                                              .bodyMedium
+                                                              .override(
+                                                            fontFamily:
+                                                            'Readex Pro',
+                                                            color: FlutterFlowTheme.of(
+                                                                context)
+                                                                .secondaryText,
+                                                            letterSpacing:
+                                                            0,
+                                                            fontSize: 20,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Flexible(
+                                            child: Align(
+                                              alignment:
+                                              AlignmentDirectional(0, 0),
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(20, 10, 0, 0),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                  MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  children: [
+                                                    Align(
+                                                      alignment:
+                                                      AlignmentDirectional(
+                                                          -1, 0),
+                                                      child: Padding(
+                                                        padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                            0, 0, 0, 5),
+                                                        child: Text(
+                                                          '$Status',
+                                                          textAlign:
+                                                          TextAlign.center,
+                                                          style: FlutterFlowTheme
+                                                              .of(context)
+                                                              .bodyMedium
+                                                              .override(
+                                                            fontFamily:
+                                                            'Readex Pro',
+                                                            color: statusColor,
+                                                            letterSpacing:
+                                                            0,
+                                                            fontSize: 20, // 원하는 크기로 변경
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -587,7 +710,7 @@ void showReturnDialog(BuildContext context) {
   );
 }
 
-
+//
 void sendReturnRequest(int userId) async {
   final String url = 'http://10.0.2.2:8080/seat/return'; // 서버 엔드포인트 URL
   try {
@@ -653,6 +776,7 @@ void showAwayDialog(BuildContext context, int dailyReservationTime, int dailyAwa
                 // 여기에 선택된 시간을 처리하는 코드를 추가하세요.
                 _leaveSeat(selectedNumber); // leave 메서드 호출
                 Navigator.of(context).pop(); // 다이얼로그 닫기
+                Navigator.of(context).pop();
               } else {
                 // 최대 값보다 큰 값을 선택한 경우 경고 메시지 출력
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -678,7 +802,6 @@ Future<void> _leaveSeat(int selectedTime) async {
     'leaveTime': selectedTime, // 선택된 자리 비움 시간
   };
 
-
   try {
     final response = await http.post(
       Uri.parse(url),
@@ -697,9 +820,6 @@ Future<void> _leaveSeat(int selectedTime) async {
     print('오류: $e');
   }
 }
-
-
-
 
 class MySeatModel extends FlutterFlowModel<MySeatWidget> {
   ///  State fields for stateful widgets in this page.
