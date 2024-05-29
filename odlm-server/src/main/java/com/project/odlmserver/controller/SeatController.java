@@ -26,22 +26,25 @@ public class SeatController {
 
     @PostMapping("/reserve")
     public ResponseEntity<String> reserve(@RequestBody ReserveRequestDto request) {
-        reservationService.save(request);
         myPageService.saveStudyLog(request.getUserId(), StudyLogType.START);
+        reservationService.save(request);
+
         return ResponseEntity.ok().body("예약 완료");
     }
 
     @PostMapping("/return")
     public ResponseEntity<String> returns(@RequestBody ReturnRequestDto request) {
-        reservationService.returns(request);
         myPageService.saveStudyLog(request.getUserId(), StudyLogType.END);
+        reservationService.returns(request);
+
         return ResponseEntity.ok().body("반납 완료");
     }
 
     @PostMapping("/leave")
     public ResponseEntity<String> returns(@RequestBody LeaveRequestDto request) {
-        reservationService.leave(request);
+
         myPageService.saveStudyLog(request.getUserId(), StudyLogType.END);
+        reservationService.leave(request);
         return ResponseEntity.ok().body("자리 비움 완료");
     }
 

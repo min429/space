@@ -26,6 +26,8 @@ public class BoardService {
 
     public void createBoard(CreateBoardRequestDto createBoardRequestDto) {
 
+
+
         Users findUser = usersService.findByUserId(createBoardRequestDto.getUserId());
 
 

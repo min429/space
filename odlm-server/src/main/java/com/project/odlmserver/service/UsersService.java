@@ -114,7 +114,7 @@ public class UsersService {
         Seat seat = seatOptional.get();
 
         return MySeatDto.builder()
-                .userId(user.getId())
+                .userId(seat.getUserId())
                 .seatId(seat.getSeatId())
                 .leaveId(seat.getLeaveId())
                 .name(user.getName())
@@ -122,6 +122,8 @@ public class UsersService {
                 .dailyAwayTime(user.getDailyAwayTime())
                 .grade(user.getGrade())
                 .build();
+
+
     }
 
     public List<MyReservationTableDto> findMyReservationTable(MyReservationTableRequestDto myReservationTableRequestDto) {

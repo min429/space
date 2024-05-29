@@ -11,7 +11,15 @@ import java.util.Optional;
 public interface SeatRedisRepository extends CrudRepository<Seat, Long> {
 
     Optional<Seat> findByUserId(Long userId);
+
     Optional<Seat> findByLeaveId(Long leaveId);
+
     List<Seat> findAll();
+
+    Optional<Seat> findById(Long seatId);
+
+    List<Seat> findByLeaveIdNotNull();
+
+    void deleteAll();
 
 }

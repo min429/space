@@ -27,6 +27,5 @@ public class DSRepositoryTest {
         // 저장
         seatRedisRepository.save(seat);
 
-
     }
 }

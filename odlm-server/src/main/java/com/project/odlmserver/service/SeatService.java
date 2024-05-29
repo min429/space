@@ -14,6 +14,7 @@ import com.project.odlmserver.repository.SeatCustomRedisRepository;
 import com.project.odlmserver.repository.SeatRedisRepository;
 import com.project.odlmserver.repository.StudyLogCustomRedisRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -35,13 +37,32 @@ public class SeatService {
     private final MyPageService myPageService;
 
     public void save(ReserveRequestDto reserveRequestDto) {
-        Seat seat = seatRedisRepository.findById(reserveRequestDto.getSeatId())
-                .orElseGet(() -> new Seat(reserveRequestDto.getSeatId(), null, false, 0L,null,0L,0L,0L));
+        Long seatId = reserveRequestDto.getSeatId();
 
+
+        // reserveRequestDto.getSeatId() 대신에 테스트에 사용할 seatId를 넣어줍니다.
+        Seat seat = seatRedisRepository.findById(seatId)
+                .orElseGet(() -> new Seat(seatId, null, false, 0L, null, 0L, 0L, 0L));
+
+        // 조회된 seat 객체가 null이 아닌지 확인합니다.
+        System.out.println("============== "+seat.getSeatId() +"========== "+seat.getLeaveId() );
+
+        List<Seat> seatsWithLeaveId = seatRedisRepository.findByLeaveIdNotNull();
         Users user = usersService.findByUserId(reserveRequestDto.getUserId());
+
+        if (user.getState() == STATE.LEAVE){
+            throw new IllegalArgumentException("현재 사용자가 자리비움 상태이므로 예약이 불가능합니다.");
+            
+        }
+
+
+
+
         if(user.getState() == STATE.RESERVE) {
             throw new IllegalArgumentException("이미 다른 자리를 예약함");
         }
+
+
 
         if(seat.getUserId() != null){
             throw new IllegalArgumentException("사용중인 자리");
@@ -59,18 +80,34 @@ public class SeatService {
         // Save the new ReservationTable object
         reservationTableRepository.save(newReservation);
 
-        Seat newSeat = new Seat(reserveRequestDto.getSeatId(), user.getId(), true, 0L,null,0L,0L , 0L);
+        Seat.SeatBuilder seatBuilder = Seat.builder()
+                .seatId(reserveRequestDto.getSeatId())
+                .userId(user.getId())
+                .isUsed(true)
+                .useCount(0L)
+                .duration(0L)
+                .leaveCount(0L)
+                .maxLeaveCount(0L);
+
+        if (seat.getLeaveId() != null) {
+            seatBuilder.leaveId(seat.getLeaveId());
+        }
+
+        Seat newSeat = seatBuilder.build();
         seatRedisRepository.save(newSeat);
         usersService.updateState(user.getId(), STATE.RESERVE);
     }
+
+
 
     public void returns(ReturnRequestDto returnRequestDto) {
         Users user = usersService.findByUserId(returnRequestDto.getUserId());
         Seat seat = seatRedisRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new IllegalArgumentException("이미 반납된 자리"));
 
-
-        if(user.getId() != seat.getUserId()) {
+        System.out.println(user.getId());
+        System.out.println(seat.getUserId());
+        if(!user.getId().equals(seat.getUserId())) {
             throw new IllegalArgumentException("예약자 본인 아님");
         }
 
@@ -94,7 +131,7 @@ public class SeatService {
         Seat seat = seatRedisRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new IllegalArgumentException("이미 반납된 자리"));
 
-        if(user.getId() != seat.getUserId()) {
+        if(!user.getId().equals(seat.getUserId())) {
             throw new IllegalArgumentException("예약자 본인 아님");
         }
         if(user.getGrade() == Grade.LOW){
