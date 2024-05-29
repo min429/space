@@ -262,7 +262,7 @@ class _MypageWidgetState extends State<MypageWidget> {
                 const SizedBox(height: 20),
                 // 막대 그래프 추가
                 Container(
-                  height: 300, // 고정된 높이 설정
+                  height: 400, // 고정된 높이 설정
                   padding: const EdgeInsets.all(8.0),
                   child: BarChart(
                     BarChartData(
