@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:odlm_app/service/messaging_service.dart';
 import 'package:odlm_app/service/notification_service.dart';
 import 'package:odlm_app/signup.dart';
+import 'package:logging/logging.dart';
 
 import 'main.dart';
 import 'globals.dart';
@@ -17,6 +18,10 @@ import 'reservation.dart';
 import 'no_my_seat.dart';
 
 void main() async {
+  Logger.root.level = Level.ALL;
+  Logger.root.onRecord.listen((record) {
+    print('${record.time}: [${record.level}] ${record.loggerName}: ${record.message}');
+  });
   WidgetsFlutterBinding.ensureInitialized();  // Flutter 바인딩 초기화
   await Firebase.initializeApp();
   runApp(const MaterialApp(
