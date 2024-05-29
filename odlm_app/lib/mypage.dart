@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:http/http.dart' as http;
@@ -19,17 +20,7 @@ class _MypageWidgetState extends State<MypageWidget> {
   String dailyStudyTime = '0분';
   String monthlyStudyTime = '0시간 0분';
 
-  List<BarChartGroupData> barChartData = [
-    BarChartGroupData(
-      x: 0,
-      barRods: [
-        BarChartRodData(
-          toY: 0,
-          color: Colors.blue,
-        ),
-      ],
-    ),
-  ]; // 기본적으로 비어있지 않은 상태로 설정
+  List<BarChartGroupData> barChartData = [];
 
   @override
   void initState() {
@@ -65,22 +56,25 @@ class _MypageWidgetState extends State<MypageWidget> {
   }
 
   Future<void> _loadBarChartData() async {
-    // 여기에 차트 데이터를 로드하는 코드를 추가합니다.
-    // 예제 데이터로 설정
-    setState(() {
-      barChartData = [
-        BarChartGroupData(x: 1, barRods: [BarChartRodData(toY: 10, color: Colors.lightBlueAccent)]),
-        BarChartGroupData(x: 2, barRods: [BarChartRodData(toY: 20, color: Colors.lightBlueAccent)]),
-        BarChartGroupData(x: 3, barRods: [BarChartRodData(toY: 30, color: Colors.lightBlueAccent)]),
-        BarChartGroupData(x: 4, barRods: [BarChartRodData(toY: 40, color: Colors.lightBlueAccent)]),
-        BarChartGroupData(x: 5, barRods: [BarChartRodData(toY: 50, color: Colors.lightBlueAccent)]),
-        BarChartGroupData(x: 6, barRods: [BarChartRodData(toY: 60, color: Colors.lightBlueAccent)]),
-        BarChartGroupData(x: 7, barRods: [BarChartRodData(toY: 70, color: Colors.lightBlueAccent)]),
-        BarChartGroupData(x: 8, barRods: [BarChartRodData(toY: 80, color: Colors.lightBlueAccent)]),
-        BarChartGroupData(x: 9, barRods: [BarChartRodData(toY: 90, color: Colors.lightBlueAccent)]),
-        BarChartGroupData(x: 10, barRods: [BarChartRodData(toY: 100, color: Colors.lightBlueAccent)]),
-      ];
-    });
+    try {
+      final monthlyTimes = await _fetchAllMonthlyStudyTime();
+      final int thisMonth = DateTime.now().month;
+
+      setState(() {
+        barChartData = List.generate(12, (index) {
+          double value = monthlyTimes.length > index ? monthlyTimes[index] / 60 : 0; // 시간 단위로 변환
+          Color barColor = (index + 1) > thisMonth ? Colors.blue[100]! : Colors.lightBlueAccent; // 작년과 올해 색상 구분
+          return BarChartGroupData(
+            x: index + 1,
+            barRods: [
+              BarChartRodData(toY: value, color: barColor, borderRadius: BorderRadius.zero),
+            ],
+          );
+        });
+      });
+    } catch (e) {
+      print('Failed to load bar chart data: $e');
+    }
   }
 
   Future<String> _fetchDailyStudyTime(int day) async {
@@ -108,6 +102,20 @@ class _MypageWidgetState extends State<MypageWidget> {
       return response.body; // 서버에서 받은 "분" 데이터
     } else {
       throw Exception('Failed to load monthly study time');
+    }
+  }
+
+  Future<List<int>> _fetchAllMonthlyStudyTime() async {
+    final String url = 'http://10.0.2.2:8080/mypage/monthly/all';
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'userId': userId}),
+    );
+    if (response.statusCode == 200) {
+      return List<int>.from(jsonDecode(response.body)); // 서버에서 받은 "분" 데이터 리스트
+    } else {
+      throw Exception('Failed to load all monthly study times');
     }
   }
 
@@ -164,9 +172,7 @@ class _MypageWidgetState extends State<MypageWidget> {
                                 opacity: 0.7,
                                 child: Text(
                                   '오늘의 학습시간',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
+                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
                                     fontFamily: 'Readex Pro',
                                   ),
                                 ),
@@ -181,9 +187,7 @@ class _MypageWidgetState extends State<MypageWidget> {
                                 opacity: 0.7,
                                 child: Text(
                                   dailyStudyTime,
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
+                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
                                     fontFamily: 'Readex Pro',
                                     fontSize: 23,
                                     fontWeight: FontWeight.w600,
@@ -223,9 +227,7 @@ class _MypageWidgetState extends State<MypageWidget> {
                                 opacity: 0.7,
                                 child: Text(
                                   '이달의 학습시간',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
+                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
                                     fontFamily: 'Readex Pro',
                                   ),
                                 ),
@@ -245,9 +247,7 @@ class _MypageWidgetState extends State<MypageWidget> {
                                       opacity: 0.7,
                                       child: Text(
                                         monthlyStudyTime,
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
+                                        style: FlutterFlowTheme.of(context).bodyMedium.override(
                                           fontFamily: 'Readex Pro',
                                           fontSize: 23,
                                           fontWeight: FontWeight.w600,
@@ -268,7 +268,7 @@ class _MypageWidgetState extends State<MypageWidget> {
                 // 막대 그래프 추가
                 Container(
                   height: 400, // 고정된 높이 설정
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.only(left: 10.0, right: 35.0),
                   child: BarChart(
                     BarChartData(
                       barGroups: barChartData,
@@ -336,7 +336,7 @@ class _MypageWidgetState extends State<MypageWidget> {
                           sideTitles: SideTitles(
                             showTitles: true,
                             getTitlesWidget: (double value, TitleMeta meta) {
-                              if ([10, 30, 50, 70, 90].contains(value.toInt())) {
+                              if (![0, 10, 20, 30, 40, 50].contains(value.toInt())) {
                                 return Container(); // 빈 컨테이너 반환
                               }
                               const style = TextStyle(
@@ -378,7 +378,7 @@ class _MypageWidgetState extends State<MypageWidget> {
                       gridData: FlGridData(
                         show: true, // 가로줄을 추가합니다.
                         drawHorizontalLine: true,
-                        horizontalInterval: 20,
+                        horizontalInterval: 10, // 간격을 10으로 설정
                         getDrawingHorizontalLine: (value) {
                           return FlLine(
                             color: Colors.grey,
@@ -388,8 +388,40 @@ class _MypageWidgetState extends State<MypageWidget> {
                         },
                         drawVerticalLine: false,
                       ),
-                      maxY: 100, // 세로 축의 최대 값을 100으로 설정합니다.
+                      maxY: 50, // 세로 축의 최대 값을 50으로 설정합니다.
                     ),
+                  ),
+                ),
+                // 범례 추가
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 10,
+                            height: 10,
+                            color: Colors.lightBlueAccent,
+                          ),
+                          const SizedBox(width: 5),
+                          const Text('올해'),
+                        ],
+                      ),
+                      const SizedBox(width: 20),
+                      Row(
+                        children: [
+                          Container(
+                            width: 10,
+                            height: 10,
+                            color: Colors.blue[100],
+                          ),
+                          const SizedBox(width: 5),
+                          const Text('작년'),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ],
