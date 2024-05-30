@@ -46,8 +46,7 @@ public class SeatService {
 
         // 조회된 seat 객체가 null이 아닌지 확인합니다.
         System.out.println("============== "+seat.getSeatId() +"========== "+seat.getLeaveId() );
-
-        List<Seat> seatsWithLeaveId = seatRedisRepository.findByLeaveIdNotNull();
+        
         Users user = usersService.findByUserId(reserveRequestDto.getUserId());
 
         if (user.getState() == STATE.LEAVE){
