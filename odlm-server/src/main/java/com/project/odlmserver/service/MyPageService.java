@@ -69,7 +69,14 @@ public class MyPageService {
 
         long time = Duration.between(lastLogTime, now).toMinutes();
 
-        dailyStudyRepository.save(new DailyStudy(new DailyStudyId(userId, day), time));
+        DailyStudyId dailyStudyId = new DailyStudyId(userId, day);
+        DailyStudy beforeTime = dailyStudyRepository.findById(dailyStudyId).orElse(null);
+
+        if (beforeTime != null) {
+            time += beforeTime.getTime();
+        }
+
+        dailyStudyRepository.save(new DailyStudy(dailyStudyId, time));
     }
 
     public void saveMonthlyStudyTime() {
