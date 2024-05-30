@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -63,9 +64,10 @@ public class MyPageService {
     }
 
     public void saveDailyStudyTime(Long userId, LocalDateTime now){
+        LocalDateTime lastLogTime = studyLogCustomRedisRepository.findLastByUserId(userId).getDateTime();
         Long day = (long) now.getDayOfMonth();
-        Long time = (long) now.getMinute()
-                - studyLogCustomRedisRepository.findLastByUserId(userId).getDateTime().getMinute();
+
+        long time = Duration.between(lastLogTime, now).toMinutes();
 
         dailyStudyRepository.save(new DailyStudy(new DailyStudyId(userId, day), time));
     }

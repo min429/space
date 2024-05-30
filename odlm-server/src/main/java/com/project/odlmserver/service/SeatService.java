@@ -46,12 +46,11 @@ public class SeatService {
 
         // 조회된 seat 객체가 null이 아닌지 확인합니다.
         System.out.println("============== "+seat.getSeatId() +"========== "+seat.getLeaveId() );
-        
+
         Users user = usersService.findByUserId(reserveRequestDto.getUserId());
 
         if (user.getState() == STATE.LEAVE){
             throw new IllegalArgumentException("현재 사용자가 자리비움 상태이므로 예약이 불가능합니다.");
-            
         }
 
 
