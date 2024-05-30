@@ -12,6 +12,10 @@ import 'my_seat.dart';
 import 'mypage.dart';
 import 'reservation.dart';
 import 'board.dart';
+import 'no_my_seat.dart';
+
+
+
 
 
 class MainWidget extends StatefulWidget {
@@ -19,6 +23,18 @@ class MainWidget extends StatefulWidget {
 
   @override
   State<MainWidget> createState() => _MainWidgetState();
+}
+
+class MySeatRequestDto {
+  final int userId;
+
+  MySeatRequestDto({required this.userId});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'userId': userId,
+    };
+  }
 }
 
 class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
@@ -123,15 +139,43 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
           !anim.applyInitialState),
       this,
     );
-  }
 
+  }
 
   @override
   void dispose() {
     _model.dispose();
-
     super.dispose();
   }
+
+  Future<void> Check_My_Seat(MySeatRequestDto request) async {
+    final String url = 'http://10.0.2.2:8080/user/myseat';
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(request.toJson()),
+      );
+      if (response.statusCode == 500) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => NoMySeatWidget()),
+        );
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MySeatWidget()),
+        );
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
+
 
   Future<void> _sendGetRequest(String action) async {
     final String url = 'http://10.0.2.2:8080/$action';
@@ -160,6 +204,8 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
       // 예외 처리를 여기에 추가할 수 있습니다.
     }
   }
+
+
 
   Future<void> _sendPostRequest(String action,
       {required Map<String, dynamic> requestData}) async {
@@ -551,11 +597,12 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
 
                             // 나의자리를 터치했을 때 실행할 동작을 여기에 작성합니다.
                             print('나의자리가 선택되었습니다.');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MySeatWidget()),
-                            );
+                            int userIdNonNull=-999;
+                            if (userId != null) {
+                              userIdNonNull = userId!;
+                            }
+                            MySeatRequestDto requestDto = MySeatRequestDto(userId: userIdNonNull);
+                            Check_My_Seat(requestDto);
 
                           },
                         // 나의 자리 메뉴
@@ -740,3 +787,5 @@ class MainModel extends FlutterFlowModel<MainWidget> {
     unfocusNode.dispose();
   }
 }
+
+
