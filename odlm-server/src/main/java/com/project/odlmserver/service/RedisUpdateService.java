@@ -52,17 +52,25 @@ public class RedisUpdateService {
                 .collect(Collectors.toList());
 
         for (Seat seat : leavedSeats) {
+            Long leaveCountNow = seat.getLeaveCount()+1;
+            seatCustomRedisRepository.updateLeaveCount(seat.getSeatId(), leaveCountNow);
 
-            seatCustomRedisRepository.updateLeaveCount(seat.getSeatId(), seat.getLeaveCount()+1);
 
-
-            if (seat.getLeaveCount().equals(seat.getMaxLeaveCount())) {
-                if (!seat.getUserId().equals(null)) {
+            if (leaveCountNow.equals(seat.getMaxLeaveCount()) ) {
+                if (seat.getUserId() == null) {
+                    no_depriveSeat(seat.getSeatId());
+                }
+                else {
                     depriveSeat(seat.getSeatId(), seat.getUserId());
                 }
+
+
+
                 changeAuthority(seat.getSeatId(),seat.getLeaveId());
                 myPageService.saveStudyLog(seat.getLeaveId(), StudyLog.StudyLogType.START);
             }
+
+
 
         }
 
@@ -141,6 +149,15 @@ public class RedisUpdateService {
         usersService.updateState(userId, STATE.RETURN);
 
         fcmService.sendDepriveNotification(user.getToken());
+
+    }
+
+    public void no_depriveSeat(Long seatId) {
+
+
+
+        seatCustomRedisRepository.updateUseCount(seatId, 0L);
+
 
     }
 
