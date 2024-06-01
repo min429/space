@@ -6,7 +6,6 @@ import com.project.odlmserver.repository.ReservationTableRepository;
 import com.project.odlmserver.repository.SeatCustomRedisRepository;
 import com.project.odlmserver.repository.SeatRedisRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,6 @@ import org.slf4j.LoggerFactory;
 @Transactional
 @RequiredArgsConstructor
 @EnableScheduling
-@Slf4j
 public class RedisUpdateService {
 
     private final SeatCustomRedisRepository seatCustomRedisRepository;
@@ -52,12 +50,13 @@ public class RedisUpdateService {
         List<Seat> leavedSeats = allSeats.stream()
                 .filter(seat -> seat != null && seat.getLeaveId() != null)
                 .collect(Collectors.toList());
+
         for (Seat seat : leavedSeats) {
 
             seatCustomRedisRepository.updateLeaveCount(seat.getSeatId(), seat.getLeaveCount()+1);
 
-            //자리비움 시간이 60분이면
-            if (seat.getLeaveCount() == seat.getMaxLeaveCount()) {
+
+            if (seat.getLeaveCount().equals(seat.getMaxLeaveCount())) {
                 depriveSeat(seat.getSeatId(), seat.getUserId());
                 changeAuthority(seat.getSeatId(),seat.getLeaveId());
                 myPageService.saveStudyLog(seat.getLeaveId(), StudyLog.StudyLogType.START);
@@ -88,11 +87,10 @@ public class RedisUpdateService {
                     warn(seat.getUserId());
                 }
 
-                if (updatedUseCount == 30) {
+                else if (updatedUseCount == 30) {
                     //등급 하락 메서드 호출
-                    //gradeManage(seat.getUserId());
+                    gradeManage(seat.getUserId());
                     //자리 박탈 메서드 호출
-                    log.info("===============depriveSeat================");
                     depriveSeat(seat.getSeatId(), seat.getUserId());
 
                 }
@@ -117,16 +115,13 @@ public class RedisUpdateService {
 
     public void depriveSeat(Long seatId, Long userId) {
 
-        log.info("===============start================");
-
         Users user = usersService.findByUserId(userId);
         LocalDateTime currentDateTime = LocalDateTime.now();
 
         // 현재 날짜의 일을 가져옵니다.
         Long dayOfMonth = (long) currentDateTime.getDayOfMonth();
 
-        Long maxReservationTime = 0L
-                ;
+        Long maxReservationTime = 0L;
         if (user.getGrade().equals(Grade.HIGH)){
 
             maxReservationTime = 960L;
@@ -134,15 +129,16 @@ public class RedisUpdateService {
             maxReservationTime = 720L;
         }
 
-        myPageService.saveStudyLog(user.getId(), StudyLog.StudyLogType.END);
-        reservationTableRepository.updateEndTimeByUserIdAndSeatId(userId, seatId, currentDateTime);
-
-        seatCustomRedisRepository.deleteUserId(seatId, userId);
-        usersService.updateState(userId, STATE.RETURN);
-
         Long dailyStudyTime= myPageService.getDailyStudyTime(user.getId(), dayOfMonth);
         Long useReservationTime = maxReservationTime - dailyStudyTime;
         usersService.updateDailyReservationTime(userId , useReservationTime);
+        reservationTableRepository.updateEndTimeByUserIdAndSeatId(userId, seatId, currentDateTime);
+
+        seatCustomRedisRepository.deleteUserId(seatId, userId);
+        seatCustomRedisRepository.updateUseCount(seatId, 0L);
+        usersService.updateState(userId, STATE.RETURN);
+
+        fcmService.sendDepriveNotification(user.getToken());
 
     }
 

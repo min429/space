@@ -44,7 +44,7 @@ class _WriteBoardWidgetState extends State<WriteBoardWidget> {
     return Scaffold(
       appBar: AppBar(
         title: Text('글쓰기', style: TextStyle(color: Colors.white)),
-        backgroundColor: Color(0xFFE1960F29),
+        backgroundColor: mainColor,
         centerTitle: true, // 가운데 정렬
 
         leading: IconButton(
