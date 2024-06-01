@@ -87,7 +87,7 @@ public class RedisUpdateService {
                     warn(seat.getUserId());
                 }
 
-                else if (updatedUseCount == 30) {
+                if (updatedUseCount == 30) {
                     //등급 하락 메서드 호출
                     gradeManage(seat.getUserId());
                     //자리 박탈 메서드 호출
