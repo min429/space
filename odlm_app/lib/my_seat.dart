@@ -56,7 +56,8 @@ class _MySeatWidgetState extends State<MySeatWidget> {
 
 
   Future<void> fetchMySeat(MySeatRequestDto request) async {
-    final String url = 'http://10.0.2.2:8080/user/myseat';
+    final String url = 'http://172.20.10.9:8080/user/myseat';
+   // http://172.20.10.9:8080/user/myseat- 안스- 가상환경 /  172.20.10.9 - 경하스팟
 
     try {
       final response = await http.post(
@@ -93,7 +94,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
           }
 
         });
-        print('seatId: $RuserId');
+        print('RuserId: $RuserId');
         print('seatId: $seatId');
         print('leaveId: $leaveId');
         print('User Name: $userName');
@@ -712,7 +713,7 @@ void showReturnDialog(BuildContext context) {
 
 //
 void sendReturnRequest(int userId) async {
-  final String url = 'http://10.0.2.2:8080/seat/return'; // 서버 엔드포인트 URL
+  final String url = 'http://172.20.10.9:8080/seat/return'; // 서버 엔드포인트 URL
   try {
     final response = await http.post(
       Uri.parse(url),
@@ -794,7 +795,7 @@ void showAwayDialog(BuildContext context, int dailyReservationTime, int dailyAwa
 
 // 자리 비움 요청을 보내는 함수
 Future<void> _leaveSeat(int selectedTime) async {
-  final String url = 'http://10.0.2.2:8080/seat/leave';
+  final String url = 'http://172.20.10.9:8080/seat/leave';
 
   // leave 메서드에 전달할 데이터 구성
   final leaveData = {

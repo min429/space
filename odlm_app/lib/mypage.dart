@@ -86,7 +86,7 @@ class _MypageWidgetState extends State<MypageWidget> {
   }
 
   Future<String> _fetchDailyStudyTime(int day) async {
-    final String url = 'http://10.0.2.2:8080/mypage/day/$day';
+    final String url = 'http://172.20.10.9:8080/mypage/day/$day';
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
@@ -100,7 +100,7 @@ class _MypageWidgetState extends State<MypageWidget> {
   }
 
   Future<String> _fetchMonthlyStudyTime(int month) async {
-    final String url = 'http://10.0.2.2:8080/mypage/month/$month';
+    final String url = 'http://172.20.10.9:8080/mypage/month/$month';
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
@@ -114,7 +114,7 @@ class _MypageWidgetState extends State<MypageWidget> {
   }
 
   Future<List<int>> _fetchAllMonthlyStudyTime() async {
-    final String url = 'http://10.0.2.2:8080/mypage/monthly/all';
+    final String url = 'http://172.20.10.9:8080/mypage/monthly/all';
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},

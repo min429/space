@@ -6,6 +6,7 @@ import com.project.odlmserver.repository.ReservationTableRepository;
 import com.project.odlmserver.repository.SeatCustomRedisRepository;
 import com.project.odlmserver.repository.SeatRedisRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import org.slf4j.LoggerFactory;
 @Transactional
 @RequiredArgsConstructor
 @EnableScheduling
+@Slf4j
 public class RedisUpdateService {
 
     private final SeatCustomRedisRepository seatCustomRedisRepository;
@@ -86,10 +88,11 @@ public class RedisUpdateService {
                     warn(seat.getUserId());
                 }
 
-                else if (updatedUseCount == 30) {
+                if (updatedUseCount == 30) {
                     //등급 하락 메서드 호출
-                    gradeManage(seat.getUserId());
+                    //gradeManage(seat.getUserId());
                     //자리 박탈 메서드 호출
+                    log.info("===============depriveSeat================");
                     depriveSeat(seat.getSeatId(), seat.getUserId());
 
                 }
@@ -114,6 +117,8 @@ public class RedisUpdateService {
 
     public void depriveSeat(Long seatId, Long userId) {
 
+        log.info("===============start================");
+
         Users user = usersService.findByUserId(userId);
         LocalDateTime currentDateTime = LocalDateTime.now();
 
@@ -129,14 +134,15 @@ public class RedisUpdateService {
             maxReservationTime = 720L;
         }
 
-        Long dailyStudyTime= myPageService.getDailyStudyTime(user.getId(), dayOfMonth);
-        Long useReservationTime = maxReservationTime - dailyStudyTime;
-        usersService.updateDailyReservationTime(userId , useReservationTime);
+        myPageService.saveStudyLog(user.getId(), StudyLog.StudyLogType.END);
         reservationTableRepository.updateEndTimeByUserIdAndSeatId(userId, seatId, currentDateTime);
 
         seatCustomRedisRepository.deleteUserId(seatId, userId);
-        seatCustomRedisRepository.updateUseCount(seatId, 0L);
         usersService.updateState(userId, STATE.RETURN);
+
+        Long dailyStudyTime= myPageService.getDailyStudyTime(user.getId(), dayOfMonth);
+        Long useReservationTime = maxReservationTime - dailyStudyTime;
+        usersService.updateDailyReservationTime(userId , useReservationTime);
 
     }
 

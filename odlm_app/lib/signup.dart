@@ -50,7 +50,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
 
   Future<void> _sendPostRequest(String action,
       {required Map<String, dynamic> requestData}) async {
-    final String url = 'http://10.0.2.2:8080/$action';
+    final String url = 'http://172.20.10.9:8080/$action';
     try {
       final response = await http.post(
         Uri.parse(url),

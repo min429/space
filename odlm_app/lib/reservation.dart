@@ -105,7 +105,7 @@ void _showReservationDialog(BuildContext context, int seatNumber) {
 
 // 서버에 예약 요청을 보내는 함수
 void _sendReservationRequest(ReserveRequestDto requestData) async {
-  final String url = 'http://10.0.2.2:8080/seat/reserve'; // 서버 엔드포인트 URL
+  final String url = 'http://172.20.10.9:8080/seat/reserve'; // 서버 엔드포인트 URL
   try {
     final response = await http.post(
       Uri.parse(url),
@@ -129,7 +129,7 @@ void _sendReservationRequest(ReserveRequestDto requestData) async {
 
 // 서버에서 모든 좌석 정보를 가져오는 함수
 Future<List<SeatDto>> getAllSeats() async {
-  final String url = 'http://10.0.2.2:8080/seat/getAll'; // 서버 엔드포인트 URL
+  final String url = 'http://172.20.10.9:8080/seat/getAll'; // 서버 엔드포인트 URL
   try {
     final response = await http.get(
       Uri.parse(url),
@@ -298,13 +298,13 @@ class _ReservationWidgetState extends State<ReservationWidget> {
   Alignment _getSeatAlignment(int seatNumber) {
     switch (seatNumber) {
       case 1:
-        return Alignment(-0.51, -0.6);
+        return Alignment(-0.5, -0.7);
       case 2:
-        return Alignment(0.51, -0.6);
+        return Alignment(0.5, -0.7);
       case 3:
-        return Alignment(-0.51, -0.25);
+        return Alignment(-0.5, -0.25);
       case 4:
-        return Alignment(0.51, -0.25);
+        return Alignment(0.5, -0.25);
       default:
         return Alignment.center;
     }
