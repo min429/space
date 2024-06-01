@@ -6,6 +6,7 @@ import com.project.odlmserver.repository.ReservationTableRepository;
 import com.project.odlmserver.repository.SeatCustomRedisRepository;
 import com.project.odlmserver.repository.SeatRedisRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import org.slf4j.LoggerFactory;
 @Transactional
 @RequiredArgsConstructor
 @EnableScheduling
+@Slf4j
 public class RedisUpdateService {
 
     private final SeatCustomRedisRepository seatCustomRedisRepository;
@@ -55,9 +57,11 @@ public class RedisUpdateService {
 
             seatCustomRedisRepository.updateLeaveCount(seat.getSeatId(), seat.getLeaveCount()+1);
 
-
+            log.info("leaveCountEqual: "+seat.getLeaveCount().equals(seat.getMaxLeaveCount()));
+            log.info("seat.getLeaveCount(): "+seat.getLeaveCount());
+            log.info("seat.getMaxLeaveCount(): "+seat.getMaxLeaveCount());
             if (seat.getLeaveCount().equals(seat.getMaxLeaveCount())) {
-                if (!seat.getUserId().equals(null)) {
+                if (seat.getUserId() != null) {
                     depriveSeat(seat.getSeatId(), seat.getUserId());
                 }
                 changeAuthority(seat.getSeatId(),seat.getLeaveId());
