@@ -254,7 +254,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
             .of(context)
             .secondaryBackground, // 배경색 설정
         appBar: AppBar(
-          backgroundColor: Color(0xE1960F29),
+          backgroundColor: mainColor,
           // 앱 바의 배경색 설정
           automaticallyImplyLeading: false,
           // 뒤로 가기 버튼 자동 추가 안 함
@@ -262,7 +262,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
             mainAxisSize: MainAxisSize.max,
             children: [
               Text(
-                'ODLM', // 앱 타이틀 설정
+                'SPACE', // 앱 타이틀 설정
                 style: FlutterFlowTheme
                     .of(context)
                     .headlineLarge
@@ -316,7 +316,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                     width: double.infinity,
                     height: 200,
                     decoration: BoxDecoration(
-                      color: Color(0xE1960F29),
+                      color: mainColor,
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(0),
                         bottomRight: Radius.circular(0),
@@ -412,7 +412,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                                                     alignment: AlignmentDirectional(
                                                         0, 0),
                                                     child: Text(
-                                                      '0분',
+                                                      '35분',
                                                       style: FlutterFlowTheme
                                                           .of(
                                                           context)
@@ -662,7 +662,6 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                             MaterialPageRoute(
                                 builder: (context) => BoardWidget()),
                           );
-
                         },
                         // 게시판 메뉴
                         child:Container(

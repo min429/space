@@ -89,7 +89,7 @@ class _BoardWidgetState extends State<BoardWidget> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: Color(0xFFE1960F29),
+        backgroundColor: mainColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           color: Colors.white,
@@ -135,7 +135,7 @@ class _BoardWidgetState extends State<BoardWidget> {
             _refreshBoardData();
           });
         },
-        backgroundColor: Color(0xFFE1960F29),
+        backgroundColor: mainColor,
         child: Icon(Icons.create, color: Colors.white),
       ),
     );

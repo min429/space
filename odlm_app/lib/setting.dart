@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import 'globals.dart';
 import 'login.dart';
 
 // 설정 화면 위젯
@@ -41,7 +42,7 @@ class _SettingWidgetState extends State<SettingWidget> {
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground, // 배경색
         appBar: AppBar(
-          backgroundColor: Color(0xE1960F29), // 앱바 배경색
+          backgroundColor: mainColor, // 앱바 배경색
           automaticallyImplyLeading: true,
           title: Text(
             '설정', // 앱바 타이틀

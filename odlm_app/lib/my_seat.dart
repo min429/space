@@ -125,7 +125,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
         appBar: AppBar(
-          backgroundColor: Color(0xE1960F29),
+          backgroundColor: mainColor,
           automaticallyImplyLeading: true,
           title: Row(
             mainAxisSize: MainAxisSize.max,
@@ -180,7 +180,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                         width: double.infinity,
                         height:260,
                         decoration: BoxDecoration(
-                          color: Color(0xE1960F29),
+                          color: mainColor,
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(0),
                             bottomRight: Radius.circular(0),
@@ -571,7 +571,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                         width: double.infinity,
                         height: 100,
                         decoration: BoxDecoration(
-                          color: Color(0xE1960F29),
+                          color: mainColor,
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
