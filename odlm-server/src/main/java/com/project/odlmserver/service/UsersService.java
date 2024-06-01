@@ -186,7 +186,7 @@ public class UsersService {
     }
 
     public void updateDailyReservationTime(Long userId, Long reservationTime) {
-        usersRepository.updateDailyReservationTime(userId, -reservationTime);
+        usersRepository.updateDailyReservationTime(userId, reservationTime);
     }
 
 }
