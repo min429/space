@@ -121,8 +121,7 @@ public class RedisUpdateService {
         // 현재 날짜의 일을 가져옵니다.
         Long dayOfMonth = (long) currentDateTime.getDayOfMonth();
 
-        Long maxReservationTime = 0L
-                ;
+        Long maxReservationTime = 0L;
         if (user.getGrade().equals(Grade.HIGH)){
 
             maxReservationTime = 960L;
@@ -138,6 +137,8 @@ public class RedisUpdateService {
         seatCustomRedisRepository.deleteUserId(seatId, userId);
         seatCustomRedisRepository.updateUseCount(seatId, 0L);
         usersService.updateState(userId, STATE.RETURN);
+
+        fcmService.sendDepriveNotification(user.getToken());
 
     }
 

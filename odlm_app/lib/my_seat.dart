@@ -54,6 +54,11 @@ class _MySeatWidgetState extends State<MySeatWidget> {
     fetchMySeat(requestDto);
   }
 
+  String convertMinutesToHoursAndMinutes(int minutes) {
+    final int hours = minutes ~/ 60;
+    final int remainingMinutes = minutes % 60;
+    return '$hours시간 $remainingMinutes분';
+  }
 
   Future<void> fetchMySeat(MySeatRequestDto request) async {
     final String url = 'http://10.0.2.2:8080/user/myseat';
@@ -239,15 +244,10 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                                                 padding: EdgeInsetsDirectional
                                                     .fromSTEB(0, 20, 30, 0),
                                                 child: Text(
-                                                  '남은 시간 $dailyReservationTime분',
-                                                  style: FlutterFlowTheme.of(
-                                                      context)
-                                                      .bodyMedium
-                                                      .override(
-                                                    fontFamily:
-                                                    'Readex Pro',
-                                                    color:
-                                                    Color(0xFF4AB1F3),
+                                                  '남은 시간 ${convertMinutesToHoursAndMinutes(dailyReservationTime)}',
+                                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                    fontFamily: 'Readex Pro',
+                                                    color: Color(0xFF4AB1F3),
                                                     letterSpacing: 0,
                                                   ),
                                                 ),
@@ -286,15 +286,10 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                                                 padding: EdgeInsetsDirectional
                                                     .fromSTEB(0, 20, 30, 0),
                                                 child: Text(
-                                                  '남은 시간 $dailyAwayTime분',
-                                                  style: FlutterFlowTheme.of(
-                                                      context)
-                                                      .bodyMedium
-                                                      .override(
-                                                    fontFamily:
-                                                    'Readex Pro',
-                                                    color:
-                                                    Color(0xFF4AB1F3),
+                                                  '남은 시간 ${convertMinutesToHoursAndMinutes(dailyAwayTime)}',
+                                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                    fontFamily: 'Readex Pro',
+                                                    color: Color(0xFF4AB1F3),
                                                     letterSpacing: 0,
                                                   ),
                                                 ),
