@@ -62,7 +62,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
 
   Future<void> fetchMySeat(MySeatRequestDto request) async {
     final String url = 'http://172.20.10.9:8080/user/myseat';
-   // http://172.20.10.9:8080/user/myseat- 안스- 가상환경 /  172.20.10.9 - 경하스팟
+   // http://10.0.2점2 점을.로 바꾸면 됨:8080/user/myseat- 안스- 가상환경 /  10.0.2점2 점을 바꾸면 됨 172.20.10점9 - 경하스팟
 
     try {
       final response = await http.post(
