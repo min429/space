@@ -117,8 +117,17 @@ public class SeatService {
         // 현재 날짜의 일을 가져옵니다.
         Long dayOfMonth = (long) currentDateTime.getDayOfMonth();
 
+        Long maxReservationTime = 0L
+                ;
+        if (user.getGrade().equals(Grade.HIGH)){
+            maxReservationTime = 960L;
+        } else if (user.getGrade().equals(Grade.MIDDLE)) {
+            maxReservationTime = 720L;
+        }
+
         Long dailyStudyTime= myPageService.getDailyStudyTime(user.getId(), dayOfMonth);
-        usersService.updateDailyReservationTime(user.getId() , dailyStudyTime);
+        Long useReservationTime = maxReservationTime - dailyStudyTime;
+        usersService.updateDailyReservationTime(user.getId() , useReservationTime);
 
         seatCustomRedisRepository.deleteUserId(seat.getSeatId(), seat.getUserId());
         usersService.updateState(user.getId(), STATE.RETURN);
@@ -141,8 +150,19 @@ public class SeatService {
         // 현재 날짜의 일을 가져옵니다.
         Long dayOfMonth = (long) currentDate.getDayOfMonth();
 
+        Long maxReservationTime = 0L
+                ;
+        if (user.getGrade().equals(Grade.HIGH)){
+
+            maxReservationTime = 960L;
+        } else if (user.getGrade().equals(Grade.MIDDLE)) {
+            maxReservationTime = 720L;
+        }
+
         Long dailyStudyTime= myPageService.getDailyStudyTime(user.getId(), dayOfMonth);
-        usersService.updateDailyReservationTime(user.getId() , dailyStudyTime);
+        Long useReservationTime = maxReservationTime - dailyStudyTime;
+
+        usersService.updateDailyReservationTime(user.getId() , useReservationTime);
         usersService.updateDailyAwayTime(user.getId() , leaveReauestDto.getLeaveTime());
 
         seatCustomRedisRepository.updateMaxLeaveCount(seat.getSeatId(),leaveReauestDto.getLeaveTime());

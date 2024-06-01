@@ -114,13 +114,24 @@ public class RedisUpdateService {
 
     public void depriveSeat(Long seatId, Long userId) {
 
+        Users user = usersService.findByUserId(userId);
         LocalDateTime currentDateTime = LocalDateTime.now();
 
         // 현재 날짜의 일을 가져옵니다.
         Long dayOfMonth = (long) currentDateTime.getDayOfMonth();
 
-        Long dailyStudyTime= myPageService.getDailyStudyTime(userId, dayOfMonth);
-        usersService.updateDailyReservationTime(userId , dailyStudyTime);
+        Long maxReservationTime = 0L
+                ;
+        if (user.getGrade().equals(Grade.HIGH)){
+
+            maxReservationTime = 960L;
+        } else if (user.getGrade().equals(Grade.MIDDLE)) {
+            maxReservationTime = 720L;
+        }
+
+        Long dailyStudyTime= myPageService.getDailyStudyTime(user.getId(), dayOfMonth);
+        Long useReservationTime = maxReservationTime - dailyStudyTime;
+        usersService.updateDailyReservationTime(userId , useReservationTime);
         reservationTableRepository.updateEndTimeByUserIdAndSeatId(userId, seatId, currentDateTime);
 
         seatCustomRedisRepository.deleteUserId(seatId, userId);
