@@ -65,15 +65,12 @@ public class SeatCustomRedisRepository {
 
 
     public void deleteUserId(Long seatId, Long userId) {
-        String id = hashOperations.get("seat:" + seatId, "userId");
-        if(id != null && !id.isEmpty()){
-            Long beforeId = Long.valueOf(id);
-            setOperations.pop("seat:userId:" + beforeId);
-            setOperations.remove("seat:" + seatId + ":idx", "seat:userId:"+beforeId);
-        }
+        setOperations.pop("seat:userId:" + userId);
+        setOperations.remove("seat:" + seatId + ":idx", "seat:userId:"+userId);
         hashOperations.put("seat:" + seatId, "userId", ""); // redis는 null 지원x
         hashOperations.put("seat:" + seatId, "useCount", "0"); // redis는 숫자 타입 지원x
         hashOperations.put("seat:" + seatId, "duration", "0"); // redis는 숫자 타입 지원x
+        hashOperations.put("seat:" + seatId, "isUsed", "0"); // redis는 숫자 타입 지원x
     }
 
     public void updateUseCount(Long seatId, Long useCount) {
