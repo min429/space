@@ -50,16 +50,27 @@ public class RedisUpdateService {
         List<Seat> leavedSeats = allSeats.stream()
                 .filter(seat -> seat != null && seat.getLeaveId() != null)
                 .collect(Collectors.toList());
+
         for (Seat seat : leavedSeats) {
+            Long leaveCountNow = seat.getLeaveCount()+1;
+            seatCustomRedisRepository.updateLeaveCount(seat.getSeatId(), leaveCountNow);
 
-            seatCustomRedisRepository.updateLeaveCount(seat.getSeatId(), seat.getLeaveCount()+1);
 
-            //자리비움 시간이 60분이면
-            if (seat.getLeaveCount() == seat.getMaxLeaveCount()) {
-                depriveSeat(seat.getSeatId(), seat.getUserId());
+            if (leaveCountNow.equals(seat.getMaxLeaveCount()) ) {
+                if (seat.getUserId() == null) {
+                    no_depriveSeat(seat.getSeatId());
+                }
+                else {
+                    depriveSeat(seat.getSeatId(), seat.getUserId());
+                }
+
+
+
                 changeAuthority(seat.getSeatId(),seat.getLeaveId());
                 myPageService.saveStudyLog(seat.getLeaveId(), StudyLog.StudyLogType.START);
             }
+
+
 
         }
 
@@ -86,7 +97,7 @@ public class RedisUpdateService {
                     warn(seat.getUserId());
                 }
 
-                else if (updatedUseCount == 30) {
+                if (updatedUseCount == 30) {
                     //등급 하락 메서드 호출
                     gradeManage(seat.getUserId());
                     //자리 박탈 메서드 호출
@@ -138,6 +149,15 @@ public class RedisUpdateService {
         usersService.updateState(userId, STATE.RETURN);
 
         fcmService.sendDepriveNotification(user.getToken());
+
+    }
+
+    public void no_depriveSeat(Long seatId) {
+
+
+
+        seatCustomRedisRepository.updateUseCount(seatId, 0L);
+
 
     }
 
