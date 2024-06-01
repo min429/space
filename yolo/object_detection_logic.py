@@ -17,12 +17,20 @@ model = torch.hub.load('ultralytics/yolov5', 'custom', path='yolov5s.pt')
 
 # RTSP 스트리밍 주소
 rtsp_url = "rtsp://asdf1013:asdf1013@172.20.10.8:554/stream1"
-# 웹캠 캡처 객체 초기화
-cap = cv2.VideoCapture(rtsp_url)
+webcam_index = 0
 
-# 캠 화면 크기 설정
+# 웹캠 캡처 객체 초기화
+# cap = cv2.VideoCapture(rtsp_url)
+cap = cv2.VideoCapture(0)
+
+#캠 화면 크기 설정
 cv2.namedWindow('YOLOv5 Person Detection', cv2.WINDOW_NORMAL)
 cv2.resizeWindow('YOLOv5 Person Detection', 1000, 750)  # 원하는 크기로 설정해주세요
+
+# 웹캠이 열려 있는지 확인
+if not cap.isOpened():
+    print("웹캠을 열 수 없습니다.")
+    exit()
 
 # 10초마다 결과를 저장할 리스트
 s10_result = []
@@ -71,25 +79,25 @@ while True:
         cv2.circle(output, point, 5, (0, 0, 255), -1)
         cv2.putText(output, str(idx), (point[0] + 10, point[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-    # 결과 리스트 초기화
-    result_list = []
-
-    # 객체 바운딩 박스와 점이 겹치는지 확인하여 결과 저장
-    for point in points:
-        is_overlapped = False
-        for bbox in bbox_list:
-            is_overlap = bbox[0] < point[0] < bbox[2] and bbox[1] < point[1] < bbox[3]
-            if is_overlap:
-                is_overlapped = True
-                break
-        result_list.append(1 if is_overlapped else 0)
-
 
     # 현재 시간
     current_time = time.time()
 
     # 10초가 지난 경우
     if current_time - start_time >= 10:
+
+        # 결과 리스트 초기화
+        result_list = []
+
+        # 객체 바운딩 박스와 점이 겹치는지 확인하여 결과 저장
+        for point in points:
+            is_overlapped = False
+            for bbox in bbox_list:
+                is_overlap = bbox[0] < point[0] < bbox[2] and bbox[1] < point[1] < bbox[3]
+                if is_overlap:
+                    is_overlapped = True
+                    break
+            result_list.append(1 if is_overlapped else 0)
 
         s10_result.append(result_list)  # 10초 결과 저장
         start_time = current_time  # 시작 시간 재설정
