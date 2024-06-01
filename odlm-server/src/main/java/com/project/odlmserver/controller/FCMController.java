@@ -17,7 +17,6 @@ public class FCMController {
 
     @PostMapping("/register")
     public void registerToken(@RequestBody RegisterTokenRequestDto request) {
-        fcmService.sendNotification(request.getToken());
         fcmService.registerToken(request.getUserId(), request.getToken());
     }
 }
