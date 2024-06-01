@@ -50,12 +50,13 @@ public class RedisUpdateService {
         List<Seat> leavedSeats = allSeats.stream()
                 .filter(seat -> seat != null && seat.getLeaveId() != null)
                 .collect(Collectors.toList());
+
         for (Seat seat : leavedSeats) {
 
             seatCustomRedisRepository.updateLeaveCount(seat.getSeatId(), seat.getLeaveCount()+1);
 
-            //자리비움 시간이 60분이면
-            if (seat.getLeaveCount() == seat.getMaxLeaveCount()) {
+
+            if (seat.getLeaveCount().equals(seat.getMaxLeaveCount())) {
                 depriveSeat(seat.getSeatId(), seat.getUserId());
                 changeAuthority(seat.getSeatId(),seat.getLeaveId());
                 myPageService.saveStudyLog(seat.getLeaveId(), StudyLog.StudyLogType.START);
