@@ -9,6 +9,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import 'globals.dart';
+
 
 
 class NoMySeatWidget extends StatefulWidget {
@@ -46,7 +48,7 @@ class _NoMySeatWidgetState extends State<NoMySeatWidget> {
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
         appBar: AppBar(
-          backgroundColor: Color(0xE1960F29),
+          backgroundColor: mainColor,
           automaticallyImplyLeading: true,
           title: Row(
             mainAxisSize: MainAxisSize.max,
@@ -94,7 +96,7 @@ class _NoMySeatWidgetState extends State<NoMySeatWidget> {
                         width: double.infinity,
                         height: 200,
                         decoration: BoxDecoration(
-                          color: Color(0xE1960F29),
+                          color: mainColor,
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(0),
                             bottomRight: Radius.circular(0),

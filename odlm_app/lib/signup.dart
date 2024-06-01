@@ -3,6 +3,8 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'globals.dart';
+
 class SignUpWidget extends StatefulWidget {
   const SignUpWidget({Key? key}) : super(key: key);
 
@@ -100,7 +102,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xE1960F29),
+      backgroundColor: mainColor,
 
       body: SingleChildScrollView(
         child: Column(
@@ -369,7 +371,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.white), // 버튼의 배경색 변경
-                    foregroundColor: MaterialStateProperty.all(Color(0xE1960F29)), // 버튼 텍스트 색상 변경
+                    foregroundColor: MaterialStateProperty.all(mainColor), // 버튼 텍스트 색상 변경
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder( // 버튼 모양 변경
                         borderRadius: BorderRadius.circular(20),
@@ -389,7 +391,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                           .bodyMedium
                           .override(
                         fontFamily: 'Readex Pro',
-                        color: Color(0xE1960F29),
+                        color: mainColor,
                         fontSize: 18,
                         letterSpacing: 0,
                       ),

@@ -136,7 +136,7 @@ class _MypageWidgetState extends State<MypageWidget> {
       child: Scaffold(
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         appBar: AppBar(
-          backgroundColor: const Color(0xE1960F29),
+          backgroundColor: mainColor,
           automaticallyImplyLeading: true,
           title: Text(
             '마이페이지',

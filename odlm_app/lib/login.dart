@@ -151,7 +151,7 @@ class _LoginWidgetState extends State<LoginWidget> {
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Color(0xE1960F29),
+        backgroundColor: mainColor,
         body: SafeArea(
           top: true,
           child: Align(
@@ -171,7 +171,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                     child: Align(
                       alignment: AlignmentDirectional(0, 0),
                       child: Text(
-                        'ODLM',
+                        'SPACE',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'Readex Pro',
                               color: Colors.white,
@@ -344,7 +344,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                     .bodyMedium
                                     .override(
                                       fontFamily: 'Readex Pro',
-                                      color: Color(0xE1960F29),
+                                      color: mainColor,
                                       fontSize: 18,
                                       letterSpacing: 0,
                                     ),
@@ -387,7 +387,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                     .bodyMedium
                                     .override(
                                       fontFamily: 'Readex Pro',
-                                      color: Color(0xE1960F29),
+                                      color: mainColor,
                                       fontSize: 18,
                                       letterSpacing: 0,
                                     ),

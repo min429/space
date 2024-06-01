@@ -201,7 +201,7 @@ class _ReservationWidgetState extends State<ReservationWidget> {
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         appBar: AppBar(
-          backgroundColor: Color(0xE1960F29),
+          backgroundColor: mainColor,
           automaticallyImplyLeading: true,
           title: Text(
             '좌석발권',
