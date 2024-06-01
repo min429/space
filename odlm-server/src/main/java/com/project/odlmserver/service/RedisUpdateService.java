@@ -57,7 +57,9 @@ public class RedisUpdateService {
 
 
             if (seat.getLeaveCount().equals(seat.getMaxLeaveCount())) {
-                depriveSeat(seat.getSeatId(), seat.getUserId());
+                if (!seat.getUserId().equals(null)) {
+                    depriveSeat(seat.getSeatId(), seat.getUserId());
+                }
                 changeAuthority(seat.getSeatId(),seat.getLeaveId());
                 myPageService.saveStudyLog(seat.getLeaveId(), StudyLog.StudyLogType.START);
             }
@@ -87,7 +89,7 @@ public class RedisUpdateService {
                     warn(seat.getUserId());
                 }
 
-                else if (updatedUseCount == 30) {
+                if (updatedUseCount == 30) {
                     //등급 하락 메서드 호출
                     gradeManage(seat.getUserId());
                     //자리 박탈 메서드 호출
