@@ -1,28 +1,33 @@
 package com.project.odlmserver.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+
+import lombok.*;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
 
 
 @Entity
-@Getter @Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 
 public class Board {
     @Id
+    @GeneratedValue()
     @Column(name = "board_id")
     private Long id;
 
-    @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "student_id")
+    @JoinColumn(name = "user_id")
     private Users user;
 
     @Lob
     private String content;
-    private LocalDateTime post_time;
+    private LocalDateTime postTime;
+
 
 }
+

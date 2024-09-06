@@ -19,3 +19,5 @@ gradle-app.setting
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+odlm_app/pubspec.lock
+odlm_app/pubspec.lock
