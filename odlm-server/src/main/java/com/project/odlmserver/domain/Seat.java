@@ -40,4 +40,6 @@ public class Seat {
         this.leaveCount = leaveCount == null ? 0L : leaveCount;
         this.maxLeaveCount = maxLeaveCount == null ? null : maxLeaveCount;
     }
+
+
 }

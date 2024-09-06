@@ -202,12 +202,13 @@ public class SeatService {
                 .map(seat -> {
                     Long userId = seat.getUserId();
                     Long leaveId = seat.getLeaveId();
-
+                    Long maxleaveCount = seat.getMaxLeaveCount();
                     // BoardDto에 사용자의 이름을 포함하여 반환
                     return SeatDto.builder()
                             .seatId(seat.getSeatId())
                             .userId(userId)
                             .leaveId(leaveId)
+                            .duration(maxleaveCount)
                             .build();
                 })
                 .collect(Collectors.toList());

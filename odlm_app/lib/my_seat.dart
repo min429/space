@@ -578,8 +578,30 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                                 child: GestureDetector(
                                   onTap: () {
                                     print('자리반납이 선택되었습니다.');
-                                    showReturnDialog(context);
 
+                                    if (Status == "자리비움중") {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('알림'),
+                                            content: Text('자리반납이 불가능합니다.'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: Text('확인'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop(); // 다이얼로그 닫기
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+
+                                    }
+                                    else {
+                                      showReturnDialog(context);
+                                    }
                                   },
                                   child: Container(
                                     width: double.infinity,
@@ -615,7 +637,30 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                                     print('자리비움이 선택되었습니다.');
                                     // 다이얼로그 표시 함수 호출
                                     // 다이얼로그 표시 함수 호출
-                                    showAwayDialog(context, dailyReservationTime, dailyAwayTime);
+                                    if (Status == "자리 예약중") {
+                                      showAwayDialog(
+                                          context, dailyReservationTime,
+                                          dailyAwayTime);
+                                    }
+                                    else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('알림'),
+                                            content: Text('자리비움이 불가능합니다.'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: Text('확인'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop(); // 다이얼로그 닫기
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
                                   },
                                   child: Container(
                                     width: double.infinity,
@@ -767,6 +812,7 @@ void showAwayDialog(BuildContext context, int dailyReservationTime, int dailyAwa
           ),
           TextButton(
             onPressed: () {
+
               if (selectedNumber <= maxAwayTime) {
                 // 여기에 선택된 시간을 처리하는 코드를 추가하세요.
                 _leaveSeat(selectedNumber); // leave 메서드 호출
