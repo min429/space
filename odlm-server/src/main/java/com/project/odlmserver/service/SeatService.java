@@ -65,6 +65,8 @@ public class SeatService {
         if(seat.getUserId() != null){
             throw new IllegalArgumentException("사용중인 자리");
         }
+        
+
 
         LocalDateTime currentDateTime = LocalDateTime.now();
 
@@ -84,8 +86,11 @@ public class SeatService {
                 .isUsed(true)
                 .useCount(0L)
                 .duration(0L)
-                .leaveCount(0L)
-                .maxLeaveCount(0L);
+                .leaveCount(0L);
+
+        if (seat.getMaxLeaveCount() != null) {
+            seatBuilder.maxLeaveCount(seat.getMaxLeaveCount());
+        }
 
         if (seat.getLeaveId() != null) {
             seatBuilder.leaveId(seat.getLeaveId());
@@ -105,10 +110,14 @@ public class SeatService {
 
         System.out.println(user.getId());
         System.out.println(seat.getUserId());
+
         if(!user.getId().equals(seat.getUserId())) {
             throw new IllegalArgumentException("예약자 본인 아님");
         }
 
+        if(user.getState().equals(STATE.LEAVE)){
+            throw new IllegalArgumentException("자리 비움 상태에선 반납이 불가능합니다");
+        }
 
 
         LocalDateTime currentDateTime = LocalDateTime.now();
@@ -141,8 +150,17 @@ public class SeatService {
         if(!user.getId().equals(seat.getUserId())) {
             throw new IllegalArgumentException("예약자 본인 아님");
         }
+
+        if(user.getState().equals(STATE.LEAVE)){
+            throw new IllegalArgumentException("자리 비움 상태에선 자리비움이 불가능합니다");
+        }
+        
         if(user.getGrade() == Grade.LOW){
             throw new IllegalArgumentException("사용자의 등급이 LOW 등급임");
+        }
+
+        if(seat.getLeaveId() != null){
+            throw new IllegalArgumentException("임시 사용중인 자리입니다");
         }
 
         LocalDate currentDate = LocalDate.now();
