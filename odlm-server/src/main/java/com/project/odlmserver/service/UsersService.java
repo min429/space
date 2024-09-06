@@ -1,6 +1,7 @@
 package com.project.odlmserver.service;
 
 import com.project.odlmserver.controller.dto.board.BoardDto;
+import com.project.odlmserver.controller.dto.mypage.ReadProfileResponseDto;
 import com.project.odlmserver.controller.dto.user.*;
 import com.project.odlmserver.domain.*;
 import com.project.odlmserver.repository.ReservationTableRepository;
@@ -189,6 +190,20 @@ public class UsersService {
         usersRepository.updateDailyReservationTime(userId, reservationTime);
     }
 
+    public ReadProfileResponseDto getUserProfile(Long userId){
+        Users user = usersRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
+
+        return ReadProfileResponseDto.builder()
+            .email(user.getEmail())
+            .name(user.getName())
+            .state(user.getState())
+            .grade(user.getGrade())
+            .dailyReservationTime(user.getDailyReservationTime())
+            .dailyAwayTime(user.getDailyAwayTime())
+            .depriveCount(user.getDepriveCount())
+            .build();
+    }
 }
 
 

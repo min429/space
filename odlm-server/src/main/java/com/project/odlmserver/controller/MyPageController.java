@@ -3,7 +3,10 @@ package com.project.odlmserver.controller;
 import com.project.odlmserver.controller.dto.mypage.AllMonthlyStudyRequestDto;
 import com.project.odlmserver.controller.dto.mypage.DailyStudyRequestDto;
 import com.project.odlmserver.controller.dto.mypage.MonthlyStudyRequestDto;
+import com.project.odlmserver.controller.dto.mypage.ReadProfileResponseDto;
 import com.project.odlmserver.service.MyPageService;
+import com.project.odlmserver.service.UsersService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +19,7 @@ import java.util.List;
 public class MyPageController {
 
     private final MyPageService myPageService;
+    private final UsersService usersService;
 
     @PostMapping("/day/{day}")
     public ResponseEntity<Long> getDailyStudyTime(@RequestBody DailyStudyRequestDto request, @PathVariable("day") Long day) {
@@ -30,5 +34,10 @@ public class MyPageController {
     @PostMapping("/monthly/all")
     public ResponseEntity<List<Long>> getAllMonthlyStudyTime(@RequestBody AllMonthlyStudyRequestDto request) {
         return ResponseEntity.ok().body(myPageService.getAllMonthlyStudyTime(request.getUserId())); // 반환타입: 분
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ReadProfileResponseDto> getAllMonthlyStudyTime(@RequestParam("id") Long userId) {
+        return ResponseEntity.ok().body(usersService.getUserProfile(userId)); // 반환타입: 분
     }
 }
