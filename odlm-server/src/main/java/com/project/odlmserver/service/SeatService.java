@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import com.project.odlmserver.controller.dto.board.BoardDto;
 import com.project.odlmserver.controller.dto.seat.LeaveRequestDto;
+import com.project.odlmserver.controller.dto.seat.ReadSeatResponseDto;
 import com.project.odlmserver.controller.dto.seat.ReserveRequestDto;
 import com.project.odlmserver.controller.dto.seat.ReturnRequestDto;
 import com.project.odlmserver.controller.dto.seat.SeatDto;
@@ -42,7 +43,7 @@ public class SeatService {
 
         // reserveRequestDto.getSeatId() 대신에 테스트에 사용할 seatId를 넣어줍니다.
         Seat seat = seatRedisRepository.findById(seatId)
-                .orElseGet(() -> new Seat(seatId, null, false, 0L, null, 0L, 0L, 0L));
+                .orElseGet(() -> new Seat(seatId, null, false, 0L, null, 0L, 0L, 0L, 0L));
 
         // 조회된 seat 객체가 null이 아닌지 확인합니다.
         System.out.println("============== "+seat.getSeatId() +"========== "+seat.getLeaveId() );
@@ -213,5 +214,19 @@ public class SeatService {
                 .collect(Collectors.toList());
     }
 
+    public ReadSeatResponseDto getSeat(Long userId) {
+        Seat seat = seatRedisRepository.findByUserId(userId)
+            .orElseThrow(() -> new IllegalArgumentException("좌석 정보가 존재하지 않습니다"));
 
+        return ReadSeatResponseDto.builder()
+            .userId(seat.getUserId())
+            .isUsed(seat.getIsUsed())
+            .useCount(seat.getUseCount())
+            .leaveId(seat.getLeaveId())
+            .duration(seat.getDuration())
+            .leaveCount(seat.getLeaveCount())
+            .maxLeaveCount(seat.getMaxLeaveCount())
+            .studyTime(seat.getStudyTime())
+            .build();
+    }
 }
