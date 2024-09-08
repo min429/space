@@ -95,6 +95,8 @@ class _LoginWidgetState extends State<LoginWidget> {
   Future<void> _sendPostRequest(String action,
       {required Map<String, dynamic> requestData}) async {
 
+
+    final String url = 'http://10.0.2.2:8080/$action';
     try {
       final response = await http.post(
         Uri.parse(url),
