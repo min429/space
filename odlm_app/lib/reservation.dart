@@ -10,7 +10,7 @@ class SeatDto {
   final int? userId;
   final int? leaveId;
 
-  SeatDto(this.seatId, this.userId,this.leaveId);
+  SeatDto(this.seatId, this.userId, this.leaveId);
 
   // JSON에서 변환하여 좌석 정보를 생성하는 팩토리 메서드
   factory SeatDto.fromJson(Map<String, dynamic> json) {
@@ -247,14 +247,8 @@ class _ReservationWidgetState extends State<ReservationWidget> {
                           ),
                         ),
                       ),
-                      // 좌석 1
-                      _buildSeatIcon(1),
-                      // 좌석 2
-                      _buildSeatIcon(2),
-                      // 좌석 3
-                      _buildSeatIcon(3),
-                      // 좌석 4
-                      _buildSeatIcon(4),
+                      // 좌석 1~8
+                      for (int i = 1; i <= 8; i++) _buildSeatIcon(i),
                     ],
                   ),
                 ),
@@ -272,7 +266,6 @@ class _ReservationWidgetState extends State<ReservationWidget> {
 
     print(isReserved);
     print(isLeave);
-
 
     // userId가 있으면 무조건 파란색, leaveId만 있으면 빨간색
     final iconColor = isReserved ? Colors.blue : (isLeave ? Colors.red : FlutterFlowTheme.of(context).primaryBackground);
@@ -294,17 +287,24 @@ class _ReservationWidgetState extends State<ReservationWidget> {
     );
   }
 
-
   Alignment _getSeatAlignment(int seatNumber) {
     switch (seatNumber) {
       case 1:
-        return Alignment(-0.5, -0.7);
+        return Alignment(-0.51, -0.7);
       case 2:
-        return Alignment(0.5, -0.7);
+        return Alignment(0.51, -0.7);
       case 3:
         return Alignment(-0.5, -0.25);
       case 4:
-        return Alignment(0.5, -0.25);
+        return Alignment(0.51, -0.25);
+      case 5:
+        return Alignment(-0.51, 0.25);
+      case 6:
+        return Alignment(0.51, 0.25);
+      case 7:
+        return Alignment(-0.51, 0.6);
+      case 8:
+        return Alignment(0.51, 0.6);
       default:
         return Alignment.center;
     }
