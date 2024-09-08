@@ -105,7 +105,7 @@ void _showReservationDialog(BuildContext context, int seatNumber) {
 
 // 서버에 예약 요청을 보내는 함수
 void _sendReservationRequest(ReserveRequestDto requestData) async {
-  final String url = 'http://172.20.10.9:8080/seat/reserve'; // 서버 엔드포인트 URL
+  final String url = 'http://10.0.2.2:8080/seat/reserve'; // 서버 엔드포인트 URL
   try {
     final response = await http.post(
       Uri.parse(url),
@@ -129,7 +129,7 @@ void _sendReservationRequest(ReserveRequestDto requestData) async {
 
 // 서버에서 모든 좌석 정보를 가져오는 함수
 Future<List<SeatDto>> getAllSeats() async {
-  final String url = 'http://172.20.10.9:8080/seat/getAll'; // 서버 엔드포인트 URL
+  final String url = 'http://10.0.2.2:8080/seat/getAll'; // 서버 엔드포인트 URL
   try {
     final response = await http.get(
       Uri.parse(url),
