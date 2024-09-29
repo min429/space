@@ -9,8 +9,9 @@ class SeatDto {
   final int seatId;
   final int? userId;
   final int? leaveId;
-
-  SeatDto(this.seatId, this.userId,this.leaveId);
+  final int? duration;
+  final int? leaveCount;
+  SeatDto(this.seatId, this.userId,this.leaveId, this.duration, this.leaveCount);
 
   // JSON에서 변환하여 좌석 정보를 생성하는 팩토리 메서드
   factory SeatDto.fromJson(Map<String, dynamic> json) {
@@ -18,6 +19,8 @@ class SeatDto {
       json['seatId'] as int,
       json['userId'] as int?,
       json['leaveId'] as int?,
+      json['duration'] as int?,
+      json['leaveCount'] as int?,
     );
   }
 }
@@ -38,70 +41,7 @@ class ReserveRequestDto {
   }
 }
 
-void _showReservationDialog(BuildContext context, int seatNumber) {
-  // 전역 변수로 선언된 userId를 사용하여 사용자 ID를 가져옵니다.
-  int? currentUserID = userId;
-  print(currentUserID);
-  // 만약 userId가 null이면 다이얼로그를 표시하지 않고 함수를 종료합니다.
-  if (currentUserID == null) {
-    print('User ID is null');
-    return;
-  }
-  print(currentUserID);
 
-  // 좌석 ID는 함수 매개변수로 받은 값 사용
-  int seatId = seatNumber;
-
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(
-          '좌석 예약',
-          style: TextStyle(
-            color: FlutterFlowTheme.of(context).primaryText,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        content: Text(
-          '좌석 $seatNumber를 예약하시겠습니까?',
-          style: TextStyle(
-            color: FlutterFlowTheme.of(context).primaryText,
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: Text(
-              '예',
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            onPressed: () {
-              // 예약 요청 데이터 생성
-              ReserveRequestDto requestData = ReserveRequestDto(seatId, currentUserID);
-              // 예약 요청 함수 호출
-              _sendReservationRequest(requestData);
-              Navigator.of(context).pop(); // 다이얼로그 닫기
-              Navigator.of(context).pop(); // 예약창 나가기
-            },
-          ),
-          TextButton(
-            child: Text(
-              '아니요',
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            onPressed: () {
-              Navigator.of(context).pop(); // 다이얼로그 닫기
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
 
 // 서버에 예약 요청을 보내는 함수
 void _sendReservationRequest(ReserveRequestDto requestData) async {
@@ -161,7 +101,7 @@ class ReservationWidget extends StatefulWidget {
 class _ReservationWidgetState extends State<ReservationWidget> {
   late ReservationModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
+  List<SeatDto> allSeats = []; // 전체 좌석 목록
   List<int> reservedSeats = []; // 예약된 좌석 목록
   List<int> leaveSeats = []; // 비움된 좌석 목록
 
@@ -181,10 +121,12 @@ class _ReservationWidgetState extends State<ReservationWidget> {
   // 예약된 좌석 정보 가져오기
   void _fetchReservedSeats() async {
     try {
+      print('Status: $Status');
       final List<SeatDto> seats = await getAllSeats();
       setState(() {
         reservedSeats = seats.where((seat) => seat.userId != null).map((seat) => seat.seatId).toList();
         leaveSeats = seats.where((seat) => seat.leaveId != null).map((seat) => seat.seatId).toList();
+        allSeats = seats;
       });
     } catch (e) {
       print('Error fetching reserved seats: $e');
@@ -266,6 +208,136 @@ class _ReservationWidgetState extends State<ReservationWidget> {
     );
   }
 
+
+
+  void _showReservationDialog(BuildContext context, int seatNumber) {
+    // 전역 변수로 선언된 userId를 사용하여 사용자 ID를 가져옵니다.
+      // 좌석에 leaveId가 있는지 확인
+    int? currentUserID = userId;
+    print(currentUserID);
+    // 만약 userId가 null이면 다이얼로그를 표시하지 않고 함수를 종료합니다.
+    if (currentUserID == null) {
+      print('User ID is null');
+      return;
+    }
+    print(currentUserID);
+
+    // 좌석 ID는 함수 매개변수로 받은 값 사용
+    int seatId = seatNumber;
+    if (leaveSeats.contains(seatNumber)) {
+      final seat = allSeats.firstWhere((seat) => seat.seatId == seatNumber);
+      final duration = seat.duration ?? 0;
+      final leaveCount = seat.leaveCount ?? 0;
+      final availableTime = duration - leaveCount;
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              '좌석 예약',
+              style: TextStyle(
+                color: FlutterFlowTheme.of(context).primaryText,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            content: Text(
+              '임시자리의 최대 사용가능 시간은 $availableTime분입니다. $seatNumber 번 자리를 예약하시겠습니까?',
+              style: TextStyle(
+                color: FlutterFlowTheme.of(context).primaryText,
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text(
+                  '예약',
+                  style: TextStyle(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                  ),
+                ),
+                onPressed: () {
+                  // 예약 요청 데이터 생성
+                  ReserveRequestDto requestData = ReserveRequestDto(seatId, currentUserID);
+                  // 예약 요청 함수 호출
+                  _sendReservationRequest(requestData);
+                  Navigator.of(context).pop(); // 다이얼로그 닫기
+                  Navigator.of(context).pop(); // 예약창 나가기
+                },
+              ),
+              TextButton(
+                child: Text(
+                  '취소',
+                  style: TextStyle(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(); // 다이얼로그 닫기
+                },
+              ),
+            ],
+          );
+        },
+      );
+      
+      
+
+    }
+    else {
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              '좌석 예약',
+              style: TextStyle(
+                color: FlutterFlowTheme.of(context).primaryText,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            content: Text(
+              '좌석 $seatNumber를 예약하시겠습니까?',
+              style: TextStyle(
+                color: FlutterFlowTheme.of(context).primaryText,
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text(
+                  '예',
+                  style: TextStyle(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                  ),
+                ),
+                onPressed: () {
+                  // 예약 요청 데이터 생성
+                  ReserveRequestDto requestData = ReserveRequestDto(seatId, currentUserID);
+                  // 예약 요청 함수 호출
+                  _sendReservationRequest(requestData);
+                  Navigator.of(context).pop(); // 다이얼로그 닫기
+                  Navigator.of(context).pop(); // 예약창 나가기
+                },
+              ),
+              TextButton(
+                child: Text(
+                  '아니요',
+                  style: TextStyle(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(); // 다이얼로그 닫기
+                },
+              ),
+            ],
+          );
+        },
+      );
+
+    }
+
+  }
+
   Widget _buildSeatIcon(int seatNumber) {
     final isReserved = reservedSeats.contains(seatNumber); // 좌석이 예약되었는지 확인
     final isLeave = leaveSeats.contains(seatNumber); // 좌석에 leaveId가 있는지 확인
@@ -282,7 +354,31 @@ class _ReservationWidgetState extends State<ReservationWidget> {
       child: GestureDetector(
         onTap: () {
           if (!isReserved) {
-            _showReservationDialog(context, seatNumber); // userId가 없는 경우에만 다이얼로그 표시
+            if (Status == "상태 없음" ||  Status == " " || Status == null) {
+              _showReservationDialog(
+                  context, seatNumber); // userId가 없는 경우에만 다이얼로그 표시
+            }
+            else {
+
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('알림'),
+                    content: Text('자리예약이 불가능합니다.'),
+                    actions: <Widget>[
+                      TextButton(
+                        child: Text('확인'),
+                        onPressed: () {
+                          Navigator.of(context).pop(); // 다이얼로그 닫기
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+
+            }
           }
         },
         child: Icon(

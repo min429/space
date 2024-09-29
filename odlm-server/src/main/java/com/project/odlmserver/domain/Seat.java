@@ -7,7 +7,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
-@Data
+
 @Getter
 @RedisHash("seat")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -43,4 +43,6 @@ public class Seat {
         this.maxLeaveCount = maxLeaveCount == null ? null : maxLeaveCount;
         this.studyTime = studyTime == null ? 0L : studyTime;
     }
+
+
 }
