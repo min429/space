@@ -37,7 +37,6 @@ class _MySeatWidgetState extends State<MySeatWidget> {
   late int seatNumber = 0;
   late int dailyReservationTime = 0;
   late int dailyAwayTime = 0;
-  late String Status = '';
   late Color statusColor = Colors.black; // 기본 텍스트 색상
 
   @override
@@ -98,6 +97,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
           }
 
         });
+        print('Status: $Status');
         print('seatId: $RuserId');
         print('seatId: $seatId');
         print('leaveId: $leaveId');
@@ -107,9 +107,13 @@ class _MySeatWidgetState extends State<MySeatWidget> {
         print('Daily Away Time: $dailyAwayTime');
 
       } else {
+        Status = "상태 없음";
+        statusColor = Colors.black;
         print('Failed to load data: ${response.statusCode}');
       }
     } catch (e) {
+      Status = "상태 없음";
+      statusColor = Colors.black;
       print('Error fetching data: $e');
     }
   }
@@ -637,7 +641,7 @@ class _MySeatWidgetState extends State<MySeatWidget> {
                                     print('자리비움이 선택되었습니다.');
                                     // 다이얼로그 표시 함수 호출
                                     // 다이얼로그 표시 함수 호출
-                                    if (Status == "자리 예약중") {
+                                    if (Status == "자리사용중") {
                                       showAwayDialog(
                                           context, dailyReservationTime,
                                           dailyAwayTime);
@@ -730,6 +734,7 @@ void showReturnDialog(BuildContext context) {
             onPressed: () {
               // 반납 요청 로직을 수행합니다.
               sendReturnRequest(currentUserID);
+              Status = "상태 없음";
               Navigator.of(context).pop();
               Navigator.of(context).pop();
             },

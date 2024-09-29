@@ -10,7 +10,8 @@ class SeatDto {
   final int? userId;
   final int? leaveId;
   final int? duration;
-  SeatDto(this.seatId, this.userId,this.leaveId, this.duration);
+  final int? leaveCount;
+  SeatDto(this.seatId, this.userId,this.leaveId, this.duration, this.leaveCount);
 
   // JSON에서 변환하여 좌석 정보를 생성하는 팩토리 메서드
   factory SeatDto.fromJson(Map<String, dynamic> json) {
@@ -19,6 +20,7 @@ class SeatDto {
       json['userId'] as int?,
       json['leaveId'] as int?,
       json['duration'] as int?,
+      json['leaveCount'] as int?,
     );
   }
 }
@@ -119,6 +121,7 @@ class _ReservationWidgetState extends State<ReservationWidget> {
   // 예약된 좌석 정보 가져오기
   void _fetchReservedSeats() async {
     try {
+      print('Status: $Status');
       final List<SeatDto> seats = await getAllSeats();
       setState(() {
         reservedSeats = seats.where((seat) => seat.userId != null).map((seat) => seat.seatId).toList();
@@ -223,7 +226,9 @@ class _ReservationWidgetState extends State<ReservationWidget> {
     int seatId = seatNumber;
     if (leaveSeats.contains(seatNumber)) {
       final seat = allSeats.firstWhere((seat) => seat.seatId == seatNumber);
-      final duration = seat.duration;
+      final duration = seat.duration ?? 0;
+      final leaveCount = seat.leaveCount ?? 0;
+      final availableTime = duration - leaveCount;
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -236,7 +241,7 @@ class _ReservationWidgetState extends State<ReservationWidget> {
               ),
             ),
             content: Text(
-              '임시자리의 최대 사용가능 시간은 $duration 분입니다. $seatNumber 번 자리를 예약하시겠습니까?',
+              '임시자리의 최대 사용가능 시간은 $availableTime분입니다. $seatNumber 번 자리를 예약하시겠습니까?',
               style: TextStyle(
                 color: FlutterFlowTheme.of(context).primaryText,
               ),
@@ -349,7 +354,7 @@ class _ReservationWidgetState extends State<ReservationWidget> {
       child: GestureDetector(
         onTap: () {
           if (!isReserved) {
-            if (Status == "상태 없음" ||  Status == " ") {
+            if (Status == "상태 없음" ||  Status == " " || Status == null) {
               _showReservationDialog(
                   context, seatNumber); // userId가 없는 경우에만 다이얼로그 표시
             }
