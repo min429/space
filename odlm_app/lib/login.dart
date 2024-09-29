@@ -94,6 +94,8 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   Future<void> _sendPostRequest(String action,
       {required Map<String, dynamic> requestData}) async {
+
+
     final String url = 'http://10.0.2.2:8080/$action';
     try {
       final response = await http.post(
@@ -103,6 +105,7 @@ class _LoginWidgetState extends State<LoginWidget> {
         },
         body: jsonEncode(requestData),
       );
+
       if (response.statusCode == 200) {
         print('Success: ${response.body}');
         // 서버 응답에 대한 처리를 여기에 추가할 수 있습니다.
@@ -116,7 +119,7 @@ class _LoginWidgetState extends State<LoginWidget> {
           );
         }
       } else {
-        print('Error: ${response.statusCode}');
+        print('Error!!!!!!!!!!!!!!!!!!!!!!!: ${response.statusCode}');
         // 에러 처리를 여기에 추가할 수 있습니다
 
         if (action == "user/login") {
@@ -323,6 +326,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                             String email = _emailController.text;
                             String password = _passwordController.text;
 
+                            print('Error!!!!!!!!!!!!!!!!!!!!!!!:!@@@@@@@@@@@!#!@#!@#!@#!@#!@#@!#');
                             _sendPostRequest('user/login', requestData: {
                               'email': email,
                               'password': password,

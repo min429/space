@@ -288,6 +288,8 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
 
   Future<void> Check_My_Seat(MySeatRequestDto request) async {
     final String url = 'http://10.0.2.2:8080/user/myseat';
+    print("user id $userId" );
+    print("incode: ${jsonEncode(request.toJson())} ");
     try {
       final response = await http.post(
         Uri.parse(url),
