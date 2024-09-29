@@ -1,22 +1,32 @@
 package com.project.odlmserver.service;
 
-import com.project.odlmserver.controller.dto.board.BoardDto;
-import com.project.odlmserver.controller.dto.mypage.ReadProfileResponseDto;
-import com.project.odlmserver.controller.dto.user.*;
-import com.project.odlmserver.domain.*;
-import com.project.odlmserver.repository.ReservationTableRepository;
-import com.project.odlmserver.repository.SeatRedisRepository;
-import com.project.odlmserver.repository.UsersRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.project.odlmserver.controller.dto.mypage.ReadProfileResponseDto;
+import com.project.odlmserver.controller.dto.user.LogInRequestDto;
+import com.project.odlmserver.controller.dto.user.MyReservationTableDto;
+import com.project.odlmserver.controller.dto.user.MyReservationTableRequestDto;
+import com.project.odlmserver.controller.dto.user.MySeatDto;
+import com.project.odlmserver.controller.dto.user.MySeatRequestDto;
+import com.project.odlmserver.controller.dto.user.SignOutRequestDto;
+import com.project.odlmserver.controller.dto.user.SignUpRequestDto;
+import com.project.odlmserver.domain.Grade;
+import com.project.odlmserver.domain.ReservationTable;
+import com.project.odlmserver.domain.STATE;
+import com.project.odlmserver.domain.Seat;
+import com.project.odlmserver.domain.Users;
+import com.project.odlmserver.repository.ReservationTableRepository;
+import com.project.odlmserver.repository.SeatRedisRepository;
+import com.project.odlmserver.repository.UsersRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -24,9 +34,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UsersService {
 
-    private final UsersRepository usersRepository;
-    private final SeatRedisRepository seatRepository;
-    private final ReservationTableRepository reservationTableRepository;
+	private final UsersRepository usersRepository;
+	private final SeatRedisRepository seatRepository;
+	private final ReservationTableRepository reservationTableRepository;
 
     public void save(SignUpRequestDto signUpRequestDto) {
         Optional<Users> user = usersRepository.findByEmail(signUpRequestDto.getEmail());
@@ -41,146 +51,145 @@ public class UsersService {
                 .state(STATE.RETURN)
                 .dailyAwayTime(240L)
                 .dailyReservationTime(960L)
+                .warnAlert(true)
+                .returnAlert(true)
                 .build());
     }
 
-    public Long login(LogInRequestDto signInRequestDto) {
-        Users user = usersRepository.findByEmail(signInRequestDto.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("아이디 불일치"));
-        if (!signInRequestDto.getPassword().equals(user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호 불일치");
-        }
-        return user.getId();
-    }
+	public Long login(LogInRequestDto signInRequestDto) {
+		Users user = usersRepository.findByEmail(signInRequestDto.getEmail())
+			.orElseThrow(() -> new IllegalArgumentException("아이디 불일치"));
+		if (!signInRequestDto.getPassword().equals(user.getPassword())) {
+			throw new IllegalArgumentException("비밀번호 불일치");
+		}
+		return user.getId();
+	}
 
-    public void delete(SignOutRequestDto signOutRequestDto) {
-        Users users = usersRepository.findById(signOutRequestDto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
-        usersRepository.delete(users);
-    }
+	public void delete(SignOutRequestDto signOutRequestDto) {
+		Users users = usersRepository.findById(signOutRequestDto.getUserId())
+			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
+		usersRepository.delete(users);
+	}
 
-    public Users findByUserId(Long userId) {
-        return usersRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
-    }
+	public Users findByUserId(Long userId) {
+		return usersRepository.findById(userId)
+			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
+	}
 
-    public void updateState(Long userId, STATE state) {
-        usersRepository.updateState(userId, state);
-    }
+	public void updateState(Long userId, STATE state) {
+		usersRepository.updateState(userId, state);
+	}
 
-    public Users findByEmail(String email) {
-        return usersRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
-    }
+	public Users findByEmail(String email) {
+		return usersRepository.findByEmail(email)
+			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
+	}
 
-    public String findUserTokenById(Long userId) {
-        return usersRepository.findTokenByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
-    }
+	public String findUserTokenById(Long userId) {
+		return usersRepository.findTokenByUserId(userId)
+			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
+	}
 
+	public void updateToken(Long userId, String token) {
+		usersRepository.updateToken(userId, token);
+	}
 
-    public void updateToken(Long userId, String token) {
-        usersRepository.updateToken(userId, token);
-    }
+	@Transactional
+	@Scheduled(cron = "0 0 0 * * ?")
+	public void performDailyTask() {
+		usersRepository.updateAllTimesBasedOnGrade();
+	}
 
-    @Transactional
-    @Scheduled(cron = "0 0 0 * * ?")
-    public void performDailyTask() {
-        usersRepository.updateAllTimesBasedOnGrade();
-    }
+	@Scheduled(cron = "0 0 0 1 * ?") // 매월 1일 0시에 실행
+	public void resetAllUsersGradeAndTimes() {
+		// 등급 및 시간을 초기화합니다.
+		usersRepository.resetAllUsersGradeAndTimes(Grade.HIGH, 960L, 240L);
+	}
 
-    @Scheduled(cron = "0 0 0 1 * ?") // 매월 1일 0시에 실행
-    public void resetAllUsersGradeAndTimes() {
-        // 등급 및 시간을 초기화합니다.
-        usersRepository.resetAllUsersGradeAndTimes(Grade.HIGH, 960L, 240L);
-    }
+	public MySeatDto findMySeat(MySeatRequestDto mySeatRequestDto) {
+		Users user = usersRepository.findById(mySeatRequestDto.getUserId())
+			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
 
+		Optional<Seat> seatOptional = seatRepository.findByUserId(user.getId());
 
-    public MySeatDto findMySeat(MySeatRequestDto mySeatRequestDto) {
-        Users user = usersRepository.findById(mySeatRequestDto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
+		if (seatOptional.isEmpty()) {
+			seatOptional = seatRepository.findByLeaveId(user.getId());
+		}
 
-        Optional<Seat> seatOptional = seatRepository.findByUserId(user.getId());
-        
+		if (seatOptional.isEmpty()) {
+			throw new IllegalArgumentException("좌석 정보가 존재하지 않습니다");
+		}
 
-        if (seatOptional.isEmpty()) {
-            seatOptional = seatRepository.findByLeaveId(user.getId());
-        }
+		Seat seat = seatOptional.get();
 
+		return MySeatDto.builder()
+			.userId(seat.getUserId())
+			.seatId(seat.getSeatId())
+			.leaveId(seat.getLeaveId())
+			.name(user.getName())
+			.dailyReservationTime(user.getDailyReservationTime())
+			.dailyAwayTime(user.getDailyAwayTime())
+			.grade(user.getGrade())
+			.build();
 
-        if (seatOptional.isEmpty()) {
-            throw new IllegalArgumentException("좌석 정보가 존재하지 않습니다");
-        }
+	}
 
-        Seat seat = seatOptional.get();
+	public List<MyReservationTableDto> findMyReservationTable(
+		MyReservationTableRequestDto myReservationTableRequestDto) {
+		// 사용자 ID를 이용하여 예약 정보를 데이터베이스에서 가져옵니다.
+		List<ReservationTable> reservationTables = reservationTableRepository.findByUserIdOrderByEndTimeDesc(
+			myReservationTableRequestDto.getUserId());
 
-        return MySeatDto.builder()
-                .userId(seat.getUserId())
-                .seatId(seat.getSeatId())
-                .leaveId(seat.getLeaveId())
-                .name(user.getName())
-                .dailyReservationTime(user.getDailyReservationTime())
-                .dailyAwayTime(user.getDailyAwayTime())
-                .grade(user.getGrade())
-                .build();
+		// 예약 정보를 DTO로 변환하여 반환합니다.
+		return reservationTables.stream()
+			.map(this::mapToDto)
+			.collect(Collectors.toList());
+	}
 
+	private MyReservationTableDto mapToDto(ReservationTable reservationTable) {
+		return MyReservationTableDto.builder()
+			.userId(reservationTable.getUser().getId())
+			.seatId(reservationTable.getSeatId())
+			.startTime(reservationTable.getStartTime())
+			.endTime(reservationTable.getEndTime())
+			.build();
+	}
 
-    }
+	public void updateDepirveCount(Long userId) {
+		usersRepository.updateDepirveCount(userId, 1);
 
-    public List<MyReservationTableDto> findMyReservationTable(MyReservationTableRequestDto myReservationTableRequestDto) {
-        // 사용자 ID를 이용하여 예약 정보를 데이터베이스에서 가져옵니다.
-        List<ReservationTable> reservationTables = reservationTableRepository.findByUserIdOrderByEndTimeDesc(myReservationTableRequestDto.getUserId());
+	}
 
-        // 예약 정보를 DTO로 변환하여 반환합니다.
-        return reservationTables.stream()
-                .map(this::mapToDto)
-                .collect(Collectors.toList());
-    }
+	public void updateGradeandReservationTimeandAwayTime(Long userId) {
+		Users user = usersRepository.findById(userId)
+			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
 
-    private MyReservationTableDto mapToDto(ReservationTable reservationTable) {
-        return MyReservationTableDto.builder()
-                .userId(reservationTable.getUser().getId())
-                .seatId(reservationTable.getSeatId())
-                .startTime(reservationTable.getStartTime())
-                .endTime(reservationTable.getEndTime())
-                .build();
-    }
+		// 현재 사용자의 등급을 확인하여 해당하는 조건에 따라 등급, dailyReservationTime 및 dailyAwayTime을 설정합니다.
+		Grade newGrade;
+		Long newReservationTime;
+		Long newAwayTime;
 
-    public void updateDepirveCount(Long userId){
-        usersRepository.updateDepirveCount(userId,1);
+		switch (user.getGrade()) {
+			case HIGH:
+				newGrade = Grade.MIDDLE;
+				newReservationTime = 720L;
+				newAwayTime = 180L;
+				break;
+			case MIDDLE:
+				newGrade = Grade.LOW;
+				newReservationTime = 0L;
+				newAwayTime = 0L;
+				break;
+			// 만약 현재 등급이 LOW이면 추가적인 업데이트가 필요하지 않습니다.
+			case LOW:
+				return;
+			default:
+				throw new IllegalArgumentException("유효하지 않은 등급입니다");
+		}
 
-    }
-
-    public void updateGradeandReservationTimeandAwayTime(Long userId) {
-        Users user = usersRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
-
-        // 현재 사용자의 등급을 확인하여 해당하는 조건에 따라 등급, dailyReservationTime 및 dailyAwayTime을 설정합니다.
-        Grade newGrade;
-        Long newReservationTime;
-        Long newAwayTime;
-
-        switch (user.getGrade()) {
-            case HIGH:
-                newGrade = Grade.MIDDLE;
-                newReservationTime = 720L;
-                newAwayTime = 180L;
-                break;
-            case MIDDLE:
-                newGrade = Grade.LOW;
-                newReservationTime = 0L;
-                newAwayTime = 0L;
-                break;
-            // 만약 현재 등급이 LOW이면 추가적인 업데이트가 필요하지 않습니다.
-            case LOW:
-                return;
-            default:
-                throw new IllegalArgumentException("유효하지 않은 등급입니다");
-        }
-
-        // 등급 및 시간을 업데이트합니다.
-        usersRepository.updateGradeAndTimes(userId, newGrade, newReservationTime, newAwayTime);
-    }
+		// 등급 및 시간을 업데이트합니다.
+		usersRepository.updateGradeAndTimes(userId, newGrade, newReservationTime, newAwayTime);
+	}
 
     public void updateDailyAwayTime(Long userId, Long leaveTime){
         usersRepository.updateDailyAwayTime(userId , -leaveTime);
@@ -203,6 +212,18 @@ public class UsersService {
             .dailyAwayTime(user.getDailyAwayTime())
             .depriveCount(user.getDepriveCount())
             .build();
+    }
+
+    public void updateWarnAlert(Long userId, boolean state){
+        Users user = usersRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
+        user.setWarnAlert(state);
+    }
+
+    public void updateReturnAlert(Long userId, boolean state){
+        Users user = usersRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
+        user.setReturnAlert(state);
     }
 }
 

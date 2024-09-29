@@ -85,6 +85,10 @@ public class RedisUpdateService {
             if (seat.getIsUsed() && seat.getUseCount() != 0 )
                 seatCustomRedisRepository.updateUseCount(seat.getSeatId(),0L);
 
+            // 실제로 사용하면 학습시간 증가
+            if(seat.getIsUsed())
+                seatCustomRedisRepository.updateStudyTime(seat.getSeatId(), seat.getStudyTime() + 1);
+
             //실제로 안하면
             if (!seat.getIsUsed()) {
 
@@ -119,6 +123,9 @@ public class RedisUpdateService {
     }
 
     public void warn(Long userId) {
+        Users user = usersService.findByUserId(userId);
+        if(!user.isWarnAlert()) return;
+
         String userToken = usersService.findUserTokenById(userId);
         fcmService.sendNotification(userToken);
     }
@@ -176,6 +183,7 @@ public class RedisUpdateService {
         seatCustomRedisRepository.updateUserId(seatId,leavedId);
         seatCustomRedisRepository.updateLeaveIdNull(seatId);
         seatCustomRedisRepository.updateLeaveCount(seatId,0L);
+        seatCustomRedisRepository.updateStudyTime(seatId, 0L);
         usersService.updateState(leavedId, STATE.RESERVE);
     }
 

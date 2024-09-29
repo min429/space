@@ -37,7 +37,7 @@ public class MyPageController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReadProfileResponseDto> getAllMonthlyStudyTime(@RequestParam("id") Long userId) {
+    public ResponseEntity<ReadProfileResponseDto> getAllMonthlyStudyTime(@PathVariable("id") Long userId) {
         return ResponseEntity.ok().body(usersService.getUserProfile(userId)); // 반환타입: 분
     }
 }
