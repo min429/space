@@ -36,6 +36,7 @@ public class SeatService {
     private final UsersService usersService;
     private final ReservationTableRepository reservationTableRepository;
     private final MyPageService myPageService;
+    private final FCMService fcmService;
 
     public void save(ReserveRequestDto reserveRequestDto) {
         Long seatId = reserveRequestDto.getSeatId();
@@ -141,6 +142,10 @@ public class SeatService {
 
         seatCustomRedisRepository.deleteUserId(seat.getSeatId(), seat.getUserId());
         usersService.updateState(user.getId(), STATE.RETURN);
+
+        if(!user.isReturnAlert()) return;
+        String userToken = usersService.findUserTokenById(user.getId());
+        fcmService.sendReturnNotification(userToken);
     }
 
     public void leave(LeaveRequestDto leaveReauestDto) {

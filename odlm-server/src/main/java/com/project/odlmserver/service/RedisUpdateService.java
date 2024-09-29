@@ -123,6 +123,9 @@ public class RedisUpdateService {
     }
 
     public void warn(Long userId) {
+        Users user = usersService.findByUserId(userId);
+        if(!user.isWarnAlert()) return;
+
         String userToken = usersService.findUserTokenById(userId);
         fcmService.sendNotification(userToken);
     }

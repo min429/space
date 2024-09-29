@@ -38,21 +38,23 @@ public class UsersService {
 	private final SeatRedisRepository seatRepository;
 	private final ReservationTableRepository reservationTableRepository;
 
-	public void save(SignUpRequestDto signUpRequestDto) {
-		Optional<Users> user = usersRepository.findByEmail(signUpRequestDto.getEmail());
-		if (user.isPresent()) {
-			throw new IllegalArgumentException("아이디 중복");
-		}
-		usersRepository.save(Users.builder()
-			.email(signUpRequestDto.getEmail())
-			.password(signUpRequestDto.getPassword())
-			.name(signUpRequestDto.getName())
-			.grade(Grade.HIGH)
-			.state(STATE.RETURN)
-			.dailyAwayTime(240L)
-			.dailyReservationTime(960L)
-			.build());
-	}
+    public void save(SignUpRequestDto signUpRequestDto) {
+        Optional<Users> user = usersRepository.findByEmail(signUpRequestDto.getEmail());
+        if (user.isPresent()) {
+            throw new IllegalArgumentException("아이디 중복");
+        }
+        usersRepository.save(Users.builder()
+                .email(signUpRequestDto.getEmail())
+                .password(signUpRequestDto.getPassword())
+                .name(signUpRequestDto.getName())
+                .grade(Grade.HIGH)
+                .state(STATE.RETURN)
+                .dailyAwayTime(240L)
+                .dailyReservationTime(960L)
+                .warnAlert(true)
+                .returnAlert(true)
+                .build());
+    }
 
 	public Long login(LogInRequestDto signInRequestDto) {
 		Users user = usersRepository.findByEmail(signInRequestDto.getEmail())
@@ -189,28 +191,40 @@ public class UsersService {
 		usersRepository.updateGradeAndTimes(userId, newGrade, newReservationTime, newAwayTime);
 	}
 
-	public void updateDailyAwayTime(Long userId, Long leaveTime) {
-		usersRepository.updateDailyAwayTime(userId, -leaveTime);
-	}
+    public void updateDailyAwayTime(Long userId, Long leaveTime){
+        usersRepository.updateDailyAwayTime(userId , -leaveTime);
+    }
 
-	public void updateDailyReservationTime(Long userId, Long reservationTime) {
-		usersRepository.updateDailyReservationTime(userId, reservationTime);
-	}
+    public void updateDailyReservationTime(Long userId, Long reservationTime) {
+        usersRepository.updateDailyReservationTime(userId, reservationTime);
+    }
 
-	public ReadProfileResponseDto getUserProfile(Long userId) {
-		Users user = usersRepository.findById(userId)
-			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
+    public ReadProfileResponseDto getUserProfile(Long userId){
+        Users user = usersRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
 
-		return ReadProfileResponseDto.builder()
-			.email(user.getEmail())
-			.name(user.getName())
-			.state(user.getState())
-			.grade(user.getGrade())
-			.dailyReservationTime(user.getDailyReservationTime())
-			.dailyAwayTime(user.getDailyAwayTime())
-			.depriveCount(user.getDepriveCount())
-			.build();
-	}
+        return ReadProfileResponseDto.builder()
+            .email(user.getEmail())
+            .name(user.getName())
+            .state(user.getState())
+            .grade(user.getGrade())
+            .dailyReservationTime(user.getDailyReservationTime())
+            .dailyAwayTime(user.getDailyAwayTime())
+            .depriveCount(user.getDepriveCount())
+            .build();
+    }
+
+    public void updateWarnAlert(Long userId, boolean state){
+        Users user = usersRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
+        user.setWarnAlert(state);
+    }
+
+    public void updateReturnAlert(Long userId, boolean state){
+        Users user = usersRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
+        user.setReturnAlert(state);
+    }
 }
 
 
