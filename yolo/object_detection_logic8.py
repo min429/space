@@ -19,8 +19,8 @@ rtsp_url = "rtsp://asdf1013:asdf1013@172.20.10.8:554/stream1"
 webcam_index = 0
 
 # 웹캠 캡처 객체 초기화
-#cap = cv2.VideoCapture(rtsp_url)
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(rtsp_url)
+# cap = cv2.VideoCapture(0)
 
 # 캠 화면 크기 설정
 cv2.namedWindow('YOLOv5 Person Detection', cv2.WINDOW_NORMAL)
