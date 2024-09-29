@@ -27,6 +27,7 @@ class _NoMySeatWidgetState extends State<NoMySeatWidget> {
 
   @override
   void initState() {
+    Status = "상태 없음";
     super.initState();
     _model = createModel(context, () => NoMySeatModel());
   }

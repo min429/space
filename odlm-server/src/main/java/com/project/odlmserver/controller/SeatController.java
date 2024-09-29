@@ -2,6 +2,7 @@ package com.project.odlmserver.controller;
 
 import com.project.odlmserver.controller.dto.board.BoardDto;
 import com.project.odlmserver.controller.dto.seat.LeaveRequestDto;
+import com.project.odlmserver.controller.dto.seat.ReadSeatResponseDto;
 import com.project.odlmserver.controller.dto.seat.ReserveRequestDto;
 import com.project.odlmserver.controller.dto.seat.ReturnRequestDto;
 import com.project.odlmserver.controller.dto.seat.SeatDto;
@@ -23,6 +24,7 @@ public class SeatController {
 
     private final SeatService reservationService;
     private final MyPageService myPageService;
+    private final SeatService seatService;
 
     @PostMapping("/reserve")
     public ResponseEntity<String> reserve(@RequestBody ReserveRequestDto request) {
@@ -52,5 +54,10 @@ public class SeatController {
     public ResponseEntity<List<SeatDto>> getAllSeats() {
         List<SeatDto> allSeats = reservationService.getAllSeats();
         return ResponseEntity.ok().body(allSeats);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ReadSeatResponseDto> getStudyTime(@PathVariable("id") Long userId) {
+        return ResponseEntity.ok().body(seatService.getSeat(userId)); // 반환타입: 분
     }
 }

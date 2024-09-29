@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -6,6 +8,7 @@ import 'package:odlm_app/service/messaging_service.dart';
 import 'package:odlm_app/service/notification_service.dart';
 import 'package:http/http.dart' as http;
 
+import 'dto/ReadSeatResponseDto.dart';
 import 'globals.dart';
 import 'setting.dart';
 import 'my_seat.dart';
@@ -25,6 +28,15 @@ class MainWidget extends StatefulWidget {
   State<MainWidget> createState() => _MainWidgetState();
 }
 
+late int? RuserId = -1;
+late int? seatId = -1;
+late int? leaveId = -1;
+late String userName = '';
+late int seatNumber = 0;
+late int dailyReservationTime = 0;
+late int dailyAwayTime = 0;
+late Color statusColor = Colors.black; // 기본 텍스트 색상
+
 class MySeatRequestDto {
   final int userId;
 
@@ -39,6 +51,9 @@ class MySeatRequestDto {
 
 class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
   late MainModel _model;
+
+  int? studyTime;
+  Timer? _timer; // 타이머 객체
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -132,6 +147,13 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
     _model = createModel(context, () => MainModel());
 
     initMessaging();
+    int userIdNonNull=-999;
+    if (userId != null) {
+      userIdNonNull = userId!;
+    }
+    MySeatRequestDto requestDto = MySeatRequestDto(userId: userIdNonNull);
+    // 서버로부터 데이터 받아오기
+    fetchMySeat(requestDto);
 
     setupAnimations(
       animationsMap.values.where((anim) =>
@@ -140,12 +162,128 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
       this,
     );
 
+    fetchAndDisplayStudyTime();
+    startAutoRefresh(); // 자동 새로고침 시작
+  }
+
+  Future<void> fetchMySeat(MySeatRequestDto request) async {
+    final String url = 'http://10.0.2.2:8080/user/myseat';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(request.toJson()),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        setState(() {
+          RuserId = responseData['userId'] as int?;
+          seatId = responseData['seatId'] as int?;
+          leaveId = responseData['leaveId'] as int?;
+          userName = responseData['name'] as String;
+          seatNumber = responseData['seatId'] as int;
+          dailyReservationTime = responseData['dailyReservationTime'] as int;
+          dailyAwayTime = responseData['dailyAwayTime'] as int;
+          // Status와 색상 설정
+          if (RuserId != null && leaveId == null) {
+            Status = "자리사용중";
+            statusColor = Colors.blue;
+          } else if (RuserId == null && leaveId != null) {
+            Status = "자리비움중";
+            statusColor = Colors.red;
+          } else if (RuserId != null && leaveId != null) {
+            Status = "임시자리사용중";
+            statusColor = Colors.orange;
+          } else {
+            Status = "상태 없음";
+            statusColor = Colors.black;
+          }
+
+        });
+        print('Status: $Status');
+
+      } else {
+        Status = "상태 없음";
+        statusColor = Colors.black;
+        print('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      Status = "상태 없음";
+      statusColor = Colors.black;
+      print('Error fetching data: $e');
+    }
   }
 
   @override
   void dispose() {
+    _timer?.cancel(); // 타이머 해제
     _model.dispose();
     super.dispose();
+  }
+
+  // 자동 새로고침을 위한 타이머 시작 함수
+  void startAutoRefresh() {
+    _timer = Timer.periodic(Duration(minutes: 1), (timer) {
+      fetchAndDisplayStudyTime(); // 1분마다 학습 시간을 갱신
+    });
+  }
+
+  String formatTime(int totalMinutes) {
+    int hours = totalMinutes ~/ 60;
+    int minutes = totalMinutes % 60;
+
+    if (hours > 0) {
+      return '$hours시간 $minutes분';
+    } else {
+      return '$minutes분';
+    }
+  }
+
+  String getCurrentDate() {
+    // 현재 날짜를 "yyyy-MM-dd" 형식으로 리턴
+    DateTime now = DateTime.now();
+    return '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+  }
+
+  Future<void> fetchAndDisplayStudyTime() async {
+    final int? fetchedStudyTime = await fetchStudyTime(userId!);
+
+    if (fetchedStudyTime != null) {
+      setState(() {
+        studyTime = fetchedStudyTime; // 받은 데이터를 state에 저장
+      });
+    }
+  }
+
+  Future<int?> fetchStudyTime(int userId) async {
+    final String url = 'http://10.0.2.2:8080/seat/$userId'; // 서버 URL
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // 서버로부터 성공적으로 데이터를 받았을 때
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        final ReadSeatResponseDto seatData = ReadSeatResponseDto.fromJson(responseData);
+
+        return seatData.studyTime; // studyTime 필드를 반환
+      } else {
+        print('Error: ${response.statusCode}');
+        return null; // 에러 처리
+      }
+    } catch (e) {
+      print('Exception: $e');
+      return null; // 예외 처리
+    }
   }
 
   Future<void> Check_My_Seat(MySeatRequestDto request) async {
@@ -177,7 +315,6 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
       print('Error fetching data: $e');
     }
   }
-
 
   Future<void> _sendGetRequest(String action) async {
     final String url = 'http://10.0.2.2:8080/$action';
@@ -411,22 +548,14 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                                                   ),
                                                   // 학습시간 표시
                                                   Align(
-                                                    alignment: AlignmentDirectional(
-                                                        0, 0),
+                                                    alignment: AlignmentDirectional(0, 0),
                                                     child: Text(
-                                                      '35분',
-                                                      style: FlutterFlowTheme
-                                                          .of(
-                                                          context)
-                                                          .bodyMedium
-                                                          .override(
+                                                      formatTime(studyTime ?? 0), // 시간이 없을 때는 0분으로 처리
+                                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                         fontFamily: 'Readex Pro',
-                                                        color: Color(
-                                                            0xC9FFFFFF),
+                                                        color: Color(0xC9FFFFFF),
                                                         fontSize: 15,
-                                                        letterSpacing: 0,
-                                                        fontWeight:
-                                                        FontWeight.bold,
+                                                        fontWeight: FontWeight.bold,
                                                       ),
                                                     ),
                                                   ),

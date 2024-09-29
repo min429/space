@@ -13,6 +13,30 @@ public class FCMService {
     private final UsersService usersService;
     private final FirebaseMessaging firebaseMessaging;
 
+    public void sendReturnNotification(String userToken){
+        Message message = Message.builder()
+            .setAndroidConfig(AndroidConfig.builder()
+                .setTtl(3600 * 1000) // 푸시알림을 fcm 서버에 한시간 보관
+                .setPriority(AndroidConfig.Priority.NORMAL)
+                .setNotification(AndroidNotification.builder()
+                    .setTitle("자리 반납 알림")
+                    .setBody("자리가 반납되었습니다.")
+                    .setIcon("stock_ticker_update")
+                    .setColor("#f45342")
+                    .build())
+                .build())
+            .setToken(userToken)
+            .build();
+
+        try{
+            String response = firebaseMessaging.send(message);
+            log.info("response: {}", response);
+        }
+        catch(FirebaseMessagingException e){
+            log.error("error: {}", e);
+        }
+    }
+
     public void sendNotification(String userToken) {
         Message message = Message.builder()
                 .setAndroidConfig(AndroidConfig.builder()

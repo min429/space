@@ -7,7 +7,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
-@Data
+
 @Getter
 @RedisHash("seat")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,8 +29,10 @@ public class Seat {
     private Long leaveCount = 0L; //자리 비움 시간 카운트 (분 단위 측정)
     private Long maxLeaveCount;
 
+    private Long studyTime = 0L;
+
     @Builder
-    public Seat(Long seatId, Long userId, Boolean isUsed, Long useCount, Long leaveId, Long duration, Long leaveCount, Long maxLeaveCount) {
+    public Seat(Long seatId, Long userId, Boolean isUsed, Long useCount, Long leaveId, Long duration, Long leaveCount, Long maxLeaveCount, Long studyTime) {
         this.seatId = seatId;
         this.userId = userId == null ? null : userId;
         this.isUsed = isUsed == null ? false : isUsed;
@@ -39,5 +41,8 @@ public class Seat {
         this.duration = duration == null ? 0L : duration;
         this.leaveCount = leaveCount == null ? 0L : leaveCount;
         this.maxLeaveCount = maxLeaveCount == null ? null : maxLeaveCount;
+        this.studyTime = studyTime == null ? 0L : studyTime;
     }
+
+
 }
