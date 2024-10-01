@@ -28,6 +28,15 @@ class MainWidget extends StatefulWidget {
   State<MainWidget> createState() => _MainWidgetState();
 }
 
+late int? RuserId = -1;
+late int? seatId = -1;
+late int? leaveId = -1;
+late String userName = '';
+late int seatNumber = 0;
+late int dailyReservationTime = 0;
+late int dailyAwayTime = 0;
+late Color statusColor = Colors.black; // 기본 텍스트 색상
+
 class MySeatRequestDto {
   final int userId;
 
@@ -138,6 +147,13 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
     _model = createModel(context, () => MainModel());
 
     initMessaging();
+    int userIdNonNull=-999;
+    if (userId != null) {
+      userIdNonNull = userId!;
+    }
+    MySeatRequestDto requestDto = MySeatRequestDto(userId: userIdNonNull);
+    // 서버로부터 데이터 받아오기
+    fetchMySeat(requestDto);
 
     setupAnimations(
       animationsMap.values.where((anim) =>
@@ -148,6 +164,58 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
 
     fetchAndDisplayStudyTime();
     startAutoRefresh(); // 자동 새로고침 시작
+  }
+
+  Future<void> fetchMySeat(MySeatRequestDto request) async {
+    final String url = 'http://10.0.2.2:8080/user/myseat';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(request.toJson()),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        setState(() {
+          RuserId = responseData['userId'] as int?;
+          seatId = responseData['seatId'] as int?;
+          leaveId = responseData['leaveId'] as int?;
+          userName = responseData['name'] as String;
+          seatNumber = responseData['seatId'] as int;
+          dailyReservationTime = responseData['dailyReservationTime'] as int;
+          dailyAwayTime = responseData['dailyAwayTime'] as int;
+          // Status와 색상 설정
+          if (RuserId != null && leaveId == null) {
+            Status = "자리사용중";
+            statusColor = Colors.blue;
+          } else if (RuserId == null && leaveId != null) {
+            Status = "자리비움중";
+            statusColor = Colors.red;
+          } else if (RuserId != null && leaveId != null) {
+            Status = "임시자리사용중";
+            statusColor = Colors.orange;
+          } else {
+            Status = "상태 없음";
+            statusColor = Colors.black;
+          }
+
+        });
+        print('Status: $Status');
+
+      } else {
+        Status = "상태 없음";
+        statusColor = Colors.black;
+        print('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      Status = "상태 없음";
+      statusColor = Colors.black;
+      print('Error fetching data: $e');
+    }
   }
 
   @override
