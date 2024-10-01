@@ -16,7 +16,7 @@ import 'mypage.dart';
 import 'reservation.dart';
 import 'board.dart';
 import 'no_my_seat.dart';
-
+import 'notice.dart'; // notice.dart
 
 
 
@@ -853,8 +853,20 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                       onTap: () {
                         // 공지사항를 터치했을 때 실행할 동작을 여기에 작성합니다.
                         print('공지사항 선택되었습니다.');
-
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NoticeDetailPage(
+                              notice: {
+                                'title': '공지사항', // 공지사항 제목을 여기에 전달
+                                'date': '2024-10-01', // 공지사항 날짜를 여기에 전달
+                                'content': '자리 비움을 하지않고 자리에 벗어나는 행위를 지속적으로 진행할시 패널티를 받게 됩니다.                                          -20분 누적시 경고 알림                                              -30분 누적시 자리 박탈                                                    -박탈 누적시 등급 감소 ' // 공지사항 내용을 여기에 전달
+                              },
+                            ),
+                          ),
+                        );
                       },
+
                       child: Container(
                         width: double.infinity,
                         height: 100,
