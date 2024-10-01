@@ -5,6 +5,7 @@ import 'package:odlm_app/globals.dart';
 import 'writeboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'globals.dart';
 
 class NoticePage extends StatelessWidget {
 
@@ -84,7 +85,24 @@ class NoticeDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(notice['title']!),
+        backgroundColor: mainColor, // mainColor가 정상적으로 정의되었는지 확인
+        automaticallyImplyLeading: true,
+        title: Text(notice['title']! ,
+            style: TextStyle(
+          fontFamily: 'Readex Pro',
+          color: Colors.white, // 폰트 색상을 명시적으로 설정
+          fontSize: 25,
+          fontWeight: FontWeight.w600,
+        )),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          color: Colors.white, // 아이콘 색상
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        centerTitle: false,
+        elevation: 2,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
