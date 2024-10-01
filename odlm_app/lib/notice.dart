@@ -111,12 +111,12 @@ class NoticeDetailPage extends StatelessWidget {
           children: [
             Text(
               notice['date']!,
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+              style: TextStyle(fontSize: 20, color: Colors.grey),
             ),
             SizedBox(height: 10),
             Text(
               notice['content']!,
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 25),
             ),
           ],
         ),
