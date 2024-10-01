@@ -66,6 +66,13 @@ class _NoMySeatWidgetState extends State<NoMySeatWidget> {
               ),
             ],
           ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: Colors.white, // 뒤로 가기 버튼의 색상
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
           actions: [
             Align(
               alignment: AlignmentDirectional(0, 0),
