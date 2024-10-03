@@ -15,17 +15,23 @@ class NoticePage extends StatelessWidget {
     {
       'title': '공지사항 1',
       'date': '2024-10-01',
-      'content': '자리비움을 하지않고 자리에 벗어나는 행위를 지속적으로 할 경우 패널티를 받을 수 있습니다.'
+      'content1': '자리비움을 하지않고 자리에 벗어나는 행위를 지속적으로 할 경우 패널티를 받을 수 있습니다.',
+      'content2': '자리비움을 하지않고 자리에 벗어나는 행위를 지속적으로 할 경우 패널티를 받을 수 있습니다.',
+      'content3': '자리비움을 하지않고 자리에 벗어나는 행위를 지속적으로 할 경우 패널티를 받을 수 있습니다.'
     },
     {
       'title': '공지사항 2',
       'date': '2024-09-25',
-      'content': '정기 점검으로 인해 서비스가 일시 중단됩니다. 양해 부탁드립니다.'
+      'content1': '자리비움을 하지않고 자리에 벗어나는 행위를 지속적으로 할 경우 패널티를 받을 수 있습니다.',
+      'content2': '자리비움을 하지않고 자리에 벗어나는 행위를 지속적으로 할 경우 패널티를 받을 수 있습니다.',
+      'content3': '자리비움을 하지않고 자리에 벗어나는 행위를 지속적으로 할 경우 패널티를 받을 수 있습니다.'
     },
     {
       'title': '공지사항 3',
       'date': '2024-09-15',
-      'content': '새로운 기능이 추가되었습니다. 업데이트를 확인해 주세요.'
+      'content1': '자리비움을 하지않고 자리에 벗어나는 행위를 지속적으로 할 경우 패널티를 받을 수 있습니다.',
+      'content2': '자리비움을 하지않고 자리에 벗어나는 행위를 지속적으로 할 경우 패널티를 받을 수 있습니다.',
+      'content3': '자리비움을 하지않고 자리에 벗어나는 행위를 지속적으로 할 경우 패널티를 받을 수 있습니다.'
     },
   ];
 
@@ -115,7 +121,25 @@ class NoticeDetailPage extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Text(
-              notice['content']!,
+              notice['content1']!,
+              style: TextStyle(fontSize: 25),
+            ),
+            Divider(
+              color: Colors.grey,  // 회색 줄
+              thickness: 1,        // 줄 두께
+              height: 20,          // 줄 위아래 간격
+            ),
+            Text(
+              notice['content2']!,
+              style: TextStyle(fontSize: 25),
+            ),
+            Divider(
+              color: Colors.grey,  // 회색 줄
+              thickness: 1,        // 줄 두께
+              height: 20,          // 줄 위아래 간격
+            ),
+            Text(
+              notice['content3']!,
               style: TextStyle(fontSize: 25),
             ),
           ],
