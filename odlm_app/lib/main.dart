@@ -857,10 +857,10 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
                           context,
                           MaterialPageRoute(
                             builder: (context) => NoticeDetailPage(
-                              notice: {
+                              notice: const {
                                 'title': '공지사항', // 공지사항 제목을 여기에 전달
                                 'date': '2024-10-01', // 공지사항 날짜를 여기에 전달
-                                'content': '자리 비움을 하지않고 자리에 벗어나는 행위를 지속적으로 진행할시 패널티를 받게 됩니다.\n-20분 누적시 경고 알림\n-30분 누적시 자리 박탈\n-박탈 누적시 등급 감소 ' // 공지사항 내용을 여기에 전달
+                                'content': '자리 비움을 하지않고 자리에 벗어나는 행위를 지속적으로 진행할시 패널티를 받게 됩니다.\n예시 1.엎드려서 이불을 덮고 잠을 자는 행위와 같은 사람의 형태를 가리는 활동을 자제해주세요.\n-20분 누적시 경고 알림\n-30분 누적시 자리 박탈\n-박탈 누적시 등급 감소 ' // 공지사항 내용을 여기에 전달
                               },
                             ),
                           ),
