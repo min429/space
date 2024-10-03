@@ -387,21 +387,21 @@ class _ReservationWidgetState extends State<ReservationWidget> {
   Alignment _getSeatAlignment(int seatNumber) {
     switch (seatNumber) {
       case 1:
-        return Alignment(-0.51, -0.7);
+        return Alignment(-0.51, -0.75);
       case 2:
-        return Alignment(0.51, -0.7);
+        return Alignment(0.51, -0.75);
       case 3:
-        return Alignment(-0.5, -0.25);
+        return Alignment(-0.51, -0.3);
       case 4:
-        return Alignment(0.51, -0.25);
+        return Alignment(0.51, -0.3);
       case 5:
         return Alignment(-0.51, 0.25);
       case 6:
         return Alignment(0.51, 0.25);
       case 7:
-        return Alignment(-0.51, 0.6);
+        return Alignment(-0.51, 0.7);
       case 8:
-        return Alignment(0.51, 0.6);
+        return Alignment(0.51, 0.7);
       default:
         return Alignment.center;
     }
