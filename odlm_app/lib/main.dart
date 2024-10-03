@@ -278,11 +278,11 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
         return seatData.studyTime; // studyTime 필드를 반환
       } else {
         print('Error: ${response.statusCode}');
-        return null; // 에러 처리
+        return 0; // 요청 실패 시 0 반환
       }
     } catch (e) {
       print('Exception: $e');
-      return null; // 예외 처리
+      return 0; // 예외 발생 시 0 반환
     }
   }
 
