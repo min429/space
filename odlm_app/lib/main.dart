@@ -166,6 +166,13 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
     startAutoRefresh(); // 자동 새로고침 시작
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // 화면이 다시 보여질 때 학습 시간을 불러옴
+    fetchAndDisplayStudyTime();
+  }
+
   Future<void> fetchMySeat(MySeatRequestDto request) async {
     final String url = 'http://10.0.2.2:8080/user/myseat';
 
@@ -311,6 +318,12 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
               builder: (context) => MySeatWidget()),
         );
       }
+
+      setState(() {
+        // 필요한 데이터를 다시 불러오거나 화면 갱신 작업을 수행
+        fetchAndDisplayStudyTime(); // 예시로 학습 시간을 다시 불러오는 경우
+      });
+
     } catch (e) {
       print('Error fetching data: $e');
     }
