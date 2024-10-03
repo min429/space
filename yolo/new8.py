@@ -30,8 +30,16 @@ if not cap.isOpened():
 # 사용자 정의 좌표 설정
 def get_user_defined_points():
     return [
-        (70, 150), (250, 150), (400, 150), (540, 150),
-        (70, 400), (250, 400), (400, 400), (540, 400),
+
+        (230, 600),   # 1
+        (290, 300),   # 2
+        (540, 650),  # 3
+        (540, 300),  # 4
+        (800, 650),  # 5
+        (800, 300),  # 6
+        (1130, 650),  # 7
+        (1050, 300),  # 8
+
     ]
 
 # 점의 좌표
@@ -45,7 +53,9 @@ while True:
     if not ret:
         break
 
-    frame = cv2.flip(frame, 1)  # 좌우 반전
+    frame = cv2.rotate(frame, cv2.ROTATE_180)  # 화면을 180도 회전
+
+    #frame = cv2.flip(frame, 1)  # 좌우 반전
     results = model(frame)  # YOLOv5 객체 탐지
     person_results = results.pred[0][results.pred[0][:, -1] == 0]
 
